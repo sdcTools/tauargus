@@ -1408,7 +1408,7 @@ public class TableSet {
                         writer.print(";" + mdecimalFormat.format(cell.CKMValue - cell.response));
                     }
                     if (addCellKey){
-                            writer.print(";" + CKdecimalFormat.format(respVar.zerosincellkey ? cell.cellkey : cell.cellkeynozeros));
+                            writer.print(";" + CKdecimalFormat.format((this.isFrequencyTable() || respVar.zerosincellkey) ? cell.cellkey : cell.cellkeynozeros));
                     }
                     writer.println();
                 }
