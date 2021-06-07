@@ -180,7 +180,8 @@ public class GHMiter {
             GHMiter = SystemUtils.getApplicationDirectory(GHMiter.class).getCanonicalPath();
         } catch (Exception ex) {}
 
-        GHMiter = "\"" + GHMiter + "/Ghmiter4.exe\"";
+        //GHMiter = "\"" + GHMiter + "/Ghmiter4.exe\"";  //Results in double quotes (""GHMiter4.exe""), some systems cannot deal with that correctly 
+        GHMiter += "\\Ghmiter4.exe";
         commandline.add(GHMiter);
 
         TauArgusUtils.writeBatchFileForExec( "RunGH", commandline);       

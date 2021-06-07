@@ -63,7 +63,7 @@ public class LinkedTables {
         String hs = ""; int i,j; TableSet tableSet0, tableSet;
         Date startDate = new Date();
         if (coverDim > 10){
-            throw new ArgusException ("The total number of explanatory variables for the Modular approach is 10+");
+            throw new ArgusException ("The total number of explanatory variables for the Modular approach should not exceed 10");
         }
         for (i=0;i<TableService.numberOfTables();i++){
             hs = hs + "\n"+ (i+1) + ": "+ TableService.getTableDescription(TableService.getTable(i));        } 

@@ -379,12 +379,12 @@ public class OptiSuppress {
             for(i=0;i<solverNames.length;i++){TauArgusUtils.DeleteFile(Application.getTempFile("CTA_"+solverNames[i]+".sol"));}
         }
         if (SystemUtils.isWindows()){
-            if (doExpert){command = "\"" + command + "/GUICTA.exe\"";}
-            else         {command = "\"" + command + "/mainCTA.exe\"";}
+            if (doExpert){command = "\"" + command + "/CTA/GUICTA.exe\"";}
+            else         {command = "\"" + command + "/CTA/mainCTA.exe\"";}
         }
         else{ // For the moment this is assumed to be Linux
-            if (doExpert){command = "\"" + command + "/GUICTA\"";}
-            else         {command = "\"" + command + "/main_CTA\"";}
+            if (doExpert){command = "\"" + command + "/CTA/GUICTA\"";}
+            else         {command = "\"" + command + "/CTA/main_CTA\"";}
         }   
         
         if (!TauArgusUtils.ExistFile(StrUtils.unQuote(command))){ throw new ArgusException("CTA-program could not be found");}
@@ -454,8 +454,26 @@ public class OptiSuppress {
             tableSet.suppressINFO = "Standard CTA solution has been applied<br>" +
                                     "Solver used : " + solver + "<br>" + hs;
         }
-        if (doExpert)
-        if (TauArgusUtils.FileLength(solFile)==0){ throw new ArgusException("Solution file of CTA-program is empty");}
+        if (doExpert){ // try to find a solutions file;  we take the first non-empty one
+            solFile = ""; long lastTime, lt;
+            lastTime = 0;
+            for(i=0;i<solverNames.length;i++){
+                hs = Application.getTempFile("CTA_"+solverNames[i]+".sol");  
+                if (TauArgusUtils.ExistFile(hs)){
+                    hs = Application.getTempFile("CTA_"+solverNames[i]+".sol"); 
+                    if (TauArgusUtils.FileLength(hs)>0) {
+                        lt = TauArgusUtils.FileLastModified(hs);
+                        if (lt > lastTime){
+                            lastTime = lt;  
+                            solFile = hs;   
+                            solver = solverNames[i];
+                        }
+                    }
+                }  
+            }
+            if (TauArgusUtils.FileLength(solFile)==0){ throw new ArgusException("Solution file of CTA-program is empty");}
+            tableSet.suppressINFO = "Expert CTA solution has been applied<br>Solver used : " + solver+ "<br>";
+        }
         
         //Read rthe results back
         nSec[0]=0;
