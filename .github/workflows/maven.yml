@@ -1,0 +1,27 @@
+# This workflow will build a Java project with Ant
+
+name: Java CI with Ant
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+    - name: Build with Ant
+      run: ant compile
+    - name: Collect into jar
+      run: ant jar
+      
