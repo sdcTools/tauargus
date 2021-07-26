@@ -18,4 +18,4 @@ jobs:
         java-version: '8'
         distribution: 'zulu'
     - name: Build with Ant
-      run: ant -noinput -buildfile build.xml compile jar
+      run: ant -noinput -buildfile build.xml -Dplatforms.JDK_1.8_Zulu.home=C:\hostedtoolcache\windows\Java_Zulu_jdk\8.0.302-8\x64 compile jar
