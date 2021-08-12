@@ -1220,7 +1220,7 @@ public class SaveTable {
             out.write("Number and fraction of cells with Difference less than or equal to Value<br>\n");
             out.write("<div>\n<div style=\"float:left\">\n");
             out.write("<table>\n");
-            out.write("<tr><th colspan=\"3\" algn=\"Left\"><b>AD</b></th></tr>\n");
+            out.write("<tr><th colspan=\"3\" algn=\"Left\">AD</th></tr>\n");
             out.write("<tr><td>Value</td><td>Count</td><td>Fraction (%)</td></tr>\n");
 
             totalcount = UseEmpty ? InfoLoss.GetNumberOfCells() : InfoLoss.GetNumberOfCells() - InfoLoss.GetNumberOfEmpty();
@@ -1242,7 +1242,7 @@ public class SaveTable {
                 
             out.write("<div>\n<div style=\"float:left\">\n");                
             out.write("<table>\n");
-            out.write("<tr><th colspan=\"3\" algn=\"Left\"><b>RAD</b></th></tr>\n");
+            out.write("<tr><th colspan=\"3\" algn=\"Left\">RAD</th></tr>\n");
             out.write("<tr><td>Value</td><td>Count</td><td>Fraction (%)</td></tr>\n");
             for (i=0;i<InfoLoss.GetECDFcounts("RAD").getBreaks().length;i++){
                 out.write("<tr><td align=\"Right\">"+String.format("%.2f",InfoLoss.GetECDFcounts("RAD").getBreaks()[i])+"</td>");
@@ -1261,7 +1261,7 @@ public class SaveTable {
                 
             out.write("<div>\n<div style=\"float:left\">\n");                
             out.write("<table>\n");
-            out.write("<tr><th colspan=\"3\" algn=\"Left\"><b>DR</b></th></tr>\n");
+            out.write("<tr><th colspan=\"3\" algn=\"Left\">DR</th></tr>\n");
             out.write("<tr><td>Value</td><td>Count</td><td>Fraction (%)</td></tr>\n");
             for (i=0;i<InfoLoss.GetECDFcounts("DR").getBreaks().length;i++){
                 out.write("<tr><td align=\"Right\">"+String.format("%.2f",InfoLoss.GetECDFcounts("DR").getBreaks()[i])+"</td>");

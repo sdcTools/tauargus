@@ -6,12 +6,12 @@ HITAS_RECREATECOLUMN     = 5004 = HiTaS: recreating existing column
 HITAS_SHOULDNOTHAPPEN    = 5005 = HiTaS: this error should not be possible
 HITAS_NOVARIABLES        = 5006 = HiTaS: no variables found
 HITAS_TABDIMSDONTMATCH   = 5007 = HiTaS: table dimensions do not match
-HITAS_JJNOTLOADED        = 5008 = HiTaS: couldn't load JJ-routines
-LB_EQ_UB_EQ_INF          = 5009 = HiTaS: lower- and upperbound both equal infinity
-HITAS_MAXINT_ERROR       = 5010 = HiTaS: integer larger than MAXINT encountered
+HITAS_JJNOTLOADED        = 5008 = Couldn't load JJ-routines
+LB_EQ_UB_EQ_INF          = 5009 = Problem may be infeasible: lower- and upperbound both equal infinity
+HITAS_MAXINT_ERROR       = 5010 = Integer larger than MAXINT encountered
 HITAS_SKIP_ERROR         = 5011 = HiTaS: complete table has to be skipped?
-HITAS_UNKNOWNSOLVER      = 5012 = HiTaS: unknown solver specified    
-JJ_FILENOTFOUND          = 6000 = JJ-routines: can not open file
+HITAS_UNKNOWNSOLVER      = 5012 = Unknown solver specified    
+JJ_FILENOTFOUND          = 6000 = JJ-routines: can not open file (not found)
 JJ_FILEWRITE             = 6001 = JJ-routines: can not write to file
 JJ_NOTENOUGHMEMORY       = 6002 = JJ-routines: not enough memory
 JJ_NOFRACSOL             = 6003 = JJ-routines: no fractional solution found
@@ -32,5 +32,5 @@ JJ_DEFAULT               = 7000 = JJ-routines: unknown error
 JJ_CHECKLP               = 7001 = JJ-routines: check the LP
 JJ_LPSOLVER              = 7002 = JJ-routines: error in LPSOLVER
 JJ_HEURISTIC             = 7003 = JJ-routines: error in heuristic
-JJ_NOXPDONGLE            = 8000 = JJ-routines: XP licence error
-JJ_NOCPLEXLICENCE        = 8001 = JJ-routines: CPlex licence error
+JJ_NOXPDONGLE            = 8000 = JJ-routines: XPress license error
+JJ_NOCPLEXLICENCE        = 8001 = JJ-routines: CPlex license error

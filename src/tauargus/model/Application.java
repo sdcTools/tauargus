@@ -44,9 +44,9 @@ public class Application {
 
     // Version info
     public static final int MAJOR = 4;
-    public static final int MINOR = 2;
+    public static final int MINOR = 3;
     public static final String REVISION = "0";
-    public static final int BUILD = 5;
+    public static final int BUILD = 1;
     
     // Error codes returned by functions in TauArgusJava dll
     public static final int ERR_CODENOTINCODELIST = 1017;

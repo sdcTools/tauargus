@@ -46,7 +46,7 @@ public class TableService {
 
 // anco 1.6
 //    static ArrayList<TableSet> tables = new ArrayList<>();
-    static ArrayList<TableSet> tables = new ArrayList<TableSet>();
+    static ArrayList<TableSet> tables = new ArrayList<>();
 
     public static int numberOfTables() {
         return tables.size();

@@ -676,7 +676,7 @@ public class OptiSuppress {
             
             if (tableSet.additivity == TableSet.ADDITIVITY_NOT_REQUIRED){
                 hs = "The table might be not additive.\n" + 
-                     "Running Modular successfully Is not guaranteed.\n";
+                     "Running Modular successfully is not guaranteed.\n";
                 int warningResult = ShowWarningMessage(hs);
                 if (warningResult == 0 ) {
                     throw new ArgusException(hs); //overlapString);
@@ -1560,8 +1560,8 @@ public class OptiSuppress {
                                     maxTimeAllowed, hs, Application.getTempDir()+"/", solverName[Application.solverSelected]);
         if (result > 1){
             if (result == 8000 || result == 8001) {throw new ArgusException(tauArgus.GetErrorString(result));}
-            throw new ArgusException("No optimal solutionfound/n"+tauArgus.GetErrorString(result) +
-                                     "see also file: " + Application.getTempFile("FullJJ.log"));
+            throw new ArgusException("No optimal solution found\n"+tauArgus.GetErrorString(result) +
+                                     "\nSee also file: " + Application.getTempFile("FullJJ.log"));
         }
         try{ 
             BufferedReader  in  = new BufferedReader(new FileReader(Application.getTempFile("JJ.OUT")));    
