@@ -316,8 +316,30 @@ public class TableService {
             if (!tauArgus.ComputeTables(errorCode, tableIndex)) {
                 throw new ArgusException("Error occurred when computing table" + (tableIndex[0] + 1) + tauArgus.GetErrorString(errorCode[0]));
             }
+            else{
+                double[] xMaxTemp = new double[]{0.0};
+                double xMin = tauArgus.GetMinimumCellValue(i, xMaxTemp);
+                double xMax = xMaxTemp[0];
+                if (xMax > 0){
+                    xMax = 1.5 * xMax;}
+                else {xMax = 0;}
+                if (xMin > 0) {
+                    xMin = 0;
+                }
+                if (xMin < 0) {
+                    xMin = 1.5 * xMin;
+                }
+                TableSet tableSet = TableService.getTable(i);
+                tableSet.maxTabVal = xMax;
+                tableSet.minTabVal = xMin;
+                tableSet.isAdditive = true;
+                tableSet.clearHistory();
+                
+                SystemUtils.writeLogbook("Table: "+TableService.getTable(i).toString()  +" has been specified");
+            }
         } 
-        for (int i = 0; i < TableService.numberOfTables(); i++) {
+        // Moved upwards to fully deal with a table and write to logfile after each single table is dealt with
+        /*for (int i = 0; i < TableService.numberOfTables(); i++) {
             double[] xMaxTemp = new double[]{0.0};
             double xMin = tauArgus.GetMinimumCellValue(i, xMaxTemp);
             double xMax = xMaxTemp[0];
@@ -335,12 +357,12 @@ public class TableService {
             tableSet.minTabVal = xMin;
             tableSet.isAdditive = true;
             tableSet.clearHistory();
-        }
+        }*/
         pcs.firePropertyChange("progressMain", null, 100);
         logger.info("Compute tables completed");
-        for(int i=0;i<TableService.numberOfTables();i++){
+        /*for(int i=0;i<TableService.numberOfTables();i++){
           SystemUtils.writeLogbook("Table: "+TableService.getTable(i).toString()  +" has been specified");
-        }
+        }*/
         SystemUtils.writeLogbook("Tables have been computed");        
     }
     

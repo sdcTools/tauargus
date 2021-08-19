@@ -1,0 +1,134 @@
+===============================================
+General information
+===============================================
+The Makefile in the tauargus repository can be used to call all Makefiles at once for the libraries
+* CSPlibCPLEX.dll, CSPlibSCIP.dll CSPlibXPRESS.dll
+* libCRP.dll
+* TauArgusJava.dll
+* TauHitas.dll
+* TauRounder.dll
+
+After compilation, these libraries will be copied to the tauargus directory (see below for assumed directory structure).
+
+Note: you will manually have to copy the used libgcc*.dll and libstdc++-6.dll to the argus directory. 
+You will find these in the compiler directory you used 
+(e.g., "C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin").
+Note: these differ for 32bit and 64bit even though they may have the same name (libstdc++-6.dll).
+
+Each Makefile in each repository can also be called individually to only make the corresponding library.
+
+In the main Makefile (in the tauargus repository) you have to set 
+* the compiler to be used, by adjusting the variable GNUDIR
+* the jave version to be used, by adjusting the variable JAVADIR
+* the swigwin version to be used, by adjusting the variable SWIGDIR
+This will override the settings in each individual Makefile when using the main Makefile.
+
+===============================================
+Usage
+===============================================
+Go to the directory of tauargus and call "make".
+To pipe the stdout and stderr to a file use "make 1>foo.log 2>&1"
+
+Available option for this Makefile:
+32BIT=true 		will produce 32bit Windows libraries (default)
+32BIT=false		will produce 64bit Windows libraries
+
+===============================================
+Assumed directory structure
+===============================================
+The directory structure can be adjusted in the Makefiles, but you should be careful to be consistent.
+We advice to use the directory structure as described below.
+
+The main directory structure as used in the Makefiles:
+.
+├── CRP/
+├── CSP/
+├── libtauargus/
+├── Solvers/
+│   ├── Cplex/
+│   ├── scip-3.1.1/
+│   ├── soplex-2.0.1/
+│   └── Xpress/
+├── tauargus/
+├── tauhitas/
+└── taurounder/
+
+All subdirectories mentioned above (except the Solvers subdirectory) can be gotten by cloning or forking 
+the respective repositories on https://github.com/sdcTools
+
+Below we will only show the parts of the directory structures relevant for the Makefiles.
+
+Subdirectory structures as used in the Makefiles (as available in the repositories):
+CRP/
+├── src/
+│   ├── *.c
+│   ├── *.h
+│   └── Versioninfo.rc
+└── Makefile
+
+CSP/
+├── src/
+│   ├── *.c
+│   ├── *.h
+│   └── Versioninfo.rc
+└── Makefile
+
+libtauargus/
+├── *.cpp
+├── *.h
+├── *.swg
+├── TauArgus.properties
+└── Versioninfo.rc
+	
+tauhitas/
+├── src/
+│   ├── *.cpp
+│   ├── *.h
+│   └── Versioninfo.rc
+├── Makefile
+└── *.swg
+
+taurounder/
+├── src/
+│   ├── *.cpp
+│   ├── *.h
+│   └── Versioninfo.rc
+├── Makefile
+└── *.swg
+
+
+Subdirectories of the solvers (not available as a repository):
+Solvers/
+├── Cplex/
+│   └── Cplex125/
+│       └── Windows/
+│           ├── 32bits/
+│           │   ├── include/
+│           │   │   └── ilcplex/
+│           │   │       └── *.h
+│           │   ├── *.dll
+│           │   └── *.lib
+│           └── 64bits/
+│               └── include/
+│                   ├── ilcplex/
+│                   │   └── *.h
+│                   ├── *.dll
+│                   └── *.lib
+├── scip-3.1.1/
+│   ├── bin/
+│   ├── lib/
+│   └── src/
+├── soplex-2.0.1/
+│   ├── bin/
+│   ├── lib/
+│   └── src/
+└── Xpress/
+    └── XPress_28/
+        ├── x86/
+        │   ├── *.dll
+        │   ├── *.lib
+        │   └── *.h
+        └── x86_64/
+            ├── *.dll
+            ├── *.h
+            └── *.lib
