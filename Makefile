@@ -33,7 +33,7 @@ endif
 SWIGDIR          = D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.1
 
 CC               = $(GNUDIR)/gcc
-CXX              = $(GNUDIR)/g++
+CXX              = $(GNUDIR)/g++ -gstabs
 WINDRES          = $(GNUDIR)/windres
 MKDIR            = mkdir
 RM               = rm -f

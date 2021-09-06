@@ -36,10 +36,6 @@ public class RounderCtrl {
     }
   }
 
-  public RounderCtrl() {
-    this(taurounderJNI.new_RounderCtrl(), true);
-  }
-
   public void SetProgressListener(RProgressListener jProgressListener) {
     taurounderJNI.RounderCtrl_SetProgressListener(swigCPtr, this, RProgressListener.getCPtr(jProgressListener), jProgressListener);
   }
@@ -58,6 +54,10 @@ public class RounderCtrl {
 
   public String GetVersion() {
     return taurounderJNI.RounderCtrl_GetVersion(swigCPtr, this);
+  }
+
+  public RounderCtrl() {
+    this(taurounderJNI.new_RounderCtrl(), true);
   }
 
 }

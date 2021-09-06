@@ -104,7 +104,7 @@ public class TableSet {
     private static final TauArgus tauArgus = Application.getTauArgusDll();
     public Metadata metadata;
 
-    public int index;  //mag niet static zijn!!!!!!!!!!!!
+    public int index;  //cannot be static!!!!!!!!!!!!
 
     // explanatory variables...
     public List<Variable> expVar = new ArrayList<>();

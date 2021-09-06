@@ -22,13 +22,13 @@ public class taurounderJNI {
   public final static native long new_RCallback();
   public final static native void RCallback_director_connect(RCallback obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void RCallback_change_ownership(RCallback obj, long cptr, boolean take_or_release);
-  public final static native long new_RounderCtrl();
-  public final static native void delete_RounderCtrl(long jarg1);
   public final static native void RounderCtrl_SetProgressListener(long jarg1, RounderCtrl jarg1_, long jarg2, RProgressListener jarg2_);
   public final static native void RounderCtrl_SetCallback(long jarg1, RounderCtrl jarg1_, long jarg2, RCallback jarg2_);
   public final static native void RounderCtrl_SetDoubleConstant(long jarg1, RounderCtrl jarg1_, int jarg2, double jarg3);
   public final static native int RounderCtrl_DoRound(long jarg1, RounderCtrl jarg1_, String jarg2, String jarg3, double jarg4, double[] jarg5, double[] jarg6, int jarg7, String jarg8, String jarg9, String jarg10, String jarg11, int jarg12, int jarg13, String jarg14, double[] jarg15, int[] jarg16, double[] jarg17, int[] jarg18);
   public final static native String RounderCtrl_GetVersion(long jarg1, RounderCtrl jarg1_);
+  public final static native long new_RounderCtrl();
+  public final static native void delete_RounderCtrl(long jarg1);
 
   public static void SwigDirector_RProgressListener_UpdateLowerBound(RProgressListener jself, double LowerBound) {
     jself.UpdateLowerBound(LowerBound);
