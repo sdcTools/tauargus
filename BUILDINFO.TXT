@@ -6,7 +6,7 @@ Used tools:
 - Netbeans IDE
 - Java version 1.7 or higher
 - Swig
-- Gnu C/C++/fortran compilers (MinGW under Windows)
+- Gnu C/C++/fortran compilers (MinGW-64 under Windows)
 - Lazarus (with FPC)
 
 
