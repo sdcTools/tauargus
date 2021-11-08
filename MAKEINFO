@@ -14,12 +14,14 @@ Note: you will manually have to copy the used libgcc*.dll and libstdc++-6.dll to
 You will find these in the compiler directory you used 
 (e.g., "C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin").
 Note: these differ for 32bit and 64bit even though they may have the same name (libstdc++-6.dll).
+Note: different GNU C compiler versions are connected to different dll-versions! Make sure to copy the dll's that are
+related to the compiler version you used to compile the ta-argus dll's.
 
 Each Makefile in each repository can also be called individually to only make the corresponding library.
 
 In the main Makefile (in the tauargus repository) you have to set 
 * the compiler to be used, by adjusting the variable GNUDIR
-* the jave version to be used, by adjusting the variable JAVADIR
+* the java version to be used, by adjusting the variable JAVADIR
 * the swigwin version to be used, by adjusting the variable SWIGDIR
 This will override the settings in each individual Makefile when using the main Makefile.
 
@@ -27,7 +29,7 @@ This will override the settings in each individual Makefile when using the main 
 Usage
 ===============================================
 Go to the directory of tauargus and call "make".
-To pipe the stdout and stderr to a file use "make 1>foo.log 2>&1"
+To pipe the stdout and stderr to a file, use "make 1>foo.log 2>&1"
 
 Available option for this Makefile:
 32BIT=true 		will produce 32bit Windows libraries (default)
