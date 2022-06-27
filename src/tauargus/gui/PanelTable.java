@@ -70,7 +70,7 @@ public class PanelTable extends javax.swing.JPanel {
 
     final Map<Integer,javax.swing.JRadioButton> buttonMap;
     
-    private static final Logger logger = Logger.getLogger(PanelTable.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PanelTable.class.getName());
    
     private JFrame getParentFrame() {
         Container container = this;
@@ -1782,7 +1782,7 @@ public class PanelTable extends javax.swing.JPanel {
                     }
                 }
                 catch (InterruptedException ex) {
-                    logger.log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 } catch (ExecutionException ex) {
                     JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                 }
@@ -1863,7 +1863,7 @@ public class PanelTable extends javax.swing.JPanel {
                     @Override
                     protected Integer doInBackground() throws ArgusException, Exception{
                         super.doInBackground();
-                        OptiSuppress.runRounder(tableSet, getPropertyChangeListener());
+                        OptiSuppress.RunRounder(tableSet, getPropertyChangeListener());
                         return null;
                     }
 
@@ -1881,7 +1881,7 @@ public class PanelTable extends javax.swing.JPanel {
                             updateSuppressButtons();
                         }
                         catch (InterruptedException ex) {
-                            logger.log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                         } catch (ExecutionException ex) {
                             JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                         }
@@ -1911,7 +1911,7 @@ public class PanelTable extends javax.swing.JPanel {
                                 adjustColumnWidths();
                                 updateSuppressButtons();
                             } catch (InterruptedException ex) {
-                                logger.log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             } catch (ExecutionException ex) {
                                 JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                             }
@@ -1926,7 +1926,7 @@ public class PanelTable extends javax.swing.JPanel {
                     final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>(){
                         @Override 
                         protected Void doInBackground() throws ArgusException, Exception{
-                            OptiSuppress.runUWE(tableSet);
+                            OptiSuppress.RunUWE(tableSet);
                             return null;
                         } 
                         @Override 
@@ -1940,7 +1940,7 @@ public class PanelTable extends javax.swing.JPanel {
                                 adjustColumnWidths();
                                 updateSuppressButtons();
                             } catch (InterruptedException ex) {
-                                logger.log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             } catch (ExecutionException ex) {
                                 JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                             }
@@ -1979,7 +1979,7 @@ public class PanelTable extends javax.swing.JPanel {
                                 adjustColumnWidths();
                                 updateSuppressButtons();                                
                             } catch (InterruptedException ex) {
-                                logger.log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             } catch (ExecutionException ex) {
                                 JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                             }
@@ -1995,7 +1995,7 @@ public class PanelTable extends javax.swing.JPanel {
                         @Override
                         protected Integer doInBackground() throws ArgusException, Exception{
                             super.doInBackground();
-                            OptiSuppress.runModular(tableSet, getPropertyChangeListener());
+                            OptiSuppress.RunModular(tableSet, getPropertyChangeListener());
                             return null;
                         }
 
@@ -2013,7 +2013,7 @@ public class PanelTable extends javax.swing.JPanel {
                                 updateSuppressButtons();
                             }
                             catch (InterruptedException ex) {
-                                logger.log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             } catch (ExecutionException ex) {
                                 JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                             }
@@ -2031,7 +2031,7 @@ public class PanelTable extends javax.swing.JPanel {
                         @Override
                         protected Void doInBackground() throws ArgusException, Exception{
                             super.doInBackground();
-                            OptiSuppress.runOptimal(tableSet, getPropertyChangeListener(), checkBoxInverseWeight.isSelected(), false, 1);
+                            OptiSuppress.RunOptimal(tableSet, getPropertyChangeListener(), checkBoxInverseWeight.isSelected(), false, 1);
                             return null;
                         }
 
@@ -2050,7 +2050,7 @@ public class PanelTable extends javax.swing.JPanel {
                                 updateSuppressButtons();
                             }
                             catch (InterruptedException ex) {
-                                logger.log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             } catch (ExecutionException ex) {
                                 JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                             }
@@ -2086,7 +2086,7 @@ public class PanelTable extends javax.swing.JPanel {
                                 adjustColumnWidths();
                                 updateSuppressButtons();
                             } catch (InterruptedException ex) {
-                                logger.log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             } catch (ExecutionException ex) {
                                 JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                             }
@@ -2149,7 +2149,7 @@ public class PanelTable extends javax.swing.JPanel {
                             updateSuppressButtons();
                         } 
                         catch (InterruptedException ex) {
-                            logger.log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                         } 
                         catch (ExecutionException ex) {
                             JOptionPane.showMessageDialog(null, ex.getCause().getMessage());

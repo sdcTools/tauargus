@@ -184,7 +184,7 @@ public class DialogGlobalRecode extends DialogBase {
         }
     }
         
-    private static final Logger logger = Logger.getLogger(DialogGlobalRecode.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DialogGlobalRecode.class.getName());
 
     private TauArgus tauArgus = Application.getTauArgusDll();
     private TableSet tableSet;
@@ -688,7 +688,7 @@ public class DialogGlobalRecode extends DialogBase {
             labelTreeResult.setForeground(Color.black);
             labelWarning.setText("");
             labelWarning.setForeground(Color.black);
-            logger.info("Recode for var: " + variable.name + " has been reversed\n"); // VarName(CurrentVar)
+            LOGGER.info("Recode for var: " + variable.name + " has been reversed\n"); // VarName(CurrentVar)
             SystemUtils.writeLogbook("Recode for var: " + variable.name + " has been reversed");
             buttonApply.setEnabled(true); 
             buttonUndo.setEnabled(false);
@@ -743,7 +743,7 @@ public class DialogGlobalRecode extends DialogBase {
                 labelTreeResult.setText("Tree recode has been applied successfully");
                 labelTreeResult.setForeground(Color.black);
                 ((AbstractTableModel)tableVariables.getModel()).fireTableDataChanged();
-                logger.info("Var: " + variable.name + " has been recoded\n"); // VarName(CurrentVar) 
+                LOGGER.info("Var: " + variable.name + " has been recoded\n"); // VarName(CurrentVar) 
                 SystemUtils.writeLogbook("Var: " + variable.name + " has been recoded");
                 buildTree();
                 if (Application.isAnco()) {
@@ -770,7 +770,7 @@ public class DialogGlobalRecode extends DialogBase {
                 buttonUndo.setEnabled(true);
                 buttonRead.setEnabled(false);
                 textAreaWarning.setText(Variable.RecodeWarning);
-                logger.log(Level.INFO, "Var: {0} has been recoded", variable.name);
+                LOGGER.log(Level.INFO, "Var: {0} has been recoded", variable.name);
                 ((AbstractTableModel)tableVariables.getModel()).fireTableDataChanged();
 //                textAreaRecodeData.requestFocusInWindow();
 //                textAreaRecodeData.setCaretPosition(StrUtils.startingPosition(textAreaRecodeData.getText(), errorLine[0], errorPos[0]));

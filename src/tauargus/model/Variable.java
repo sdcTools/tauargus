@@ -34,7 +34,7 @@ import tauargus.utils.Tokenizer;
 
 public class Variable implements Cloneable {
     
-    private static final Logger logger = Logger.getLogger(Variable.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Variable.class.getName());
     
     private final TauArgus tauArgus = Application.getTauArgusDll();
 
@@ -280,7 +280,7 @@ public class Variable implements Cloneable {
             recoded = true;
             truncLevels = 0;
             RecodeWarning = warning[0];
-            logger.info("Recode: variable (" + name + ") has been recoded");
+            LOGGER.info("Recode: variable (" + name + ") has been recoded");
         } else {
             throw new ArgusException(tauArgus.GetErrorString(errorType[0]) + " " + warning[0] + " in recoding; line " + errorLine[0] + " pos " + errorPos[0]);
         }
@@ -318,7 +318,7 @@ public class Variable implements Cloneable {
     public void recode(String fileName) throws ArgusException, FileNotFoundException, IOException {
         if (hierarchical != HIER_NONE) {
             applyRecodeTree(fileName);
-            logger.info("Variable (" + name + ") recoded.\nRecode file used:" + fileName);
+            LOGGER.info("Variable (" + name + ") recoded.\nRecode file used:" + fileName);
         } else {
             RecodeInfo recodeInfo = readRecodeFile(fileName);
             recode(recodeInfo);

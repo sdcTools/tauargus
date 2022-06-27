@@ -53,7 +53,7 @@ import tauargus.utils.Tokenizer;
 
 public class TableSet {
 
-    private static final Logger logger = Logger.getLogger(TableSet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TableSet.class.getName());
     private static final double EPSILON = 1.0e-10;
 
     public static final int MAX_EXP_VAR = 10;
@@ -568,8 +568,7 @@ public class TableSet {
                       {throw new ArgusException (ex.getMessage());}
                     break;
                 case FREQUENCY:
-                    if (value.equals("") || value.equals("-")){ cell.status = CellStatus.EMPTY;}// cell.freq=0;}
-                    else
+                    if (value.equals("") || value.equals("-")){ cell.status = CellStatus.EMPTY; break;}// cell.freq=0;}
                     try{cell.freq = StrUtils.toInteger(value);} catch(Exception ex)
                       {throw new ArgusException (ex.getMessage());}
                     break;
@@ -1155,7 +1154,7 @@ public class TableSet {
             if (nInconsistent > 0) {
                 SystemUtils.writeLogbook("" + nInconsistent + " inconsistencies found in cover table\n"
                         + "see als file Inconsistent.txt in the temp directory (" + Application.getTempDir() + ")");
-                logger.info("" + nInconsistent + " inconsistencies found in cover table\n"
+                LOGGER.info("" + nInconsistent + " inconsistencies found in cover table\n"
                         + "see als file Inconsistent.txt in the temp directory (" + Application.getTempDir() + ")");
             }
             if (nInconsistentSevere>0){throw new ArgusException(""+nInconsistentSevere+" severe inconsistencies found in the cover table\n"+

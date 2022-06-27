@@ -40,9 +40,9 @@ import tauargus.utils.TauArgusUtils;
 
 public class TableService {
     
-    private static final Logger logger = Logger.getLogger(TableService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TableService.class.getName());
     
-    private static TauArgus tauArgus = Application.getTauArgusDll();
+    private static final TauArgus TAUARGUS = Application.getTauArgusDll();
 
 // anco 1.6
 //    static ArrayList<TableSet> tables = new ArrayList<>();
@@ -85,7 +85,7 @@ public class TableService {
     
     public static void undoSuppress(int index){
         TableSet tableSet = getTable(index);   
-        tauArgus.UndoSecondarySuppress(tableSet.index, 1);
+        TAUARGUS.UndoSecondarySuppress(tableSet.index, 1);
         tableSet.suppressed = TableSet.SUP_NO;
         tableSet.solverUsed = Application.SOLVER_NO; 
         tableSet.ghMiterMessage = "";
@@ -182,7 +182,7 @@ public class TableService {
                                 Application.addVariable(variable);
                                 tableSet1.expVar.set(k, variable);
                             } catch (CloneNotSupportedException ex) {
-                                logger.log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             }
                         }
                     }
@@ -194,7 +194,7 @@ public class TableService {
             TableSet tableSet = TableService.getTable(i);
             StringBuilder s = new StringBuilder();
             s.append("Table ").append(i).append(": ").append(tableSet.toString());
-            logger.info(s.toString());
+            LOGGER.info(s.toString());
         }
 
         for (int i = 0; i < Application.numberOfVariables(); i++) {
@@ -219,7 +219,7 @@ public class TableService {
             }
         }
         try{
-            tauArgus.CleanAll();
+            TAUARGUS.CleanAll();
         }
         catch(Exception ex){
             throw new ArgusException("Something wrong:\n"+ex.getMessage());
@@ -230,13 +230,13 @@ public class TableService {
                 pcs.firePropertyChange("progressMain", null, percentage);
             }
         };
-        tauArgus.SetProgressListener(progressListener);
+        TAUARGUS.SetProgressListener(progressListener);
         
         if (metadata.dataFileType == Metadata.DATA_FILE_TYPE_FREE) {
-            tauArgus.SetInFileInfo(false, metadata.fieldSeparator);
+            TAUARGUS.SetInFileInfo(false, metadata.fieldSeparator);
         }
         else{ // Is this indeed in all other cases ????? PWOF 18-10-2016
-            tauArgus.SetInFileInfo(true, metadata.fieldSeparator);
+            TAUARGUS.SetInFileInfo(true, metadata.fieldSeparator);
         }
             
         TauArgusUtils.setVariables();
@@ -251,7 +251,7 @@ public class TableService {
 
             SpssUtilsTau.exportSpssData(metadata.dataFile);            
         }
-//        logger.log(Level.INFO, "Start explore file: {0}", s);
+//        LOGGER.log(Level.INFO, "Start explore file: {0}", s);
         batch.reportProgress("Start explore file: "+ s);
         // using arrays of size 1 for output parameters
 
@@ -260,14 +260,14 @@ public class TableService {
         int[] errorLine = new int[]{0};
         int[] errorVarIndex = new int[]{0};
         
-        if (!tauArgus.ExploreFile(s, errorCode, errorLine, errorVarIndex)) {
+        if (!TAUARGUS.ExploreFile(s, errorCode, errorLine, errorVarIndex)) {
             s = "";
             if (errorVarIndex[0] >= 0 && errorVarIndex[0] < Application.numberOfVariables()) {
                 s = "\nVariable: " + Application.getVariable(errorVarIndex[0]).name;
             }
-            throw new ArgusException("ExploreFile went wrong in line" + errorLine[0] + "\n" + StringUtils.strip(tauArgus.GetErrorString(errorCode[0])) + s);
+            throw new ArgusException("ExploreFile went wrong in line" + errorLine[0] + "\n" + StringUtils.strip(TAUARGUS.GetErrorString(errorCode[0])) + s);
         }
-        if (!tauArgus.SetNumberTab(TableService.numberOfTables())) {
+        if (!TAUARGUS.SetNumberTab(TableService.numberOfTables())) {
             throw new ArgusException("SetNumberTab went wrong");
         }
         for (int i = 0; i < TableService.numberOfTables(); i++) {
@@ -279,7 +279,7 @@ public class TableService {
             }
             int[] expVar = table.indicesOfExplanatoryVariables();
             int requestVariableIndex = metadata.indexOf(Type.REQUEST);
-            if (!tauArgus.SetTable(i, expVar.length, expVar, isFreq, table.indexOfResponseVariable(), ish, table.indexOfCostVariable(), 
+            if (!TAUARGUS.SetTable(i, expVar.length, expVar, isFreq, table.indexOfResponseVariable(), ish, table.indexOfCostVariable(), 
                                         table.indexOfCellKeyVariable(), table.respVar.CKMType, table.respVar.CKMTopK,
                                         table.lambda, table.maxScaleCost, requestVariableIndex, table.missingIsSafe)) {
                 throw new ArgusException("SetTable went wrong for table" + (i + 1));
@@ -297,7 +297,7 @@ public class TableService {
             if (frequencyMarge[0] < frequencyMarge[1] && table.holding && table.minFreq[1] > 0) {
                 frequencyMarge[0] = frequencyMarge[1];
             }
-            if (!tauArgus.SetTableSafety(i, table.domRule, table.domN, table.domK, table.pqRule, table.pqP, table.pqQ, table.pqN, 
+            if (!TAUARGUS.SetTableSafety(i, table.domRule, table.domN, table.domK, table.pqRule, table.pqP, table.pqQ, table.pqN, 
                                          minFreq, table.piepPercentage, table.piepMarge, table.piepMinFreq, isPiep, table.weighted, 
                                          table.weighted, table.holding, table.zeroUnsafe, false, 10, table.zeroRange, table.manualMarge, 
                                          frequencyMarge)) {
@@ -307,18 +307,18 @@ public class TableService {
         pcs.firePropertyChange("progressMain", null, 100);
         pcs.firePropertyChange("activityMain", null, "Computing tables...");
         pcs.firePropertyChange("progressMain", null, 0);
-//        logger.info("Start computing tables");
+//        LOGGER.info("Start computing tables");
 //        if (Application.batchType()==Application.BATCH_FROMMENU){Application.windowInfo.addText("Start computing tables");}
         batch.reportProgress("Start computing tables");
         int[] tableIndex = new int[]{0};
         for (int i = 0; i < TableService.numberOfTables(); i++) {
             tableIndex[0] = i;
-            if (!tauArgus.ComputeTables(errorCode, tableIndex)) {
-                throw new ArgusException("Error occurred when computing table" + (tableIndex[0] + 1) + tauArgus.GetErrorString(errorCode[0]));
+            if (!TAUARGUS.ComputeTables(errorCode, tableIndex)) {
+                throw new ArgusException("Error occurred when computing table" + (tableIndex[0] + 1) + TAUARGUS.GetErrorString(errorCode[0]));
             }
             else{
                 double[] xMaxTemp = new double[]{0.0};
-                double xMin = tauArgus.GetMinimumCellValue(i, xMaxTemp);
+                double xMin = TAUARGUS.GetMinimumCellValue(i, xMaxTemp);
                 double xMax = xMaxTemp[0];
                 if (xMax > 0){
                     xMax = 1.5 * xMax;}
@@ -341,7 +341,7 @@ public class TableService {
         // Moved upwards to fully deal with a table and write to logfile after each single table is dealt with
         /*for (int i = 0; i < TableService.numberOfTables(); i++) {
             double[] xMaxTemp = new double[]{0.0};
-            double xMin = tauArgus.GetMinimumCellValue(i, xMaxTemp);
+            double xMin = TAUARGUS.GetMinimumCellValue(i, xMaxTemp);
             double xMax = xMaxTemp[0];
             if (xMax > 0){
               xMax = 1.5 * xMax;}
@@ -359,7 +359,7 @@ public class TableService {
             tableSet.clearHistory();
         }*/
         pcs.firePropertyChange("progressMain", null, 100);
-        logger.info("Compute tables completed");
+        LOGGER.info("Compute tables completed");
         /*for(int i=0;i<TableService.numberOfTables();i++){
           SystemUtils.writeLogbook("Table: "+TableService.getTable(i).toString()  +" has been specified");
         }*/
@@ -393,16 +393,16 @@ public class TableService {
         Application.setVariables();
 
         try {
-            tauArgus.CleanAll();
+            TAUARGUS.CleanAll();
             TauArgusUtils.setVariables();
-            tauArgus.ThroughTable();
-            tauArgus.SetNumberTab(tables.size());
+            TAUARGUS.ThroughTable();
+            TAUARGUS.SetNumberTab(tables.size());
             for (TableSet table : tables) {
                 table.read(propertyChangeSupport);
             }
         }
         catch (Exception ex) {
-            tauArgus.CleanAll();
+            TAUARGUS.CleanAll();
             throw ex;
         }
    }
@@ -418,7 +418,7 @@ public class TableService {
         i1 = c;
         for (i=0;i<ne-1;i++){
           j = tableSet.expVar.get(i+1).index;                    
-          tauArgus.GetVarNumberOfCodes(j, n, something);
+          TAUARGUS.GetVarNumberOfCodes(j, n, something);
           nc[i]=n[0];
         }
         nc[ne-1]=1;
@@ -428,7 +428,7 @@ public class TableService {
         }
         for(i=0;i<ne;i++){
           j = tableSet.expVar.get(i).index;                    
-          tauArgus.GetVarCode(j, c1[i], ct, codeString, isMissing, level);
+          TAUARGUS.GetVarCode(j, c1[i], ct, codeString, isMissing, level);
           if (codeString[0].equals("")){codeString[0] = "Total";}
           hs = hs + codeString[0] + ",";
            //GetVarCode(int VarIndex, int CodeIndex, int[] CodeType, String[] CodeString, int[] IsMissing, int[] Level)

@@ -57,9 +57,9 @@ public class batch {
     static Tokenizer tokenizer;
     private static String batchDataPath = "";
     private static String batchFilePath = "";
-    private static final TauArgus tauArgus = Application.getTauArgusDll();    
+    private static final TauArgus TAUARGUS = Application.getTauArgusDll();    
         
-    private static final Logger logger = Logger.getLogger(PanelTable.class.getName());        
+    private static final Logger LOGGER = Logger.getLogger(PanelTable.class.getName());        
        
 /**
  * Writes progress info both to the progress window and the logbook
@@ -143,7 +143,7 @@ public class batch {
             Application.openInfoWindow(true);           
             Application.windowInfo.addLabel("Progress of the batch proces");
         }    
-        tauArgus.CleanAll();
+        TAUARGUS.CleanAll();
         clearMetadatas();
         clearVariables();
         try{
@@ -214,7 +214,7 @@ public class batch {
                         break;
                     case ("<CLEAR>"):
                         TableService.clearTables();
-                        tauArgus.CleanAll();
+                        TAUARGUS.CleanAll();
                         clearMetadatas();
                         clearVariables();
                         status = 0;
@@ -558,7 +558,7 @@ public class batch {
                     token = nextToken(tail);
                     tableset.maxHitasTime = Integer.parseInt(token);
                     Application.generalMaxHitasTime = tableset.maxHitasTime;
-                    // The generalMAxHitasTime is used in the runModular procedure.
+                    // The generalMAxHitasTime is used in the RunModular procedure.
                     token = nextChar(tail); 
                 }
                 i=0;
@@ -586,7 +586,7 @@ public class batch {
                     }
                     try{ // Make sure that PropertyChanges are not processed in batch-mode by overriding propertyChange to do nothing
                         if (Application.batchType() == Application.BATCH_COMMANDLINE){  
-                            OptiSuppress.runModular(tableset, new PropertyChangeListener(){
+                            OptiSuppress.RunModular(tableset, new PropertyChangeListener(){
                                 @Override
                                 public void propertyChange(PropertyChangeEvent evt){ }});
                             reportProgressInfo("The modular procedure has been applied\n" + 
@@ -597,7 +597,7 @@ public class batch {
                                 @Override
                                 protected Integer doInBackground() throws ArgusException, Exception{
                                     super.doInBackground();
-                                    OptiSuppress.runModular(tableset, getPropertyChangeListener());
+                                    OptiSuppress.RunModular(tableset, getPropertyChangeListener());
                                     reportProgressInfo("The modular procedure has been applied\n" + 
                                                         tableset.CountSecondaries() + " cells have been suppressed");
                                     return null;
@@ -608,8 +608,8 @@ public class batch {
                                     try{
                                         get();
                                         tableset.undoAudit();
-                                    }
-                                    catch (InterruptedException ex) {logger.log(Level.SEVERE, null, ex);} 
+                                    } 
+                                    catch (InterruptedException ex) {LOGGER.log(Level.SEVERE, null, ex);} 
                                     catch (ExecutionException ex) {JOptionPane.showMessageDialog(null, ex.getCause().getMessage());}
                                 }
                             };
@@ -636,7 +636,7 @@ public class batch {
                 
                 if (Application.batchType() == Application.BATCH_COMMANDLINE){  
                     try{
-                        OptiSuppress.runOptimal(tableset, new PropertyChangeListener(){
+                        OptiSuppress.RunOptimal(tableset, new PropertyChangeListener(){
                             @Override 
                             public void propertyChange(PropertyChangeEvent evt){} }, false, false, 1);
                     }catch (IOException ex) {}
@@ -647,7 +647,7 @@ public class batch {
                         protected Integer doInBackground() throws ArgusException, Exception{
                             super.doInBackground(); 
                             try{
-                                OptiSuppress.runOptimal(tableset, new PropertyChangeListener(){
+                                OptiSuppress.RunOptimal(tableset, new PropertyChangeListener(){
                                     @Override
                                     public void propertyChange(PropertyChangeEvent evt){} }, false, false, 1);
                             }
@@ -658,8 +658,8 @@ public class batch {
                         @Override
                         protected void done(){
                             super.done();
-                            try{ get(); }
-                            catch (InterruptedException ex) { logger.log(Level.SEVERE, null, ex); } 
+                            try{ get(); } 
+                            catch (InterruptedException ex) { LOGGER.log(Level.SEVERE, null, ex); } 
                             catch (ExecutionException ex) { JOptionPane.showMessageDialog(null, ex.getCause().getMessage()); }
                         }
                     };
@@ -750,7 +750,7 @@ public class batch {
                 // all parameters have been handeled. Run the rounder.
                 if (Application.batchType() == Application.BATCH_COMMANDLINE){
                     try{
-                        OptiSuppress.runRounder(tableset, new PropertyChangeListener(){
+                        OptiSuppress.RunRounder(tableset, new PropertyChangeListener(){
                                                                     @Override
                                                                     public void propertyChange(PropertyChangeEvent evt){}
                                                                 });
@@ -763,7 +763,7 @@ public class batch {
                     protected Integer doInBackground() throws ArgusException, Exception{
                         super.doInBackground(); 
                         try{
-                            OptiSuppress.runRounder(tableset, new PropertyChangeListener(){
+                            OptiSuppress.RunRounder(tableset, new PropertyChangeListener(){
                                                             @Override
                                                             public void propertyChange(PropertyChangeEvent evt){}
                                                         });
@@ -779,7 +779,7 @@ public class batch {
                             get();
                         }
                         catch (InterruptedException ex) {
-                            logger.log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                         } catch (ExecutionException ex) {
                             JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                         }

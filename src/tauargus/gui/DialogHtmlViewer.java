@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 public class DialogHtmlViewer extends DialogBase {
     
-    private static final Logger logger = Logger.getLogger(DialogHtmlViewer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DialogHtmlViewer.class.getName());
 
     public DialogHtmlViewer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -37,7 +37,7 @@ public class DialogHtmlViewer extends DialogBase {
             editorPaneHTML.setPage(url);   
  
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         setLocationRelativeTo(this.getParent());        
         setVisible(true);
@@ -119,7 +119,7 @@ public class DialogHtmlViewer extends DialogBase {
         try {
             editorPaneHTML.print();
         } catch (PrinterException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
@@ -140,13 +140,13 @@ public class DialogHtmlViewer extends DialogBase {
 //                }
 //            }
 //        } catch (ClassNotFoundException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (InstantiationException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        }
 //        //</editor-fold>
 //

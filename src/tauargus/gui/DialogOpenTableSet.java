@@ -19,7 +19,7 @@ package tauargus.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import tauargus.model.DataFilePair;
@@ -27,7 +27,7 @@ import tauargus.utils.TauArgusUtils;
 
 public class DialogOpenTableSet extends DialogBase {
 
-    private static final Logger logger = Logger.getLogger(DialogOpenTableSet.class.getName());
+    //private static final Logger LOGGER = Logger.getLogger(DialogOpenTableSet.class.getName());
 
     // ***** Dialog Return Values *****
     public static final int CANCEL_OPTION = 1;
@@ -228,13 +228,13 @@ public class DialogOpenTableSet extends DialogBase {
 //                }
 //            }
 //        } catch (ClassNotFoundException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (InstantiationException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        }
 //        //</editor-fold>
 //

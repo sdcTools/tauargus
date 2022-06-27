@@ -276,7 +276,7 @@ public class TauArgusUtils {
       }   
     }
     
-        public static int ShowWarningMessage(String WarningString){
+    public static int ShowWarningMessage(String WarningString){
         /* If interactive show a message
               if teh message is ignore: do nothing es raise an exception
            If Batch (both versions) write a message to the logfile*/

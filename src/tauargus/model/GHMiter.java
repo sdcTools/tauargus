@@ -44,11 +44,11 @@ import tauargus.utils.TauArgusUtils;
  *  * 
  */
 public class GHMiter {
-    // private TauArgus tauArgus;
-    private static final Logger logger = Logger.getLogger(GHMiter.class.getName());
+    // private TauArgus TAUARGUS;
+    private static final Logger LOGGER = Logger.getLogger(GHMiter.class.getName());
     private static String Token;
     //private TableSet tableSet; Not used?????
-    private static final TauArgus tauArgus = Application.getTauArgusDll();
+    private static final TauArgus TAUARGUS = Application.getTauArgusDll();
     private static DecimalFormat ghMiterDecimalFormat;
     public static boolean ShowProto002;
     
@@ -59,7 +59,7 @@ public class GHMiter {
 
         ghMiterDecimalFormat =  SystemUtils.getInternalDecimalFormat(tableSet.respVar.nDecimals);
         //WriteEingabe ;
-        Integer ReturnVal = tauArgus.WriteGHMITERDataCell(Application.getTempFile("EINGABE.TMP"), tableSet.index, false);
+        Integer ReturnVal = TAUARGUS.WriteGHMITERDataCell(Application.getTempFile("EINGABE.TMP"), tableSet.index, false);
         if (!(ReturnVal == 1)) { // Something wrong writing EINGABE
             throw new ArgusException( "Unable to write the file EINGABE for the Hypercube");
         }
@@ -100,7 +100,7 @@ public class GHMiter {
         
         testProto003(tableSet);
 
-        int OkeCode = tauArgus.SetSecondaryGHMITER(Application.getTempFile(ausgabe), tableSet.index, NSec, false);
+        int OkeCode = TAUARGUS.SetSecondaryGHMITER(Application.getTempFile(ausgabe), tableSet.index, NSec, false);
         //OkeCode = 4007;
         if (OkeCode == 4007){
             if (Application.isAnco()) tableSet.ghMiterMessage = "Some frozen/protected cells needed to be suppressed\n"; 
@@ -252,7 +252,7 @@ public class GHMiter {
             }
             out.close();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new ArgusException("A problem was encountered when preparing the file EINGABE");
         }
     }
@@ -365,7 +365,7 @@ public class GHMiter {
         // getting info on table-parameters
         HS = String.format(Locale.US,"%10.8f", X); // Using Locale.US to ensure the use decimalseparator = "."
         HS = HS + "  0.00";
-        Integer OkeCode = tauArgus.WriteGHMITERSteuer(Application.getTempFile("STEUER"+number), HS, HS1, TableNumber);
+        Integer OkeCode = TAUARGUS.WriteGHMITERSteuer(Application.getTempFile("STEUER"+number), HS, HS1, TableNumber);
         if (OkeCode != 1) {throw new ArgusException("Unable to write the file STEUER for the Hypercube");}
     }
     

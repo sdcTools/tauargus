@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Tokenizer {
 
-    private static final Logger logger = Logger.getLogger(Tokenizer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Tokenizer.class.getName());
     
     private BufferedReader reader;
     private String line;
@@ -49,7 +49,7 @@ public class Tokenizer {
             try {
                 line = reader.readLine();
             } catch (IOException ex) {
-                logger.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 line = null;
             }
             line = StringUtils.replaceChars(line, '\t', ' ');

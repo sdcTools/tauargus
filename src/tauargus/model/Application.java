@@ -40,12 +40,12 @@ import tauargus.service.TableService;
 
 public class Application {
 
-    private static final Logger logger = Logger.getLogger(Application.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
 
     // Version info
     public static final int MAJOR = 4;
-    public static final int MINOR = 3;
-    public static final String REVISION = "0";
+    public static final int MINOR = 2;
+    public static final String REVISION = "3";
     public static final int BUILD = 1;
     
     // Error codes returned by functions in TauArgusJava dll
@@ -62,7 +62,7 @@ public class Application {
     public static final int SOLVER_XPRESS = 1;
     public static final int SOLVER_CPLEX = 2;
     public static final int SOLVER_SOPLEX = 3;
-    private static final File manual = new File("TauManualV4.1.pdf");
+    private static final File MANUAL = new File("TauManualV4.1.pdf");
     private static Process helpViewerProcess;
 
     // for interfacing with C++ dll
@@ -222,7 +222,7 @@ public class Application {
     public static void showHelp(String namedDest) throws ArgusException {
         ArrayList<String> args = new ArrayList<>();
         args.add("-loadfile");
-        args.add(manual.getAbsolutePath());
+        args.add(MANUAL.getAbsolutePath());
         if (namedDest != null) {
             args.add("-nameddest");
             args.add(namedDest);
@@ -408,21 +408,28 @@ public class Application {
 // Anco 1.6            
 //        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
         } catch (ClassNotFoundException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
           catch (InstantiationException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
           catch (IllegalAccessException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
           catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         //Locale.setDefault(Locale.US);
         //try{manualPath = SystemUtils.getApplicationDirectory(Application.class).getCanonicalPath();}
         //catch (IOException ex){};
         //manualPath = manualPath +"/tauManual.pdf";
-        try{manualPath = manual.getPath();}
+        try{manualPath = MANUAL.getPath();}
         catch (Exception ex){}
         
         SystemUtils.setRegistryRoot("tauargus/");

@@ -22,16 +22,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import tauargus.model.Application;
 
 public class DialogAbout extends DialogBase {
 
-    private static final Logger logger = Logger.getLogger(DialogAbout.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DialogAbout.class.getName());
 
     // Creates new form DialogAbout
     public DialogAbout(java.awt.Frame parent, boolean modal) {
@@ -224,13 +222,13 @@ public class DialogAbout extends DialogBase {
 //// Anco 1.6            
 ////        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
 //        } catch (ClassNotFoundException  ex) { 
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
 //          catch (InstantiationException ex) { 
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
 //          catch (IllegalAccessException  ex) { 
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
 //          catch ( javax.swing.UnsupportedLookAndFeelException ex) { 
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //            
 //        }
 //        //</editor-fold>

@@ -65,16 +65,16 @@ public class OptiSuppress {
     public static double JJZero, JJZero1, JJZero2, JJFeasTol, JJOptTol, JJMinViola, JJMaxSlack,CTATolerance;
     public static int JJInfinity, JJMaxColslp, JJMaxRowslp, JJMaxCutsPool, JJMaxCutsIter;
              
-    private static final String solverName[]={"NO","XPRESS", "CPLEX", "SCIP" }; 
-    private static final String dots = "....................";
-    private static final TauArgus tauArgus = Application.getTauArgusDll();    
-    private static final HiTaSCtrl tauHitas = Application.getTauHitasDll();
-    private static final RounderCtrl rounder = Application.getRounder();
+    private static final String[] SOLVERNAME={"NO","XPRESS", "CPLEX", "SCIP" }; 
+    private static final String DOTS = "....................";
+    private static final TauArgus TAUARGUS = Application.getTauArgusDll();    
+    private static final HiTaSCtrl TAUHITAS = Application.getTauHitasDll();
+    private static final RounderCtrl TAUROUNDER = Application.getRounder();
     
     private static int UB, LB, TimeSoFar, nSuppressed;
     private static double DUB, DLB, Diff;
     private static BufferedWriter out;
-    private static final Logger logger = Logger.getLogger(OptiSuppress.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(OptiSuppress.class.getName());
     
     public static void loadJJParamFromRegistry(){
         //Initialize the JJ-parameters first, then get them from the registry.
@@ -116,18 +116,18 @@ public class OptiSuppress {
     }
     
     private static void setJJParamIntauHitas(){
-      tauHitas.SetJJconstantsDbl(101, JJZero);
-      tauHitas.SetJJconstantsDbl(102, JJZero1);
-      tauHitas.SetJJconstantsDbl(103, JJZero2);
-      tauHitas.SetJJconstantsDbl(104, JJInfinity);
-      tauHitas.SetJJconstantsInt(105, JJMaxColslp);
-      tauHitas.SetJJconstantsInt(106, JJMaxRowslp);
-      tauHitas.SetJJconstantsInt(107, JJMaxCutsPool);
-      tauHitas.SetJJconstantsInt(108, JJMaxCutsIter);
-      tauHitas.SetJJconstantsDbl(109, JJMinViola);
-      tauHitas.SetJJconstantsDbl(110, JJMaxSlack);
-      tauHitas.SetJJconstantsDbl(111, JJFeasTol);
-      tauHitas.SetJJconstantsDbl(112, JJOptTol);
+      TAUHITAS.SetJJconstantsDbl(101, JJZero);
+      TAUHITAS.SetJJconstantsDbl(102, JJZero1);
+      TAUHITAS.SetJJconstantsDbl(103, JJZero2);
+      TAUHITAS.SetJJconstantsDbl(104, JJInfinity);
+      TAUHITAS.SetJJconstantsInt(105, JJMaxColslp);
+      TAUHITAS.SetJJconstantsInt(106, JJMaxRowslp);
+      TAUHITAS.SetJJconstantsInt(107, JJMaxCutsPool);
+      TAUHITAS.SetJJconstantsInt(108, JJMaxCutsIter);
+      TAUHITAS.SetJJconstantsDbl(109, JJMinViola);
+      TAUHITAS.SetJJconstantsDbl(110, JJMaxSlack);
+      TAUHITAS.SetJJconstantsDbl(111, JJFeasTol);
+      TAUHITAS.SetJJconstantsDbl(112, JJOptTol);
   
 //From hitas header file:      
 //#define JJZERO          101
@@ -177,7 +177,7 @@ public class OptiSuppress {
         Date startDate = new Date();  
         String temp = Application.getTempDir();
         SystemUtils.writeLogbook("Start of Network protecton procedure");   
-        if (!tauArgus.WriteHierarchicalTableInAMPLFormat(Application.getTempFile("NetInH.tmp"), temp, tableSet.index, ms, errorCode)){
+        if (!TAUARGUS.WriteHierarchicalTableInAMPLFormat(Application.getTempFile("NetInH.tmp"), temp, tableSet.index, ms, errorCode)){
             throw new ArgusException("Error preparing intermediate file\n" + 
                                      "for the hierarchical network solution (" + errorCode[0] + ")");
         }
@@ -206,11 +206,11 @@ public class OptiSuppress {
        result = ExecUtils.execCommand(commandline, Application.getTempDir(),false,"Run Network program");
        if (result != 0) { //something wrong
          if ((result >= -6) && (result < 0 )){
-             throw new ArgusException(tauArgus.GetErrorString(4500 - result));
+             throw new ArgusException(TAUARGUS.GetErrorString(4500 - result));
          }
          throw new ArgusException("Error occurred running the 1H2D Network solution (code = " + result + ")");    
        }    
-       if (!tauArgus.SetSecondaryFromHierarchicalAMPL( Application.getTempFile("sec_1H2D.out"), tableSet.index, errorCode)){
+       if (!TAUARGUS.SetSecondaryFromHierarchicalAMPL( Application.getTempFile("sec_1H2D.out"), tableSet.index, errorCode)){
         throw new ArgusException("Error occurred while reading the results of network; code (" + errorCode[0] + ")");     
        }
        tableSet.suppressed =  TableSet.SUP_NETWORK;  
@@ -312,7 +312,7 @@ public class OptiSuppress {
                 lpl = Double.parseDouble(tokenizer.nextField(";"));
                 upl = Double.parseDouble(tokenizer.nextField(";"));
                 cVal = Double.parseDouble(tokenizer.nextField(";"));
-                oke = tauArgus.SetRealizedLowerAndUpper(tabNo, cn, upl, lpl);
+                oke = TAUARGUS.SetRealizedLowerAndUpper(tabNo, cn, upl, lpl);
                 if(!oke){throw new ArgusException("An error has occurred when reading the audit results for cell: "+cn);}
                 if (tokenizer.getLine().equals("u;1")){
                     lineNumber++;
@@ -379,12 +379,12 @@ public class OptiSuppress {
             for(i=0;i<solverNames.length;i++){TauArgusUtils.DeleteFile(Application.getTempFile("CTA_"+solverNames[i]+".sol"));}
         }
         if (SystemUtils.isWindows()){
-            if (doExpert){command = "\"" + command + "/CTA/GUICTA.exe\"";}
-            else         {command = "\"" + command + "/CTA/mainCTA.exe\"";}
+            if (doExpert){command = "\"" + command + "/GUICTA.exe\"";}
+            else         {command = "\"" + command + "/mainCTA.exe\"";}
         }
         else{ // For the moment this is assumed to be Linux
-            if (doExpert){command = "\"" + command + "/CTA/GUICTA\"";}
-            else         {command = "\"" + command + "/CTA/main_CTA\"";}
+            if (doExpert){command = "\"" + command + "/GUICTA\"";}
+            else         {command = "\"" + command + "/main_CTA\"";}
         }   
         
         if (!TauArgusUtils.ExistFile(StrUtils.unQuote(command))){ throw new ArgusException("CTA-program could not be found");}
@@ -487,7 +487,7 @@ public class OptiSuppress {
                 orgVal = Double.parseDouble(tokenizer.nextToken());
                 ctaVal = Double.parseDouble(tokenizer.nextToken());
                 if (Math.abs(orgVal-ctaVal) < eps){ctaVal = orgVal;}
-                tauArgus.SetCTAValues(tabNo, cn, orgVal, ctaVal, nSec);
+                TAUARGUS.SetCTAValues(tabNo, cn, orgVal, ctaVal, nSec);
             }
             tokenizer.close();
         }
@@ -586,7 +586,7 @@ public class OptiSuppress {
     public static boolean rewriteHitasv(int expVarNo, int VarNo ) throws ArgusException {
         int i, n, l; 
         String hs;
-        char dot = dots.charAt(0);
+        char dot = DOTS.charAt(0);
         hs = "hitasv" + Integer.toString(VarNo+1);
         File fileKlad = new File(Application.getTempFile(hs+".kld"));
         File fileHitasVtxt = new File(Application.getTempFile(hs+".txt"));
@@ -603,7 +603,7 @@ public class OptiSuppress {
                 while ( (i<l) && (hs.charAt(i) == dot)) {i++;}
                 hs = hs.substring(i);
                 hs = hs.replace (".", "_");
-                hs = dots.substring(0, i) + hs;
+                hs = DOTS.substring(0, i) + hs;
                 out2.write(hs);
                 out2.newLine();
             }
@@ -618,7 +618,7 @@ public class OptiSuppress {
         return true;
     }
     
-    public static boolean runModular(TableSet tableSet, final PropertyChangeListener propertyChangeListener) throws ArgusException, FileNotFoundException, IOException{
+    public static boolean RunModular(TableSet tableSet, final PropertyChangeListener propertyChangeListener) throws ArgusException, FileNotFoundException, IOException{
         boolean Oke; 
         int i, returnValue; 
         String hs; 
@@ -636,7 +636,7 @@ public class OptiSuppress {
                 pcs.firePropertyChange("progressDetail", null, percentage);
             }
         };
-        tauHitas.SetProgressListener(progressListener);
+        TAUHITAS.SetProgressListener(progressListener);
         pcs.firePropertyChange("activityMain", null, "Groups");
         pcs.firePropertyChange("progressMain", null, 0);
         pcs.firePropertyChange("activityDetail", null, "Tables");
@@ -685,10 +685,10 @@ public class OptiSuppress {
         }
 
     
-        Oke = tauArgus.PrepareHITAS(tableSet.index, Application.getTempFile("NPF.txt"), Application.getTempFile("NFS.txt"), Application.getTempDir()+"/");
+        Oke = TAUARGUS.PrepareHITAS(tableSet.index, Application.getTempFile("NPF.txt"), Application.getTempFile("NFS.txt"), Application.getTempDir()+"/");
         if (!Oke){throw new ArgusException("An unknown error occurred when preparing the files for Modular");} 
         // TestHitasFiles; check for a bogus at the top level
-        // rewrite hitasv?.txt here again without dots in the codes
+        // rewrite hitasv?.txt here again without DOTS in the codes
         // Note that this procedure will faill if the code starts with a dot!!!!
         // Ideally this is coorrected in the TauArgus dll itself
         for(i=0;i<tableSet.expVar.size();i++){
@@ -752,16 +752,16 @@ public class OptiSuppress {
         
         tableSet.maxHitasTime = Application.generalMaxHitasTime;
  
-        tauHitas.SetDebugMode(Application.SaveDebugHiTaS);
+        TAUHITAS.SetDebugMode(Application.SaveDebugHiTaS);
    
         loadJJParamFromRegistry();
         setJJParamIntauHitas();
       
-        returnValue = tauHitas.AHiTaS(Application.getTempFile("NPF.txt"), Application.getTempFile("NFS.txt"), tableSet.maxHitasTime, 
-                                        hs, Application.getTempDir()+"/", solverName[Application.solverSelected], 
+        returnValue = TAUHITAS.AHiTaS(Application.getTempFile("NPF.txt"), Application.getTempFile("NFS.txt"), tableSet.maxHitasTime, 
+                                        hs, Application.getTempDir()+"/", SOLVERNAME[Application.solverSelected], 
                                         tableSet.singletonSingletonCheck, tableSet.singletonMultipleCheck, tableSet.minFreqCheck);
         if (returnValue > 0) {        
-            hs = tauHitas.GetErrorString(returnValue);
+            hs = TAUHITAS.GetErrorString(returnValue);
             //XPRESS or CPLEX or SCIP
             //if (returnValue != 0) {throw new ArgusException ("Error in modular suppression procedure\n" + hs);}
             throw new ArgusException ("Error in modular suppression procedure\n" + hs);
@@ -775,7 +775,7 @@ public class OptiSuppress {
         tableSet.processingTime = (int) diff;
         SystemUtils.writeLogbook("End of modular protection. Time used "+ diff+ " seconds\n" + 
                                  "Number of suppressions: " +tableSet.nSecond); 
-        tauHitas.SetProgressListener(null);
+        TAUHITAS.SetProgressListener(null);
         pcs.removePropertyChangeListener(propertyChangeListener);
         return true;
     }
@@ -801,7 +801,7 @@ public class OptiSuppress {
         boolean oke;
         File fileSecondaries = new File(Application.getTempFile("hitassec.txt"));
         if (! fileSecondaries.exists() ) {throw new ArgusException("Error in modular;\nNo outputfile found");}
-        oke = tauArgus.SetSecondaryHITAS(tableSet.index , nSecondaries);
+        oke = TAUARGUS.SetSecondaryHITAS(tableSet.index , nSecondaries);
         tableSet.nSecond = nSecondaries[0];
         tableSet.suppressed = TableSet.SUP_HITAS;
         tableSet.solverUsed = Application.solverSelected;
@@ -909,7 +909,7 @@ public class OptiSuppress {
         catch (Exception ex){}
     }
     
-    public static void runUWE(TableSet tableSet)throws ArgusException, IOException{
+    public static void RunUWE(TableSet tableSet)throws ArgusException, IOException{
         String hs;
         int[] nSec = new int[1];
         ArrayList<String> commandline = new ArrayList<>();
@@ -970,7 +970,7 @@ public class OptiSuppress {
         }
         in.close(); out2.close();
       
-        result = tauArgus.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("s1.txt"), false, nSec);
+        result = TAUARGUS.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("s1.txt"), false, nSec);
 
         tableSet.nSecond = nSec[0];
         Date endDate = new Date();
@@ -984,11 +984,11 @@ public class OptiSuppress {
   
     /**
     * Calls the JJ-Rounder for the tableSet.\n
-    * First writes a JJ file, using SaveTable.writeJJ\n
-    * Checks a bit the JJ file and optionally replaces the weight/cost to unity, using correctRoundJJ\n
-    * If required it will partitionate the JJ-file in smaller pieces using splitJJ,  
-    * using the first spanning variable as the blocking variable.\n
-    * Then the JJ rounder is called and the result is given back to the engine.
+ First writes a JJ file, using SaveTable.writeJJ\n
+ Checks a bit the JJ file and optionally replaces the weight/cost to unity, using correctRoundJJ\n
+ If required it will partitionate the JJ-file in smaller pieces using splitJJ,  
+ using the first spanning variable as the blocking variable.\n
+ Then the JJ TAUROUNDER is called and the result is given back to the engine.
     * 
     * @param tableSet
     * @param propertyChangeListener
@@ -996,7 +996,7 @@ public class OptiSuppress {
     * @throws IOException 
     */
     
-    public static void runRounder(TableSet tableSet, final PropertyChangeListener propertyChangeListener) throws ArgusException, IOException{
+    public static void RunRounder(TableSet tableSet, final PropertyChangeListener propertyChangeListener) throws ArgusException, IOException{
         DialogStopTime rdialog = new DialogStopTime(null,true);
         RCallback jRCallback = new RCallback(){
             @Override
@@ -1043,8 +1043,8 @@ public class OptiSuppress {
                 pcs.firePropertyChange("closed", null, val);
             }            
         };
-        rounder.SetProgressListener(progressListener);
-        rounder.SetCallback(jRCallback);
+        TAUROUNDER.SetProgressListener(progressListener);
+        TAUROUNDER.SetCallback(jRCallback);
         
         //TODO test on MaxTableValue
         Date startDate = new Date();
@@ -1075,13 +1075,13 @@ public class OptiSuppress {
              #define JJMAXTIME	105
             */
             double jjRoundZero = SystemUtils.getRegDouble("optimal", "jjRoundZero", 0.0000001);
-            rounder.SetDoubleConstant(101, jjRoundZero);
+            TAUROUNDER.SetDoubleConstant(101, jjRoundZero);
             double jjRoundInf = SystemUtils.getRegDouble("optimal", "jjRoundInf", 21400000000000.0);
-            rounder.SetDoubleConstant(102, jjRoundInf);
+            TAUROUNDER.SetDoubleConstant(102, jjRoundInf);
             double jjRoundMinViola = SystemUtils.getRegDouble("optimal", "jjRoundMinViola", 0.0001);
-            rounder.SetDoubleConstant(103, jjRoundMinViola);
+            TAUROUNDER.SetDoubleConstant(103, jjRoundMinViola);
             double jjRoundMaxSlack = SystemUtils.getRegDouble("optimal", "jjRoundMaxSlack", 0.01);
-            rounder.SetDoubleConstant(104, jjRoundMaxSlack);               
+            TAUROUNDER.SetDoubleConstant(104, jjRoundMaxSlack);               
 
             double X = tableSet.roundBase;
             solutionString = "";
@@ -1115,7 +1115,7 @@ public class OptiSuppress {
                     TauArgusUtils.DeleteFile(Application.getTempFile("JJ"+xs+".OUT.RAPID"));
                     TauArgusUtils.DeleteFile(Application.getTempFile("JJRound"+xs+".OUT"));
                     TauArgusUtils.DeleteFile(Application.getTempFile("JJStat"+xs+".OUT"));
-                    result = rounder.DoRound(Solvername, Application.getTempFile("JJ"+xs+".IN"), X, upperBound, lowerBound, 0,  
+                    result = TAUROUNDER.DoRound(Solvername, Application.getTempFile("JJ"+xs+".IN"), X, upperBound, lowerBound, 0,  
                                               Application.getTempFile("JJ"+xs+".OUT"), 
                                               Application.getTempFile("JJstat"+xs+".OUT"),
                                               LicenceFile, 
@@ -1125,8 +1125,8 @@ public class OptiSuppress {
                                                maxJump, numberJump , usedTime, errorCode); //, activityListener );
                     // Only Optimal is implemented currently, so set manually solutionType = 0;
                     solutionType = 0; 
-                    //if (solutionType > 2) {throw new ArgusException("Rounding error code = "+tauArgus.GetErrorString(errorCode[0]) + "\noccured in subtable "+j);}             
-                    if (result > 0) {throw new ArgusException("Rounding error code = "+tauArgus.GetErrorString(errorCode[0]) + "\noccured in subtable "+j);}
+                    //if (solutionType > 2) {throw new ArgusException("Rounding error code = "+TAUARGUS.GetErrorString(errorCode[0]) + "\noccured in subtable "+j);}             
+                    if (result > 0) {throw new ArgusException("Rounding error code = "+TAUARGUS.GetErrorString(errorCode[0]) + "\noccured in subtable "+j);}
                     tableSet.roundMaxJump = Math.max(tableSet.roundMaxJump, maxJump[0]);
                     tableSet.roundJumps = Math.max(tableSet.roundJumps,numberJump[0]);
                     if (maxJump[0] > tableSet.roundMaxJump){tableSet.roundMaxJump = maxJump[0];}
@@ -1158,7 +1158,7 @@ public class OptiSuppress {
                 joinRounded(tableSet,nPart);
             }
             else{ // round as a single table
-                result = rounder.DoRound(Solvername, Application.getTempFile("JJ.IN"), X, upperBound, lowerBound, 0,  
+                result = TAUROUNDER.DoRound(Solvername, Application.getTempFile("JJ.IN"), X, upperBound, lowerBound, 0,  
                                           Application.getTempFile("JJ.OUT"), 
                                           Application.getTempFile("JJstat.OUT"),
                                           LicenceFile,
@@ -1175,8 +1175,8 @@ public class OptiSuppress {
                         TauArgusUtils.renameFile(Application.getTempFile("JJRound.OUT.RAPID"),Application.getTempFile("JJRound.OUT"));
                     }
                 }                
-                //if (solutionType>2) {throw new ArgusException("Rounding error: "+tauArgus.GetErrorString(errorCode[0]));}  
-                if (result > 0) {throw new ArgusException("Rounding error: "+tauArgus.GetErrorString(errorCode[0]));}  
+                //if (solutionType>2) {throw new ArgusException("Rounding error: "+TAUARGUS.GetErrorString(errorCode[0]));}  
+                if (result > 0) {throw new ArgusException("Rounding error: "+TAUARGUS.GetErrorString(errorCode[0]));}  
                 tableSet.roundMaxJump = maxJump[0];
                 tableSet.roundJumps = numberJump[0];
                 tableSet.roundSolType[solutionType]++;             
@@ -1193,7 +1193,7 @@ public class OptiSuppress {
             diff = diff / 1000;
             tableSet.processingTime = (int)diff;  
 
-            tauArgus.SetRoundedResponse(Application.getTempFile("JJ.OUT"), tableSet.index);
+            TAUARGUS.SetRoundedResponse(Application.getTempFile("JJ.OUT"), tableSet.index);
             tableSet.roundedInfo = solutionString;
             tableSet.rounded = true;
             tableSet.suppressed = TableSet.SUP_ROUNDING;
@@ -1321,7 +1321,7 @@ public class OptiSuppress {
         try{
             in = new BufferedReader(new FileReader(Application.getTempFile("jj.in")));
             EV1 = tableSet.expVar.get(0);
-            tauArgus.GetVarNumberOfCodes (EV1.index, nc, nac);
+            TAUARGUS.GetVarNumberOfCodes (EV1.index, nc, nac);
             //deci = tableSet.respVar.nDecimals; Not used ????
             hs = in.readLine();
             hs = in.readLine();
@@ -1462,7 +1462,7 @@ public class OptiSuppress {
         catch (ArgusException ex){}
     }
 
-    public static void runOptimal(TableSet tableSet, final PropertyChangeListener propertyChangeListener, Boolean inverseWeight, Boolean externalJJFile, int maxTime) throws ArgusException, FileNotFoundException, IOException{
+    public static void RunOptimal(TableSet tableSet, final PropertyChangeListener propertyChangeListener, Boolean inverseWeight, Boolean externalJJFile, int maxTime) throws ArgusException, FileNotFoundException, IOException{
         DialogStopTime dialog = new DialogStopTime(null,true);    
         ICallback jCallback = new ICallback(){
             @Override
@@ -1527,13 +1527,13 @@ public class OptiSuppress {
                 nSuppressed = value;    
             }
         };
-        tauHitas.SetProgressListener(progressListener);
+        TAUHITAS.SetProgressListener(progressListener);
         pcs.firePropertyChange("label1", null, "Upper Bound:");
         pcs.firePropertyChange("label2", null, "Lower Bound:");
         pcs.firePropertyChange("label3", null, "Discrepancy:");
         pcs.firePropertyChange("label4", null, "Time used:");
            
-        tauHitas.SetCallback(jCallback);
+        TAUHITAS.SetCallback(jCallback);
          
         Date startDate = new Date();  
             
@@ -1551,16 +1551,16 @@ public class OptiSuppress {
 
         if (Application.solverSelected == Application.SOLVER_CPLEX) hs = TauArgusUtils.GetCplexLicenceFile();
         else hs ="";
-        tauHitas.SetDebugMode(Application.SaveDebugHiTaS);
+        TAUHITAS.SetDebugMode(Application.SaveDebugHiTaS);
         
         loadJJParamFromRegistry();
         setJJParamIntauHitas();
         
-        result = tauHitas.FullJJ(Application.getTempFile("JJ.IN"), Application.getTempFile("JJ.OUT"), 
-                                    maxTimeAllowed, hs, Application.getTempDir()+"/", solverName[Application.solverSelected]);
+        result = TAUHITAS.FullJJ(Application.getTempFile("JJ.IN"), Application.getTempFile("JJ.OUT"), 
+                                    maxTimeAllowed, hs, Application.getTempDir()+"/", SOLVERNAME[Application.solverSelected]);
         if (result > 1){
-            if (result == 8000 || result == 8001) {throw new ArgusException(tauArgus.GetErrorString(result));}
-            throw new ArgusException("No optimal solution found\n"+tauArgus.GetErrorString(result) +
+            if (result == 8000 || result == 8001) {throw new ArgusException(TAUARGUS.GetErrorString(result));}
+            throw new ArgusException("No optimal solution found\n"+TAUARGUS.GetErrorString(result) +
                                      "\nSee also file: " + Application.getTempFile("FullJJ.log"));
         }
         try{ 
@@ -1581,7 +1581,7 @@ public class OptiSuppress {
             jCallback.delete();
         }
         if (externalJJFile){return;}
-        result = tauArgus.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("JJ2.OUT"), false, nSecondary);
+        result = TAUARGUS.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("JJ2.OUT"), false, nSecondary);
         tableSet.suppressINFO = ReadHitasINFO("fulljj.log");
         //TestTRivialSolution
         tableSet.nSecond = nSecondary[0];
@@ -1595,7 +1595,7 @@ public class OptiSuppress {
         tableSet.inverseWeight = inverseWeight;
         SystemUtils.writeLogbook("End of Optimal protection. Time used " + diff + " seconds\n" + 
                                  "Number of suppressions: " + tableSet.nSecond); 
-        tauHitas.SetProgressListener(null);
+        TAUHITAS.SetProgressListener(null);
         pcs.removePropertyChangeListener(propertyChangeListener);
     }
         
@@ -1606,7 +1606,7 @@ public class OptiSuppress {
             protected Integer doInBackground() throws ArgusException, Exception{
                 super.doInBackground(); 
                 try{
-                    OptiSuppress.runOptimal(null, new PropertyChangeListener(){
+                    OptiSuppress.RunOptimal(null, new PropertyChangeListener(){
                         @Override
                         public void propertyChange(PropertyChangeEvent evt){}
                     }, false, true, 1);
@@ -1620,8 +1620,8 @@ public class OptiSuppress {
                 super.done();
                 try{
                     get();
-                }
-                catch (InterruptedException ex) {logger.log(Level.SEVERE, null, ex);} 
+                } 
+                catch (InterruptedException ex) {LOGGER.log(Level.SEVERE, null, ex);} 
                 catch (ExecutionException ex) {JOptionPane.showMessageDialog(null, ex.getCause().getMessage());}
             }
         };
@@ -1686,7 +1686,7 @@ public class OptiSuppress {
         int result;
         Variable var = tableSet.respVar;
 
-        result = tauArgus.SetCellKeyValuesCont(tableSet.index, tableSet.cellkeyVar.metadata.getFilePath(PTableFileCont), 
+        result = TAUARGUS.SetCellKeyValuesCont(tableSet.index, tableSet.cellkeyVar.metadata.getFilePath(PTableFileCont), 
                                 var.CKMseparation ? tableSet.cellkeyVar.metadata.getFilePath(PTableFileSep) : "", 
                                 var.CKMType, var.CKMTopK, var.zerosincellkey, var.CKMapply_even_odd, var.CKMseparation, 
                                 var.CKMm1squared, var.CKMscaling, var.CKMsigma0, var.CKMsigma1, var.CKMxstar, var.CKMq, 
@@ -1719,7 +1719,7 @@ public class OptiSuppress {
         // Currently only reading ptable from file as given in metadata is possible
         long startTime = new Date().getTime();
         int getmin[]={0}, getmax[]={0};
-        int result = tauArgus.SetCellKeyValuesFreq(tableSet.index, tableSet.cellkeyVar.metadata.getFilePath(PTableFile), getmin, getmax);
+        int result = TAUARGUS.SetCellKeyValuesFreq(tableSet.index, tableSet.cellkeyVar.metadata.getFilePath(PTableFile), getmin, getmax);
         tableSet.minDiff = getmin[0];
         tableSet.maxDiff = getmax[0];
         

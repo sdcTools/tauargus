@@ -43,7 +43,7 @@ public class DialogSpecifyMetadata extends DialogBase {
     private Metadata metadata;
     private DefaultListModel<Variable> variableListModel; 
     private Variable previousSelectedVariable;
-    private static final Logger logger = Logger.getLogger(DialogSpecifyMetadata.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DialogSpecifyMetadata.class.getName());
 
     // ***** Dialog Return Values *****
     public static final int CANCEL_OPTION = 1;
@@ -64,7 +64,7 @@ public class DialogSpecifyMetadata extends DialogBase {
         try {
             this.metadata = (Metadata)metadata.clone();
         } catch (CloneNotSupportedException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         i=0;
         switch (metadata.dataFileType){

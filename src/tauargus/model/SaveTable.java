@@ -93,6 +93,9 @@ public class SaveTable {
         hs = hs + addOption ("FL",SaveTable.writeVarnamesOnFirstLine);
         hs = hs + addOption ("QU",SaveTable.writeEmbedQuotes);
         hs = hs + addOption ("TR",SaveTable.writeJJRemoveBogus);
+        hs = hs + addOption ("AO",SaveTable.writeCKMOriginalValues);
+        hs = hs + addOption ("AD",SaveTable.writeCKMDifferences);
+        hs = hs + addOption ("AC",SaveTable.writeCKMCellKeys);
         tableSet.safeFileOptions= hs;                
         
         switch (selectedFormat) {

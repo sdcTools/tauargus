@@ -17,7 +17,7 @@
 
 package tauargus.gui;
 
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import tauargus.model.TableSet;
 import tauargus.model.Variable;
@@ -29,7 +29,7 @@ public class DialogSelectRowColumn extends DialogBase {
     public static final int CANCEL_OPTION = 1;
     public static final int APPROVE_OPTION = 0;
 
-    private static final Logger logger = Logger.getLogger(DialogSelectRowColumn.class.getName());
+    //private static final Logger LOGGER = Logger.getLogger(DialogSelectRowColumn.class.getName());
     
     private int returnValue = CANCEL_OPTION;
 

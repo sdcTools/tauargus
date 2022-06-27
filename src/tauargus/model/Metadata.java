@@ -49,7 +49,7 @@ public class Metadata implements Cloneable {
     public static final int DATA_FILE_TYPE_FREE_WITH_META = 3;
     public static final int DATA_FILE_TYPE_SPSS = 4;
 
-    private static final Logger logger = Logger.getLogger(Metadata.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Metadata.class.getName());
     
     public int index;
     public int dataOrigin = DATA_ORIGIN_MICRO;
@@ -868,9 +868,9 @@ public class Metadata implements Cloneable {
         try {
             write(fileName, new BufferedWriter(new FileWriter(new File(fileName))));
           } catch (ArgusException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
           } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1123,7 +1123,7 @@ public class Metadata implements Cloneable {
     }
     
     public void setVariableLengthFromData(final PropertyChangeSupport propertyChangeSupport) throws ArgusException, IOException, FileNotFoundException { 
-        logger.info("Start reading data from file: " + dataFile);
+        LOGGER.info("Start reading data from file: " + dataFile);
         propertyChangeSupport.firePropertyChange("activityMain", null, "Determining length of variables from data file " + dataFile);
 
         for (Variable variable : variables) {

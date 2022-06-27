@@ -60,7 +60,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         return rootPane;
     }
     
-    private static final Logger logger = Logger.getLogger(DialogSpecifyMetadata.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DialogSpecifyMetadata.class.getName());
     
     // ***** Dialog Return Values *****
     public static final int CANCEL_OPTION = 1;
@@ -721,7 +721,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                     returnValue = APPROVE_OPTION;
                     setVisible(false);
                 } catch (InterruptedException ex) {
-                    logger.log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 } catch (ExecutionException ex) {
                     JOptionPane.showMessageDialog(DialogSpecifyTablesTabular.this, ex.getCause().getMessage() + "; something wrong");
                     if (TauArgusUtils.ExistFile(Application.getTempFile("additerr.txt"))){

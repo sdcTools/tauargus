@@ -29,7 +29,7 @@ import tauargus.utils.TauArgusUtils;
  */
 public class DialogChangePTable extends DialogBase{
 
-    private static final Logger logger = Logger.getLogger(DialogOpenMicrodata.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DialogOpenMicrodata.class.getName());
     
     public static final int CANCEL_OPTION = 1;
     public static final int APPROVE_OPTION = 0;

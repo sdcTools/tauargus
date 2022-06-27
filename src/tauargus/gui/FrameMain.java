@@ -53,7 +53,7 @@ import tauargus.utils.TauArgusUtils;
 
 public class FrameMain extends javax.swing.JFrame {
     
-    private static final Logger logger = Logger.getLogger(FrameMain.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FrameMain.class.getName());
     
     private TableSet currentTable = null;
       
@@ -880,7 +880,7 @@ public class FrameMain extends javax.swing.JFrame {
                         organise();    
                     }
                     catch (InterruptedException ex) {
-                        logger.log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                     } catch (ExecutionException ex) {
                         JOptionPane.showMessageDialog(null, ex.getCause().getMessage());
                     }

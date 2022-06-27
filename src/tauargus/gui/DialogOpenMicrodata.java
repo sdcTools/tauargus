@@ -20,7 +20,7 @@ package tauargus.gui;
 //import argus.model.SpssVariable;
 import argus.utils.SystemUtils;
 import java.io.File;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.io.FilenameUtils;
@@ -32,7 +32,7 @@ import tauargus.utils.TauArgusUtils;
 public class DialogOpenMicrodata extends DialogBase{
 
     private int returnValue = CANCEL_OPTION;
-    private static final Logger logger = Logger.getLogger(DialogOpenMicrodata.class.getName());
+//    private static final Logger LOGGER = Logger.getLogger(DialogOpenMicrodata.class.getName());
 
     // ***** Dialog Return Values *****
     public static final int CANCEL_OPTION = 1;
@@ -332,13 +332,13 @@ public class DialogOpenMicrodata extends DialogBase{
 //            // Anco 1.6
 ////        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
 //        } catch (ClassNotFoundException  ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
 //          catch (InstantiationException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
 //          catch (IllegalAccessException  ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);}
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);}
 //          catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//            LOGGER.log(java.util.logging.Level.SEVERE, null, ex);
 //        }
 //        //</editor-fold>
 //
