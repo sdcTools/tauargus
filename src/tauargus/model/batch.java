@@ -630,7 +630,7 @@ public class batch {
                 token = nextChar(tail);
                 if (token.equals(",")){
                     token = nextToken(tail);
-                    tableset.maxHitasTime = Integer.parseInt(token);
+                    tableset.maxTimeOptimal = Integer.parseInt(token);
                     token = nextChar(tail);    
                 }
                 
