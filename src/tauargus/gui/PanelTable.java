@@ -29,6 +29,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -40,6 +41,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -1892,7 +1894,13 @@ public class PanelTable extends javax.swing.JPanel {
                 }
                 break;
             case CTA:  //do CTA
-                final int i=JOptionPane.showConfirmDialog(parentFrame, "Do you prefer to use the expert version?", "Select CTA version", JOptionPane.YES_NO_CANCEL_OPTION);
+                //final int i=JOptionPane.showConfirmDialog(parentFrame, "Do you prefer to use the expert version?", "Select CTA version", JOptionPane.YES_NO_CANCEL_OPTION);
+                List<Object> options = new ArrayList<Object>();
+                options.add(UIManager.getString("OptionPane.yesButtonText"));
+                options.add(UIManager.getString("OptionPane.noButtonText"));
+                options.add(UIManager.getString("OptionPane.cancelButtonText"));
+                
+                final int i=JOptionPane.showOptionDialog(parentFrame, "Do you prefer to use the expert version?", "Select CTA version", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,null,options.toArray(),UIManager.getString("OptionPane.noButtonText"));
                 if ((i == JOptionPane.YES_OPTION)||(i == JOptionPane.NO_OPTION) ){
                     final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>(){
                         @Override 
