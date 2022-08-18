@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
 import tauargus.extern.dataengine.IProgressListener;
 import tauargus.extern.dataengine.TauArgus;
@@ -367,9 +368,10 @@ public class TableService {
     }
     
   
-    public static void addAdditivityParamBatch( int additParam){
+    public static void addAdditivityParamBatch( int additParam, boolean keepStatus){
             for (TableSet table : tables) {
                 table.additivity = additParam;
+                table.keepStatus = keepStatus;
             }
     }
     public static void readTables(PropertyChangeListener propertyChangeListener) throws ArgusException, FileNotFoundException, IOException {

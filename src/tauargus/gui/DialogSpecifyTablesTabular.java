@@ -208,7 +208,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         buttonGroupAdditivity.add(radioButtonAdditivityNone);
         radioButtonAdditivityNone.setText("Allow non-additivity");
 
-        checkBoxKeepStatus.setText("Keep original status");
+        checkBoxKeepStatus.setText("Keep given status");
         checkBoxKeepStatus.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 checkBoxKeepStatusItemStateChanged(evt);
@@ -236,7 +236,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                         .addComponent(labelFrequencyVar)
                         .addGap(15, 15, 15)
                         .addComponent(labelCostVar)
-                        .addGap(0, 18, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelVariablesLayout.createSequentialGroup()
                         .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelExpVar)
@@ -244,12 +244,13 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                                 .addComponent(scrollPaneExpVar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelVariablesLayout.createSequentialGroup()
+                                        .addGap(21, 21, 21)
+                                        .addComponent(checkBoxKeepStatus))
                                     .addComponent(radioButtonAdditivityForce)
                                     .addComponent(radioButtonAdditivityNone)
-                                    .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(checkBoxKeepStatus)
-                                        .addComponent(radioButtonAdditivityRecompute)))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(radioButtonAdditivityRecompute))))
+                        .addContainerGap(12, Short.MAX_VALUE))))
         );
         panelVariablesLayout.setVerticalGroup(
             panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,13 +261,13 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(scrollPaneExpVar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(panelVariablesLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 15, Short.MAX_VALUE)
                         .addComponent(radioButtonAdditivityForce)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(radioButtonAdditivityRecompute)
-                        .addGap(0, 0, 0)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(checkBoxKeepStatus)
-                        .addGap(0, 0, 0)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(radioButtonAdditivityNone)))
                 .addGap(7, 7, 7)
                 .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -557,7 +558,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(textFieldZeroMargin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(checkBoxZeroUnsafe))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addContainerGap(27, Short.MAX_VALUE))))
                     .addGroup(panelSafetyRulesLayout.createSequentialGroup()
                         .addComponent(labelManualSafetyRange)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -633,10 +634,12 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelVariables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(panelCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(4, 4, 4))
                     .addComponent(panelSafetyRules, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(buttonOk)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonCancel)))
@@ -986,6 +989,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
             table.additivity = TableSet.ADDITIVITY_CHECK;
         } else if (radioButtonAdditivityRecompute.isSelected()) {
             table.additivity = TableSet.ADDITIVITY_RECOMPUTE;
+            table.keepStatus = checkBoxKeepStatus.isSelected();
         } else if (radioButtonAdditivityNone.isSelected()) {
             table.additivity = TableSet.ADDITIVITY_NOT_REQUIRED;
         }

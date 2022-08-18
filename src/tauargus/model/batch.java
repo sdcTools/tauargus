@@ -232,14 +232,14 @@ public class batch {
                     case ("<READTABLE>"): 
                         if (status == 3) { throw new ArgusException ("TODO Add automatic Use Status"); }
                         if (status != 4){ throw new ArgusException ("This keyword (" + token + ") is not allowed in this position"); }
-                        token = tokenizer.nextToken();
-                        if (token.equals("")){token = "0";}
-                        if (!token.equals("0") && !token.equals("1") && !token.equals("2")) { 
-                            throw new ArgusException ("Illegal parameter (" + token + ") for ReadTable");}
-                        int computeTotals = 0;
-                        if ( token.equals("1")){computeTotals = 1;}
-                        if ( token.equals("2")){computeTotals = 2;}
-                        if (!readTablesBatch(computeTotals)) {throw new ArgusException ("Something wrong in readTablesBatch()");}
+//                        token = tokenizer.nextToken();
+//                        if (token.equals("")){token = "0";}
+//                        if (!token.equals("0") && !token.equals("1") && !token.equals("2")) { 
+//                            throw new ArgusException ("Illegal parameter (" + token + ") for ReadTable");}
+//                        int computeTotals = 0;
+//                        if ( token.equals("1")){computeTotals = 1;}
+//                        if ( token.equals("2")){computeTotals = 2;}
+                        if (!readTablesBatch()) {throw new ArgusException ("Something wrong in readTablesBatch()");}
                         reportProgress("Tables have been read");
                         break;
                     case ("<APRIORY>"): 
@@ -463,12 +463,31 @@ public class batch {
         SaveTable.writeReport(tableSet);
     }
     
-    static boolean readTablesBatch(int computeTotals)throws ArgusException{
+    static boolean readTablesBatch()throws ArgusException{
         try{
-            TableService.addAdditivityParamBatch(computeTotals);
+            String token, hs;
+            String[] tail = new String[1];
+            int additivity;
+            boolean keepStatus = false;
+            tail[0] = tokenizer.nextToken();
+            hs = nextChar(tail);
+            if (hs.equals("")){hs = "0";}
+            if (!hs.equals("0") && !hs.equals("1") && !hs.equals("2")) { 
+                throw new ArgusException ("Illegal parameter (" + hs + ") for ReadTable");}
+            additivity = Integer.parseInt(hs); // additivity will be 0, 1 or 2
+            if (!tail[0].equals("")){
+                hs = nextChar(tail);
+                if (hs.equals("T")) keepStatus = true;
+                else {
+                    if (hs.equals("F")) keepStatus = false;
+                    else throw new ArgusException("Invalid option " + hs + "\n");
+                }
+            }
+            
+            TableService.addAdditivityParamBatch(additivity, keepStatus);
             TableService.readTables(null);
         }catch (IOException ex){
-            throw new ArgusException ("\nError reading tables.");
+            throw new ArgusException ("\nError reading tables.\n"+ex.getMessage());
         }
         return true;
     }

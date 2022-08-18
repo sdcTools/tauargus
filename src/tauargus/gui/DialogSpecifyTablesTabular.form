@@ -41,11 +41,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="panelVariables" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelCost" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                   </Group>
                   <Component id="panelSafetyRules" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="buttonOk" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="buttonCancel" min="-2" max="-2" attributes="0"/>
@@ -112,7 +114,7 @@
                           <Component id="labelFrequencyVar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                           <Component id="labelCostVar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -121,16 +123,17 @@
                                   <Component id="scrollPaneExpVar" min="-2" pref="113" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
+                                          <Component id="checkBoxKeepStatus" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                       <Component id="radioButtonAdditivityForce" min="-2" max="-2" attributes="0"/>
                                       <Component id="radioButtonAdditivityNone" min="-2" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                          <Component id="checkBoxKeepStatus" min="-2" max="-2" attributes="0"/>
-                                          <Component id="radioButtonAdditivityRecompute" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="radioButtonAdditivityRecompute" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="12" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -146,13 +149,13 @@
                           <Component id="scrollPaneExpVar" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="15" max="32767" attributes="0"/>
                           <Component id="radioButtonAdditivityForce" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="radioButtonAdditivityRecompute" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="checkBoxKeepStatus" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="radioButtonAdditivityNone" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -255,7 +258,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="checkBoxKeepStatus">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Keep original status"/>
+            <Property name="text" type="java.lang.String" value="Keep given status"/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="checkBoxKeepStatusItemStateChanged"/>
@@ -490,7 +493,7 @@
                                       </Group>
                                       <Component id="checkBoxZeroUnsafe" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="27" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>

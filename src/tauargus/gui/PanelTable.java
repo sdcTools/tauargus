@@ -447,7 +447,7 @@ public class PanelTable extends javax.swing.JPanel {
         
         buttonCost.setVisible(tableSet.costFunc == TableSet.COST_VAR);
         isAdjusting = true;
-        comboBoxDecimals.setSelectedIndex(tableSet.respVar.nDecimals);
+        comboBoxDecimals.setSelectedIndex(Math.min(tableSet.respVar.nDecimals,comboBoxDecimals.getMaximumRowCount()));
         isAdjusting = false;
         Variable columnVar = null;
         if (!isSingleColumn) {columnVar = tableSet.expVar.get(1);}

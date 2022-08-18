@@ -220,6 +220,10 @@ public class TauArgus {
     return TauArgusJavaJNI.TauArgus_GetTableCellValue(swigCPtr, this, TableIndex, CellIndex, CellResponse);
   }
 
+  public boolean GetTableCellStatus(int TableIndex, int CellIndex, int[] CellStatus) {
+    return TauArgusJavaJNI.TauArgus_GetTableCellStatus(swigCPtr, this, TableIndex, CellIndex, CellStatus);
+  }
+
   public boolean GetTableCell(int TableIndex, int[] DimIndex, double[] CellResponse, double[] CellRoundedResp, double[] CellCTAResp, double[] CellCKMResp, double[] CellShadow, double[] CellCost, double[] CellKey, double[] CellKeyNoZeros, int[] CellFreq, int[] CellStatus, double[] CellMaxScore, double[] CellMaxScoreWeight, int[] HoldingFreq, double[] HoldingMaxScore, int[] HoldingNrPerMaxScore, double[] PeepCell, double[] PeepHolding, int[] PeepSortCell, int[] PeepSortHolding, double[] Lower, double[] Upper, double[] RealizedLower, double[] RealizedUpper) {
     return TauArgusJavaJNI.TauArgus_GetTableCell(swigCPtr, this, TableIndex, DimIndex, CellResponse, CellRoundedResp, CellCTAResp, CellCKMResp, CellShadow, CellCost, CellKey, CellKeyNoZeros, CellFreq, CellStatus, CellMaxScore, CellMaxScoreWeight, HoldingFreq, HoldingMaxScore, HoldingNrPerMaxScore, PeepCell, PeepHolding, PeepSortCell, PeepSortHolding, Lower, Upper, RealizedLower, RealizedUpper);
   }
@@ -249,7 +253,11 @@ public class TauArgus {
   }
 
   public boolean SetTableCellStatus(int TableIndex, int[] DimIndex, int CelStatus) {
-    return TauArgusJavaJNI.TauArgus_SetTableCellStatus(swigCPtr, this, TableIndex, DimIndex, CelStatus);
+    return TauArgusJavaJNI.TauArgus_SetTableCellStatus__SWIG_0(swigCPtr, this, TableIndex, DimIndex, CelStatus);
+  }
+
+  public boolean SetTableCellStatus(int TableIndex, int CellIndex, int CellStatus) {
+    return TauArgusJavaJNI.TauArgus_SetTableCellStatus__SWIG_1(swigCPtr, this, TableIndex, CellIndex, CellStatus);
   }
 
   public boolean UndoRecode(int VarIndex) {

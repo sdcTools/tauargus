@@ -86,6 +86,8 @@ public class TableSet {
     public static final int ADDITIVITY_CHECK = 0;
     public static final int ADDITIVITY_RECOMPUTE = 1;
     public static final int ADDITIVITY_NOT_REQUIRED = 2;
+    
+    public static final boolean KEEP_STATUS = false; // Default: do not keep status when recomputing additivity
 
     public static final int FILE_FORMAT_UNKNOWN = -1;
     public static final int FILE_FORMAT_CSV = 0;
@@ -241,6 +243,7 @@ public class TableSet {
     public int minDiff = 0;
     public int maxDiff = 0;
     public boolean computeTotals = false;
+    public boolean keepStatus = KEEP_STATUS;
     public boolean useStatusOnly = false;
     public int additivity = ADDITIVITY_CHECK;
     boolean negIsAbsolute = false;
@@ -1170,6 +1173,16 @@ public class TableSet {
         fileTxt.delete();
         this.isAdditive = true;
         //index
+        int[] StatusList = null;
+        if (computeTotals && keepStatus){
+        // Save status of all cells
+            int[] Status = new int[1];
+            StatusList = new int[this.numberOfCells()];
+            for (int nc=0;nc<this.numberOfCells();nc++){
+                tauArgus.GetTableCellStatus(this.index, nc, Status);
+                        StatusList[nc]=Status[0];
+            }
+        }
         if (!tauArgus.CompletedTable(index, errorCodeArr, fileNameJJ, computeTotals, setCalculatedTotalsAsSafe, Application.isProtectCoverTable())) {
             this.isAdditive = false;
             if (this.additivity == TableSet.ADDITIVITY_NOT_REQUIRED || Application.isProtectCoverTable()) {}
@@ -1179,6 +1192,13 @@ public class TableSet {
                     MakeAdditErrorList(index);
                     throw new ArgusException(tauArgus.GetErrorString(errorCodeArr[0]));
                 }
+            }
+        }
+        if (computeTotals && keepStatus){
+        // Reload status of all cells
+            if (StatusList == null) throw new ArgusException("Something went wrong in reloading cell status: StatusList = null\n");
+            for (int nc=0; nc<this.numberOfCells(); nc++) {
+                tauArgus.SetTableCellStatus(this.index, nc, StatusList[nc]);
             }
         }
 
