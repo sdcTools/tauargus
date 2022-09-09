@@ -32,8 +32,7 @@ public class ArgusException extends Exception {
     public ArgusException(String message, boolean critical) {
         super(message);
         this.critical = critical;
-        if (tauargus.model.Application.isBatch()) {SystemUtils.writeLogbook(message);
-        }
+        if (tauargus.model.Application.isBatch()) {SystemUtils.writeLogbook(message);}
     }
 
     public ArgusException(String message) {

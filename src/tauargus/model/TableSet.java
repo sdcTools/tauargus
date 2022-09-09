@@ -794,13 +794,20 @@ public class TableSet {
         int[] dimIndex = new int[expVar.size()];
         computeTotals = (additivity == TableSet.ADDITIVITY_RECOMPUTE);
         hasRealFreq = metadata.containsFrequencyVariable();
-        boolean continueBogusCovertable, Oke;
+        boolean continueBogusCovertable;
         int[][] bogusRange = new int[expVar.size()][2];
         int[] bogusIndex = new int[expVar.size()];
         int nDim, i;
 
         int[] varlist = indicesOfExplanatoryVariables();
-        Oke = TauArgusUtils.DeleteFile(Application.getTempFile("additerr.txt"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("AdditErr.txt"));
+        // start Added 26-08-2022
+        TauArgusUtils.DeleteFile(Application.getTempFile("AddErr.JJ"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("AddErr.JJ.frq"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("additerr.jj"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("additerr.jj.frq"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("JJklad.jj"));
+        // end Added 26-08-2022
         nDim = expVar.size();
         File[] files = SystemUtils.getFiles(metadata.dataFile);
         for (int f = 0; f < files.length; f++) {

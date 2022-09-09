@@ -245,18 +245,12 @@ public class TableService {
         pcs.firePropertyChange("progressMain", null, 0);
         String s = metadata.dataFile;
         if (metadata.dataFileType == Metadata.DATA_FILE_TYPE_SPSS) {
-//            File f = new File(System.getProperty("java.io.tmpdir"), "SPSSTemp.dat");
-//            File f = new File (Application.getTempFile("SPSSTemp.dat"));
-//            s = f.getPath();
             s = Application.getTempFile("SPSSTemp.dat");
-
             SpssUtilsTau.exportSpssData(metadata.dataFile);            
         }
-//        LOGGER.log(Level.INFO, "Start explore file: {0}", s);
         batch.reportProgress("Start explore file: "+ s);
-        // using arrays of size 1 for output parameters
-
         
+        // using arrays of size 1 for output parameters
         int[] errorCode = new int[]{0};
         int[] errorLine = new int[]{0};
         int[] errorVarIndex = new int[]{0};
@@ -308,8 +302,6 @@ public class TableService {
         pcs.firePropertyChange("progressMain", null, 100);
         pcs.firePropertyChange("activityMain", null, "Computing tables...");
         pcs.firePropertyChange("progressMain", null, 0);
-//        LOGGER.info("Start computing tables");
-//        if (Application.batchType()==Application.BATCH_FROMMENU){Application.windowInfo.addText("Start computing tables");}
         batch.reportProgress("Start computing tables");
         int[] tableIndex = new int[]{0};
         for (int i = 0; i < TableService.numberOfTables(); i++) {
@@ -339,31 +331,8 @@ public class TableService {
                 SystemUtils.writeLogbook("Table: "+TableService.getTable(i).toString()  +" has been specified");
             }
         } 
-        // Moved upwards to fully deal with a table and write to logfile after each single table is dealt with
-        /*for (int i = 0; i < TableService.numberOfTables(); i++) {
-            double[] xMaxTemp = new double[]{0.0};
-            double xMin = TAUARGUS.GetMinimumCellValue(i, xMaxTemp);
-            double xMax = xMaxTemp[0];
-            if (xMax > 0){
-              xMax = 1.5 * xMax;}
-            else {xMax = 0;}
-            if (xMin > 0) {
-                xMin = 0;
-            }
-            if (xMin < 0) {
-                xMin = 1.5 * xMin;
-            }
-            TableSet tableSet = TableService.getTable(i);
-            tableSet.maxTabVal = xMax;
-            tableSet.minTabVal = xMin;
-            tableSet.isAdditive = true;
-            tableSet.clearHistory();
-        }*/
         pcs.firePropertyChange("progressMain", null, 100);
         LOGGER.info("Compute tables completed");
-        /*for(int i=0;i<TableService.numberOfTables();i++){
-          SystemUtils.writeLogbook("Table: "+TableService.getTable(i).toString()  +" has been specified");
-        }*/
         SystemUtils.writeLogbook("Tables have been computed");        
     }
     
@@ -374,6 +343,7 @@ public class TableService {
                 table.keepStatus = keepStatus;
             }
     }
+    
     public static void readTables(PropertyChangeListener propertyChangeListener) throws ArgusException, FileNotFoundException, IOException {
         PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(TableService.class);
         propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);

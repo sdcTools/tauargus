@@ -140,7 +140,8 @@ public class batch {
         batchFilePath = TauArgusUtils.getFilePath(batchFile);
         firstCommand  = true; silent = false;
         if (Application.batchType() == Application.BATCH_FROMMENU) {
-            Application.openInfoWindow(true);           
+            Application.openInfoWindow(true);
+            Application.windowInfo.clearText(); // Start with an empty canvas, even when restarting a batchjob in same session
             Application.windowInfo.addLabel("Progress of the batch proces");
         }    
         TAUARGUS.CleanAll();
@@ -358,7 +359,12 @@ public class batch {
             else {SystemUtils.writeLogbook("Error in batch file");}
             return BATCH_NORMAL_ERROR;                  
         }
-        finally {if (Application.batchType()== Application.BATCH_FROMMENU){Application.openInfoWindow(false);}}
+        finally {
+            if (Application.batchType()== Application.BATCH_FROMMENU){
+                Application.openInfoWindow(false);
+                Application.setBatch(Application.BATCH_NOBATCH); // Makes sure you can use the menu afterwards
+            }
+        }
         return BATCH_OK;
     }
 
@@ -477,9 +483,9 @@ public class batch {
             additivity = Integer.parseInt(hs); // additivity will be 0, 1 or 2
             if (!tail[0].equals("")){
                 hs = nextChar(tail);
-                if (hs.equals("T")) keepStatus = true;
+                if (hs.equals("T")||hs.equals("t")) keepStatus = true;
                 else {
-                    if (hs.equals("F")) keepStatus = false;
+                    if (hs.equals("F")||hs.equals("f")) keepStatus = false;
                     else throw new ArgusException("Invalid option " + hs + "\n");
                 }
             }
@@ -487,7 +493,12 @@ public class batch {
             TableService.addAdditivityParamBatch(additivity, keepStatus);
             TableService.readTables(null);
         }catch (IOException ex){
-            throw new ArgusException ("\nError reading tables.\n"+ex.getMessage());
+            TableService.clearTables();
+            throw new ArgusException("\nError reading tables.\n"+ex.getMessage());
+        }catch (ArgusException ex){
+            if (Application.batchType()== Application.BATCH_FROMMENU) {JOptionPane.showMessageDialog(null, ex.getMessage()+"; something wrong");}
+            TableService.clearTables();
+            return false;
         }
         return true;
     }

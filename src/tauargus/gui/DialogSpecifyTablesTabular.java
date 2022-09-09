@@ -722,6 +722,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         }
         return (JFrame)container;
     }
+     
     private void buttonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOkActionPerformed
         if (!SwingUtils.verifyTextFields(this)) {
             return;
@@ -763,20 +764,17 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                 } catch (ExecutionException ex) {
                     JOptionPane.showMessageDialog(DialogSpecifyTablesTabular.this, ex.getCause().getMessage() + "; something wrong");
                     if (TauArgusUtils.ExistFile(Application.getTempFile("additerr.txt"))){
-                     DialogInfo Info = new DialogInfo(getParentFrame(), true);
-                     Info.addLabel("Overview of the additivity errors");
-                     try{
-                       Info.addTextFile(Application.getTempFile("additerr.txt"));}
-                     catch (ArgusException ex1){}
-                     Info.setVisible(true);
+                        DialogInfo Info = new DialogInfo(getParentFrame(), true);
+                        Info.addLabel("Overview of the additivity errors");
+                        try{
+                            Info.addTextFile(Application.getTempFile("additerr.txt"));}
+                        catch (ArgusException ex1){}
+                        Info.setVisible(true);
                     }
-                    
-                       
                     TableService.clearTables();
                 }
             }
         };        
-
         worker.execute();
     }//GEN-LAST:event_buttonOkActionPerformed
 
