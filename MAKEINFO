@@ -76,11 +76,13 @@ CSP/
 └── Makefile
 
 libtauargus/
-├── *.cpp
-├── *.h
-├── *.swg
-├── TauArgus.properties
-└── Versioninfo.rc
+├── src/
+│   ├── *.cpp
+│   ├── *.h
+│   ├── *.swg
+│   ├── TauArgus.properties
+│   └── Versioninfo.rc
+└── Makefile
 	
 tauhitas/
 ├── src/
