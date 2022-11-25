@@ -27,6 +27,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -414,7 +415,8 @@ public class PanelTable extends javax.swing.JPanel {
         buttonMap.put(TableSet.SUP_CKM,radioButtonCellKey);
         
         // disable reordering of columns
-        table.getTableHeader().setReorderingAllowed(false);        
+        table.getTableHeader().setReorderingAllowed(false); 
+        table.requestFocus();
     }
     
     private int indexOfVariable(Variable variable) {
@@ -1552,15 +1554,23 @@ public class PanelTable extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void comboBoxDecimalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxDecimalsActionPerformed
+        int r = table.getSelectedRow();
+        int c = table.getSelectedColumn();
         updateFormatters();
         ((AbstractTableModel)table.getModel()).fireTableDataChanged();
         adjustColumnWidths();
+        table.changeSelection(r,c,false,false);
+        table.requestFocus();
     }//GEN-LAST:event_comboBoxDecimalsActionPerformed
 
     private void checkBoxThousandSeparatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxThousandSeparatorActionPerformed
+        int r = table.getSelectedRow();
+        int c = table.getSelectedColumn();
         updateFormatters();
         ((AbstractTableModel)table.getModel()).fireTableDataChanged();
         adjustColumnWidths();
+        table.changeSelection(r,c,false,false);
+        table.requestFocus();
     }//GEN-LAST:event_checkBoxThousandSeparatorActionPerformed
 
     private void buttonSetStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSetStatusActionPerformed
@@ -1572,7 +1582,11 @@ public class PanelTable extends javax.swing.JPanel {
         
         int r = table.getSelectedRow();
         int c = table.getSelectedColumn();
-        
+        if ((r==-1)&&(c==-1)){
+            JOptionPane.showMessageDialog(this, "Please select cell");
+            return;
+        }
+         
         javax.swing.JButton button = (javax.swing.JButton) evt.getSource();
         CellStatus newStatus = statusMap.get(button);
         if (!tauArgus.SetTableCellStatus(tableSet.index, createDimArray(r, c), newStatus.getValue())) {
@@ -1586,23 +1600,34 @@ public class PanelTable extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSetStatusActionPerformed
 
     private void buttonNonStructEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNonStructEmptyActionPerformed
+        int r = table.getSelectedRow();
+        int c = table.getSelectedColumn();
         tauArgus.SetAllEmptyNonStructural (tableSet.index);
         ((AbstractTableModel)table.getModel()).fireTableDataChanged();
+        table.changeSelection(r,c,false,false);
+        table.requestFocus();
     }//GEN-LAST:event_buttonNonStructEmptyActionPerformed
 
     private void buttonCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCostActionPerformed
         int r = table.getSelectedRow();
         int c = table.getSelectedColumn();
         
+        if ((r==-1)&&(c==-1)){
+            JOptionPane.showMessageDialog(this, "Please select cell");
+            return;
+        }
+        
         Cell cell = tableSet.getCell(createDimArray(r, c));
         while (true) {
             String value = JOptionPane.showInputDialog(this, "Set new cost for (" + doubleFormatter.format(cell.cost) + ")", doubleFormatter.format(cell.cost));
             if (value == null) {
                 // the user canceled the input
+                table.requestFocus();
                 return;
             }
             try {
-                Double newCost = Double.parseDouble(value);
+                //Double newCost = Double.parseDouble(value);
+                Double newCost = doubleFormatter.parse(value).doubleValue();
                 if (newCost > 0) {
                     // the user entered correct input
                     if (!tauArgus.SetTableCellCost(tableSet.index, createDimArray(r, c), newCost)) {
@@ -1612,14 +1637,20 @@ public class PanelTable extends javax.swing.JPanel {
                         cell = getCell(r, c);      
                         panelCellInformation.update(tableSet, cell, integerFormatter, doubleFormatter);
                     }
+                    table.requestFocus();
                     return;
                 } 
             }
             catch (NumberFormatException ex) {
                 // incorrect input
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+            catch (ParseException ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
             // incorrect input
             if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, "Illegal value for cost function. Try again?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                table.requestFocus();
                 break;
             }
         }
@@ -1690,8 +1721,12 @@ public class PanelTable extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonRecodeActionPerformed
 
     private void checkBoxOutputViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxOutputViewActionPerformed
+        int r = table.getSelectedRow();
+        int c = table.getSelectedColumn();
         ((AbstractTableModel)table.getModel()).fireTableDataChanged();
         adjustColumnWidths();
+        table.changeSelection(r,c,false,false);
+        table.requestFocus();
     }//GEN-LAST:event_checkBoxOutputViewActionPerformed
 
     private void comboBoxNrOfHorLevelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxNrOfHorLevelsActionPerformed
@@ -1744,8 +1779,12 @@ public class PanelTable extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPrioryActionPerformed
 
     private void checkBoxColoredViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxColoredViewActionPerformed
+        int r = table.getSelectedRow();
+        int c = table.getSelectedColumn();
         ((AbstractTableModel)table.getModel()).fireTableDataChanged();
         adjustColumnWidths();
+        table.changeSelection(r,c,false,false);
+        table.requestFocus();
     }//GEN-LAST:event_checkBoxColoredViewActionPerformed
 
     private void radioButtonCellKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioButtonCellKeyActionPerformed
