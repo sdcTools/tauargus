@@ -17,6 +17,7 @@
 
 package tauargus.model;
 
+import static argus.utils.StrUtils.toInteger;
 import argus.utils.SystemUtils;
 import argus.utils.Tokenizer;
 import java.beans.PropertyChangeEvent;
@@ -24,6 +25,7 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import tauargus.gui.PanelTable;
 import static tauargus.model.Application.clearMetadatas;
 import static tauargus.model.Application.clearVariables;
 import static tauargus.model.Metadata.DATA_ORIGIN_MICRO;
+import static tauargus.model.Metadata.DATA_ORIGIN_TABULAR;
 import tauargus.service.TableService;
 import tauargus.utils.StrUtils;
 import tauargus.utils.TauArgusUtils;
@@ -57,7 +60,7 @@ public class batch {
     static Tokenizer tokenizer;
     private static String batchDataPath = "";
     private static String batchFilePath = "";
-    private static final TauArgus TAUARGUS = Application.getTauArgusDll();    
+    private static final TauArgus TauArgus = Application.getTauArgusDll();    
         
     private static final Logger LOGGER = Logger.getLogger(PanelTable.class.getName());        
        
@@ -143,7 +146,7 @@ public class batch {
             Application.openInfoWindow(true);           
             Application.windowInfo.addLabel("Progress of the batch proces");
         }    
-        TAUARGUS.CleanAll();
+        TauArgus.CleanAll();
         clearMetadatas();
         clearVariables();
         try{
@@ -214,7 +217,7 @@ public class batch {
                         break;
                     case ("<CLEAR>"):
                         TableService.clearTables();
-                        TAUARGUS.CleanAll();
+                        TauArgus.CleanAll();
                         clearMetadatas();
                         clearVariables();
                         status = 0;
@@ -302,7 +305,9 @@ public class batch {
     // Case "<REPORTSTR>": If Not ReportSTR(Staart) Then GoTo FOUTEINDE
     // Something special for Space Time Reserach
                     case ("<RECODE>"):
-                        reportProgress("<RECODE> not yet implemented. Skipping this command.");
+                        // <RECODE>  TabNo, VarName,RecodeFile
+                        batchRecode();
+//                        reportProgress("<RECODE> not yet implemented. Skipping this command.");
                         break;
                     case ("<SOLVER>"):
                         hs = tokenizer.nextField(",");
@@ -485,7 +490,119 @@ public class batch {
         SystemUtils.writeLogbook("Micro data file read; processing time " + timeDiff + " seconds");
         return true;
     }
+  static void batchRecode() throws ArgusException{
+        String token, hs, varName, fileName;
+        int tabNo , varNo, n, i, nC, nRecode, maxLevel;
+        String[] tail = new String[1];
+        int[] level = new int[1];
+        TableSet tableSet;
+        Metadata metadata;
+       Variable variable;
+        //<RECODE>  1,Size,"D:\Argus\TauData\Size.grc"
 
+        tail[0] = tokenizer.getLine(); tokenizer.clearLine();
+        token = nextToken(tail);
+        //Find table number
+        tabNo = StrUtils.toInteger(token);
+        if (tabNo < 1 || tabNo > TableService.numberOfTables())
+            {throw new ArgusException("Wrong table number in <RECODE>");}
+        tableSet = tauargus.service.TableService.getTable(tabNo-1);
+        metadata = Application.getMetadata(0);
+        if (metadata.dataOrigin == metadata.DATA_ORIGIN_TABULAR){
+            throw new ArgusException ("Recode is not allowed for tabular input");
+        }
+        if (tableSet.suppressed != TableSet.SUP_NO) {
+            throw new ArgusException ("Recode is not allowed for a protected table");}
+        // find Variable
+        token = nextChar(tail);
+        if (token.equals(",")) {
+          varName = nextToken(tail);
+        }
+        else
+         { throw new ArgusException ("Illegal character " + token +" found. Comma expected)");}
+        // Check the varName
+        n = tableSet.expVar.size(); varNo = -1;
+        variable = tableSet.expVar.get(0);  //if not initialized somehowJAVA will complain later.
+        for (i=0;i<n;i++) {
+           if(varName.equalsIgnoreCase(tableSet.expVar.get(i).name)){
+               varNo = tableSet.expVar.get(i).index;
+               variable = tableSet.expVar.get(i);}
+           }
+        if (!variable.isCategorical())
+            throw new ArgusException("Variable "+ varName + "  cannot be recoded");
+        if (varNo == -1) {
+           throw new ArgusException ("Variable " + varName +" was not found in this table");
+           }
+        //Find recode file
+        token = nextChar(tail);
+
+        if (token.equals(",")) {
+          fileName = StrUtils.unQuote(tail[0]);
+        }
+        else
+         { throw new ArgusException ("Illegal character " + token +" found. comma expected)");}
+        // The file namemist exist, or a digit '0'..'9'is allowed
+        boolean digitRecode = false;
+        if ((fileName.length() == 1) && ( ( fileName.compareTo("1")>= 0) && (fileName.compareTo("9")<=0))){
+           digitRecode = true;
+        }
+        else
+        { if (!TauArgusUtils.ExistFile(fileName)){
+           throw new ArgusException ("The recode file " + fileName +" could not be found");}
+        }
+        // Now the real work
+        if (digitRecode){
+//            throw new ArgusException ("Recode by digit level has not yet been implemented");
+            if (variable.hierarchical == Variable.HIER_NONE ) {
+              throw new ArgusException("Truncation is only possible for hierarchical variables");
+            }
+            TauArgus.UndoRecode(variable.index);
+            varNo = variable.index;
+            nRecode = 0;
+            maxLevel = (int)(fileName.charAt(0))-48;
+            n = TauArgusUtils.getNumberOfCodes(varNo);
+            for(i=0;i<n;i++){
+              nC = TauArgusUtils.getVarCodeLevelChildern(varNo,i, level);
+              if ((level[0]==maxLevel) && (nC > 0)){
+                 TauArgus.SetVarCodeActive(varNo, i, false);
+                 nRecode++;
+              }
+            }
+            if (nRecode > 0){
+              if (TauArgus.DoActiveRecode(varNo)) {
+                variable.recoded = true;
+                TauArgus.ApplyRecode();}
+              else{
+                TauArgus.UndoRecode(variable.index);
+                throw new ArgusException ("There was a problem recoding this variable");
+              }
+            }
+            SystemUtils.writeLogbook(Integer.toString(nRecode) + " nodes have been closed");
+        }
+        else{
+
+        try {
+//          variable = metadata.variables.get(varNo);
+
+          variable.recode(fileName);
+          variable.recoded = true;
+          hs = variable.RecodeWarning;
+          SystemUtils.writeLogbook("Variable "+ variable.name + " has been recoded for table " + Integer.toString(tabNo));
+
+//           variable = null;
+//           variable = metadata.variables.get(varNo);
+
+//             metadata.variables.get(varNo).recode(fileName);
+//             metadata.variables.get(varNo).recoded = true;
+           }
+
+ //        catch (FileNotFoundException  ex) { };
+         catch (IOException ex) {};
+
+         TauArgus.ApplyRecode();
+        }
+
+    }
 /**
  * Read the <SUPPRESS> command in a batch file with all its parameters 
  * and calls the required suppression method
