@@ -54,6 +54,7 @@ import tauargus.extern.taurounder.RCallback;
 import tauargus.extern.taurounder.RProgressListener;
 import tauargus.extern.taurounder.RounderCtrl;
 import tauargus.gui.DialogStopTime;
+import tauargus.gui.FrameMain;
 import tauargus.service.TableService;
 import tauargus.utils.ExecUtils;
 import tauargus.utils.StrUtils;
@@ -621,7 +622,7 @@ public class OptiSuppress {
     public static boolean RunModular(TableSet tableSet, final PropertyChangeListener propertyChangeListener) throws ArgusException, FileNotFoundException, IOException{
         boolean Oke; 
         int i, returnValue; 
-        String hs; 
+        String hs, fs1, fs2; 
         Variable variable; 
         BufferedWriter tmpOut ;
         final PropertyChangeSupport pcs = new PropertyChangeSupport(TableService.class);
@@ -727,7 +728,22 @@ public class OptiSuppress {
             throw new ArgusException("A problem was encountered when writing the file NPF");
         }  
         if (tableSet.expVar.size() == 1){}
-//TODO Dummy variable toevoegen voor HITAS  (SjoemelBestandenVoorHitas1)          
+//TODO Dummy variable toevoegen voor HITAS  (SjoemelBestandenVoorHitas1) 
+// Easter egg for Sarah  
+            if ( !Application.isBatch() && Application.isAnco() ){ 
+             fs1 = "";   
+             try{fs1 = SystemUtils.getApplicationDirectory(FrameMain.class).getCanonicalPath();}
+             catch (Exception ex){}
+             fs1 = fs1 +"\\SarahStop.txt";  
+             fs2 = SystemUtils.getRegString("general", "datadir", "");
+             fs2 = TauArgusUtils.getFilePath(fs2);
+             fs2 = fs2 + "\\SarahStop.txt"; 
+             if ( TauArgusUtils.ExistFile(fs1) ||
+                  TauArgusUtils.ExistFile(fs2) ) {
+                TauArgusUtils.ShowInfoMessage("Sarah, you can modify the input files");
+             }
+            }  
+               
             ControleerHITAStabtxt(tableSet); 
             if (tableSet.expVar.size() == 1) {verdubbelHitasTxt();}
        
