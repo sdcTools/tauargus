@@ -166,6 +166,7 @@ public class TableSet {
     }
     // minimum frequency rule...
     public boolean frequencyRule = false;
+    public boolean emptyNonStructural = false;
     public int[] minFreq = new int[MAX_FREQ_PAR_SETS];
     public int[] frequencyMarge = new int[MAX_FREQ_PAR_SETS];
     {
