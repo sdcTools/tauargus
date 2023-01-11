@@ -742,7 +742,7 @@ public class OptiSuppress {
                   TauArgusUtils.ExistFile(fs2) ) {
                 TauArgusUtils.ShowInfoMessage("Sarah, you can modify the input files");
              }
-            }
+            }  
                
             ControleerHITAStabtxt(tableSet); 
             if (tableSet.expVar.size() == 1) {verdubbelHitasTxt();}
