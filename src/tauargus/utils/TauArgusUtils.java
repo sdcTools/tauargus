@@ -75,7 +75,7 @@ public class TauArgusUtils {
         return codeString[0];
     }
 
-    public static Integer getVarCodeLevelChildern (int varIndex, int index, int[] level){
+    public static Integer getVarCodeLevelChildren (int varIndex, int index, int[] level){
       int[] nChild = new int[1];
        tauArgus.GetVarCodeProperties(varIndex, index, new int[1], new int[1], new int[1], level, nChild, new String[1]); 
        return nChild[0];

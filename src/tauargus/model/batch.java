@@ -529,6 +529,7 @@ public class batch {
         Metadata metadata;
        Variable variable;
         //<RECODE>  1,Size,"D:\Argus\TauData\Size.grc"
+        //<RECODE> TabNo, VarName, hrc-file or maximum treelevel
 
         tail[0] = tokenizer.getLine(); tokenizer.clearLine();
         token = nextToken(tail);
@@ -592,7 +593,7 @@ public class batch {
             maxLevel = (int)(fileName.charAt(0))-48;
             n = TauArgusUtils.getNumberOfCodes(varNo);
             for(i=0;i<n;i++){
-              nC = TauArgusUtils.getVarCodeLevelChildern(varNo,i, level);
+              nC = TauArgusUtils.getVarCodeLevelChildren(varNo,i, level);
               if ((level[0]==maxLevel) && (nC > 0)){
                  TauArgus.SetVarCodeActive(varNo, i, false);
                  nRecode++;
