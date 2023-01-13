@@ -74,6 +74,13 @@ public class TauArgusUtils {
         } catch (Exception ex){}        
         return codeString[0];
     }
+
+    public static Integer getVarCodeLevelChildren (int varIndex, int index, int[] level){
+      int[] nChild = new int[1];
+       tauArgus.GetVarCodeProperties(varIndex, index, new int[1], new int[1], new int[1], level, nChild, new String[1]); 
+       return nChild[0];
+    } 
+    
     public static void setVariable(int varIndex) throws ArgusException {
         Variable variable = Application.getVariable(varIndex); 
         int nMissings = variable.numberOfMissings();
@@ -275,6 +282,12 @@ public class TauArgusUtils {
         catch (IOException ex){} 
       }   
     }
+    
+    public static void ShowInfoMessage(String InfoString){
+            if (!Application.isBatch()){
+                JOptionPane.showMessageDialog(null, InfoString);
+            }
+        }
     
     public static int ShowWarningMessage(String WarningString){
         /* If interactive show a message

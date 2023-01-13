@@ -46,6 +46,10 @@ public class FrameInfo extends javax.swing.JFrame {
         return imageList;
     }
     
+    public void clearText(){
+        jTextAreaProgress.setText(null);
+    }
+    
     public void addText (String s){
         {
             jTextAreaProgress.append(s);

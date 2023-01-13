@@ -124,6 +124,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         labelTopNVarCount = new javax.swing.JLabel();
         labelCostVar = new javax.swing.JLabel();
         radioButtonAdditivityNone = new javax.swing.JRadioButton();
+        checkBoxKeepStatus = new javax.swing.JCheckBox();
         panelCost = new javax.swing.JPanel();
         radioButtonDistance = new javax.swing.JRadioButton();
         radioButtonUnity = new javax.swing.JRadioButton();
@@ -196,11 +197,23 @@ public class DialogSpecifyTablesTabular extends DialogBase {
 
         buttonGroupAdditivity.add(radioButtonAdditivityRecompute);
         radioButtonAdditivityRecompute.setText("Compute incorrect totals");
+        radioButtonAdditivityRecompute.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                radioButtonAdditivityRecomputeItemStateChanged(evt);
+            }
+        });
 
         labelCostVar.setText("Cost");
 
         buttonGroupAdditivity.add(radioButtonAdditivityNone);
         radioButtonAdditivityNone.setText("Allow non-additivity");
+
+        checkBoxKeepStatus.setText("Keep given status");
+        checkBoxKeepStatus.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                checkBoxKeepStatusItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelVariablesLayout = new javax.swing.GroupLayout(panelVariables);
         panelVariables.setLayout(panelVariablesLayout);
@@ -224,32 +237,39 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                         .addGap(15, 15, 15)
                         .addComponent(labelCostVar)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(panelVariablesLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelVariablesLayout.createSequentialGroup()
                         .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelExpVar)
-                            .addComponent(scrollPaneExpVar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(radioButtonAdditivityForce)
-                            .addComponent(radioButtonAdditivityRecompute)
-                            .addComponent(radioButtonAdditivityNone)))))
+                            .addGroup(panelVariablesLayout.createSequentialGroup()
+                                .addComponent(scrollPaneExpVar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelVariablesLayout.createSequentialGroup()
+                                        .addGap(21, 21, 21)
+                                        .addComponent(checkBoxKeepStatus))
+                                    .addComponent(radioButtonAdditivityForce)
+                                    .addComponent(radioButtonAdditivityNone)
+                                    .addComponent(radioButtonAdditivityRecompute))))
+                        .addContainerGap(12, Short.MAX_VALUE))))
         );
         panelVariablesLayout.setVerticalGroup(
             panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelVariablesLayout.createSequentialGroup()
                 .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelVariablesLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(labelExpVar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scrollPaneExpVar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollPaneExpVar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(panelVariablesLayout.createSequentialGroup()
+                        .addGap(0, 15, Short.MAX_VALUE)
                         .addComponent(radioButtonAdditivityForce)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(radioButtonAdditivityRecompute)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBoxKeepStatus)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(radioButtonAdditivityNone)))
-                .addGap(14, 14, 14)
+                .addGap(7, 7, 7)
                 .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelNExpVarCount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -350,13 +370,15 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(radioButtonUnity)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radioButtonDistance))))
+                        .addComponent(radioButtonDistance)))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         panelSafetyRules.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Safety rules"));
 
         buttonGroupSafetyRules.add(radioButtonUseGivenStatus);
         radioButtonUseGivenStatus.setText("Use given status");
+        radioButtonUseGivenStatus.setMargin(new java.awt.Insets(2, -2, 2, 2));
         radioButtonUseGivenStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 safetyRulesActionPerformed(evt);
@@ -372,6 +394,8 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         });
 
         checkBoxDominanceRule.setText("Dominance rule");
+        checkBoxDominanceRule.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        checkBoxDominanceRule.setMargin(new java.awt.Insets(2, -2, 2, 2));
         checkBoxDominanceRule.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 safetyRulesActionPerformed(evt);
@@ -385,6 +409,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         labelPercentage.setText("Percentage:");
 
         checkBoxMinimumFrequency.setText("Minimum frequency");
+        checkBoxMinimumFrequency.setMargin(new java.awt.Insets(2, -2, 2, 2));
         checkBoxMinimumFrequency.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 safetyRulesActionPerformed(evt);
@@ -398,6 +423,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         labelRange.setText("Range:");
 
         checkBoxZeroUnsafe.setText("Zero unsafe");
+        checkBoxZeroUnsafe.setMargin(new java.awt.Insets(2, -2, 2, 2));
         checkBoxZeroUnsafe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 safetyRulesActionPerformed(evt);
@@ -408,6 +434,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         labelZeroMargin.setText("Zero margin:");
 
         checkBoxMissingIsSafe.setText("Missing = safe");
+        checkBoxMissingIsSafe.setMargin(new java.awt.Insets(2, -2, 2, 2));
 
         labelManualSafetyRange.setLabelFor(textFieldManualSafetyRange);
         labelManualSafetyRange.setText("Manual safety range:");
@@ -419,6 +446,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         labelPercSign3.setText("%");
 
         checkBoxPqRule.setText("PQ-rule");
+        checkBoxPqRule.setMargin(new java.awt.Insets(2, -2, 2, 2));
         checkBoxPqRule.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 safetyRulesActionPerformed(evt);
@@ -483,55 +511,60 @@ public class DialogSpecifyTablesTabular extends DialogBase {
             .addGroup(panelSafetyRulesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkBoxMissingIsSafe)
+                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                .addComponent(radioButtonUseGivenStatus)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(radioButtonUseSafetyRules))
+                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkBoxDominanceRule)
+                                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(labelNumber)
+                                            .addComponent(labelPercentage))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(textFieldNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                                .addComponent(textFieldPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(labelPercSign1)))))
+                                .addGap(33, 33, 33)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(28, 28, 28)
+                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkBoxMinimumFrequency)
+                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(labelRange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelFrequency, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(textFieldFrequency, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textFieldRange, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelPercSign2)))
+                        .addGap(50, 50, 50)
+                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                .addComponent(checkBoxMissingIsSafe)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                        .addComponent(labelZeroMargin)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textFieldZeroMargin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(checkBoxZeroUnsafe))
+                                .addContainerGap(27, Short.MAX_VALUE))))
                     .addGroup(panelSafetyRulesLayout.createSequentialGroup()
                         .addComponent(labelManualSafetyRange)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(textFieldManualSafetyRange, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelPercSign3))
-                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
-                        .addComponent(radioButtonUseGivenStatus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radioButtonUseSafetyRules))
-                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
-                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBoxDominanceRule)
-                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
-                                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelNumber)
-                                    .addComponent(labelPercentage))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(textFieldNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
-                                        .addComponent(textFieldPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(labelPercSign1)))))
-                        .addGap(33, 33, 33)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(28, 28, 28)
-                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
-                        .addComponent(checkBoxMinimumFrequency)
-                        .addGap(50, 50, 50)
-                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBoxZeroUnsafe)
-                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
-                                .addComponent(labelZeroMargin)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textFieldZeroMargin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(20, Short.MAX_VALUE))
-                    .addGroup(panelSafetyRulesLayout.createSequentialGroup()
-                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(labelRange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labelFrequency, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textFieldFrequency, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldRange, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelPercSign2)
+                        .addComponent(labelPercSign3)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         panelSafetyRulesLayout.setVerticalGroup(
@@ -542,7 +575,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                     .addComponent(radioButtonUseGivenStatus)
                     .addComponent(radioButtonUseSafetyRules))
                 .addGap(18, 18, 18)
-                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelSafetyRulesLayout.createSequentialGroup()
                         .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(checkBoxDominanceRule)
@@ -556,23 +589,26 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                             .addComponent(textFieldFrequency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelZeroMargin)
                             .addComponent(textFieldZeroMargin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labelPercentage)
-                            .addComponent(textFieldPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelRange)
-                            .addComponent(textFieldRange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelPercSign1)
-                            .addComponent(labelPercSign2)))
+                        .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelSafetyRulesLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(labelPercentage)
+                                    .addComponent(textFieldPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelRange)
+                                    .addComponent(textFieldRange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelPercSign1)
+                                    .addComponent(labelPercSign2)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSafetyRulesLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(checkBoxMissingIsSafe))))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(checkBoxMissingIsSafe)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelSafetyRulesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelManualSafetyRange)
                     .addComponent(textFieldManualSafetyRange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelPercSign3))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         buttonOk.setText("OK");
@@ -598,10 +634,12 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelVariables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(panelCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(4, 4, 4))
                     .addComponent(panelSafetyRules, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(buttonOk)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonCancel)))
@@ -611,16 +649,16 @@ public class DialogSpecifyTablesTabular extends DialogBase {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelCost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelVariables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelVariables, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(panelCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelSafetyRules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonOk)
                     .addComponent(buttonCancel))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -684,6 +722,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         }
         return (JFrame)container;
     }
+     
     private void buttonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOkActionPerformed
         if (!SwingUtils.verifyTextFields(this)) {
             return;
@@ -725,20 +764,17 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                 } catch (ExecutionException ex) {
                     JOptionPane.showMessageDialog(DialogSpecifyTablesTabular.this, ex.getCause().getMessage() + "; something wrong");
                     if (TauArgusUtils.ExistFile(Application.getTempFile("additerr.txt"))){
-                     DialogInfo Info = new DialogInfo(getParentFrame(), true);
-                     Info.addLabel("Overview of the additivity errors");
-                     try{
-                       Info.addTextFile(Application.getTempFile("additerr.txt"));}
-                     catch (ArgusException ex1){}
-                     Info.setVisible(true);
+                        DialogInfo Info = new DialogInfo(getParentFrame(), true);
+                        Info.addLabel("Overview of the additivity errors");
+                        try{
+                            Info.addTextFile(Application.getTempFile("additerr.txt"));}
+                        catch (ArgusException ex1){}
+                        Info.setVisible(true);
                     }
-                    
-                       
                     TableService.clearTables();
                 }
             }
         };        
-
         worker.execute();
     }//GEN-LAST:event_buttonOkActionPerformed
 
@@ -757,6 +793,25 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         setVisible(false);
         dispose();
     }//GEN-LAST:event_dialogClosing
+
+    private void checkBoxKeepStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkBoxKeepStatusItemStateChanged
+        radioButtonUseGivenStatus.setSelected(checkBoxKeepStatus.isSelected());
+        radioButtonUseSafetyRules.setEnabled(!checkBoxKeepStatus.isSelected());
+    }//GEN-LAST:event_checkBoxKeepStatusItemStateChanged
+
+    private void radioButtonAdditivityRecomputeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioButtonAdditivityRecomputeItemStateChanged
+        boolean boolSelected = radioButtonAdditivityRecompute.isSelected();
+        if (boolSelected){
+            checkBoxKeepStatus.setEnabled(boolSelected && labelStatusVar.isEnabled());
+            radioButtonUseGivenStatus.setSelected(checkBoxKeepStatus.isSelected());
+            radioButtonUseSafetyRules.setEnabled(!checkBoxKeepStatus.isSelected());
+        }
+        else{
+            checkBoxKeepStatus.setEnabled(false);
+            radioButtonUseSafetyRules.setEnabled(labelTopNVarCount.isEnabled() || labelFrequencyVar.isEnabled());
+            organizeSafetyRules();
+        }
+    }//GEN-LAST:event_radioButtonAdditivityRecomputeItemStateChanged
 
     boolean verify() {
         if (radioButtonUseSafetyRules.isEnabled() && radioButtonUseGivenStatus.isEnabled()) {
@@ -880,6 +935,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         // force a selection
         radioButtonResponseVar.setSelected(true);
         radioButtonAdditivityForce.setSelected(true);
+        checkBoxKeepStatus.setEnabled(false);
         organizeCost();
         organizeSafetyRules();
     }
@@ -931,6 +987,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
             table.additivity = TableSet.ADDITIVITY_CHECK;
         } else if (radioButtonAdditivityRecompute.isSelected()) {
             table.additivity = TableSet.ADDITIVITY_RECOMPUTE;
+            table.keepStatus = checkBoxKeepStatus.isSelected();
         } else if (radioButtonAdditivityNone.isSelected()) {
             table.additivity = TableSet.ADDITIVITY_NOT_REQUIRED;
         }
@@ -943,6 +1000,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
     private javax.swing.ButtonGroup buttonGroupSafetyRules;
     private javax.swing.JButton buttonOk;
     private javax.swing.JCheckBox checkBoxDominanceRule;
+    private javax.swing.JCheckBox checkBoxKeepStatus;
     private javax.swing.JCheckBox checkBoxMinimumFrequency;
     private javax.swing.JCheckBox checkBoxMissingIsSafe;
     private javax.swing.JCheckBox checkBoxPqRule;

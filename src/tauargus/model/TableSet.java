@@ -86,6 +86,8 @@ public class TableSet {
     public static final int ADDITIVITY_CHECK = 0;
     public static final int ADDITIVITY_RECOMPUTE = 1;
     public static final int ADDITIVITY_NOT_REQUIRED = 2;
+    
+    public static final boolean KEEP_STATUS = false; // Default: do not keep status when recomputing additivity
 
     public static final int FILE_FORMAT_UNKNOWN = -1;
     public static final int FILE_FORMAT_CSV = 0;
@@ -164,6 +166,7 @@ public class TableSet {
     }
     // minimum frequency rule...
     public boolean frequencyRule = false;
+    public boolean emptyNonStructural = false;
     public int[] minFreq = new int[MAX_FREQ_PAR_SETS];
     public int[] frequencyMarge = new int[MAX_FREQ_PAR_SETS];
     {
@@ -241,6 +244,7 @@ public class TableSet {
     public int minDiff = 0;
     public int maxDiff = 0;
     public boolean computeTotals = false;
+    public boolean keepStatus = KEEP_STATUS;
     public boolean useStatusOnly = false;
     public int additivity = ADDITIVITY_CHECK;
     boolean negIsAbsolute = false;
@@ -791,13 +795,20 @@ public class TableSet {
         int[] dimIndex = new int[expVar.size()];
         computeTotals = (additivity == TableSet.ADDITIVITY_RECOMPUTE);
         hasRealFreq = metadata.containsFrequencyVariable();
-        boolean continueBogusCovertable, Oke;
+        boolean continueBogusCovertable;
         int[][] bogusRange = new int[expVar.size()][2];
         int[] bogusIndex = new int[expVar.size()];
         int nDim, i;
 
         int[] varlist = indicesOfExplanatoryVariables();
-        Oke = TauArgusUtils.DeleteFile(Application.getTempFile("additerr.txt"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("AdditErr.txt"));
+        // start Added 26-08-2022
+        TauArgusUtils.DeleteFile(Application.getTempFile("AddErr.JJ"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("AddErr.JJ.frq"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("additerr.jj"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("additerr.jj.frq"));
+        TauArgusUtils.DeleteFile(Application.getTempFile("JJklad.jj"));
+        // end Added 26-08-2022
         nDim = expVar.size();
         File[] files = SystemUtils.getFiles(metadata.dataFile);
         for (int f = 0; f < files.length; f++) {
@@ -1170,6 +1181,16 @@ public class TableSet {
         fileTxt.delete();
         this.isAdditive = true;
         //index
+        int[] StatusList = null;
+        if (computeTotals && keepStatus){
+        // Save status of all cells
+            int[] Status = new int[1];
+            StatusList = new int[this.numberOfCells()];
+            for (int nc=0;nc<this.numberOfCells();nc++){
+                tauArgus.GetTableCellStatus(this.index, nc, Status);
+                        StatusList[nc]=Status[0];
+            }
+        }
         if (!tauArgus.CompletedTable(index, errorCodeArr, fileNameJJ, computeTotals, setCalculatedTotalsAsSafe, Application.isProtectCoverTable())) {
             this.isAdditive = false;
             if (this.additivity == TableSet.ADDITIVITY_NOT_REQUIRED || Application.isProtectCoverTable()) {}
@@ -1179,6 +1200,13 @@ public class TableSet {
                     MakeAdditErrorList(index);
                     throw new ArgusException(tauArgus.GetErrorString(errorCodeArr[0]));
                 }
+            }
+        }
+        if (computeTotals && keepStatus){
+        // Reload status of all cells
+            if (StatusList == null) throw new ArgusException("Something went wrong in reloading cell status: StatusList = null\n");
+            for (int nc=0; nc<this.numberOfCells(); nc++) {
+                tauArgus.SetTableCellStatus(this.index, nc, StatusList[nc]);
             }
         }
 
