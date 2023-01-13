@@ -17,7 +17,6 @@
 
 package tauargus.model;
 
-import static argus.utils.StrUtils.toInteger;
 import argus.utils.SystemUtils;
 import argus.utils.Tokenizer;
 import java.beans.PropertyChangeEvent;
@@ -25,7 +24,6 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,7 +39,6 @@ import tauargus.gui.PanelTable;
 import static tauargus.model.Application.clearMetadatas;
 import static tauargus.model.Application.clearVariables;
 import static tauargus.model.Metadata.DATA_ORIGIN_MICRO;
-import static tauargus.model.Metadata.DATA_ORIGIN_TABULAR;
 import tauargus.service.TableService;
 import tauargus.utils.StrUtils;
 import tauargus.utils.TauArgusUtils;
@@ -60,7 +57,7 @@ public class batch {
     static Tokenizer tokenizer;
     private static String batchDataPath = "";
     private static String batchFilePath = "";
-    private static final TauArgus TauArgus = Application.getTauArgusDll();    
+    private static final TauArgus TAUARGUS = Application.getTauArgusDll();    
         
     private static final Logger LOGGER = Logger.getLogger(PanelTable.class.getName());        
        
@@ -147,7 +144,7 @@ public class batch {
             Application.windowInfo.clearText(); // Start with an empty canvas, even when restarting a batchjob in same session
             Application.windowInfo.addLabel("Progress of the batch proces");
         }    
-        TauArgus.CleanAll();
+        TAUARGUS.CleanAll();
         clearMetadatas();
         clearVariables();
         try{
@@ -218,7 +215,7 @@ public class batch {
                         break;
                     case ("<CLEAR>"):
                         TableService.clearTables();
-                        TauArgus.CleanAll();
+                        TAUARGUS.CleanAll();
                         clearMetadatas();
                         clearVariables();
                         status = 0;
@@ -300,15 +297,9 @@ public class batch {
                     case ("<WRITETABLE>"): 
                         writeTableBatch();
                         break;  
-    //Was used by Space Time Research, no longer supported
-    //              case ("<REPORTSTR>"):   
-    //                  break;    
-    // Case "<REPORTSTR>": If Not ReportSTR(Staart) Then GoTo FOUTEINDE
-    // Something special for Space Time Reserach
                     case ("<RECODE>"):
                         // <RECODE>  TabNo, VarName,RecodeFile
                         batchRecode();
-//                        reportProgress("<RECODE> not yet implemented. Skipping this command.");
                         break;
                     case ("<SOLVER>"):
                         hs = tokenizer.nextField(",");
@@ -587,7 +578,7 @@ public class batch {
             if (variable.hierarchical == Variable.HIER_NONE ) {
               throw new ArgusException("Truncation is only possible for hierarchical variables");
             }
-            TauArgus.UndoRecode(variable.index);
+            TAUARGUS.UndoRecode(variable.index);
             varNo = variable.index;
             nRecode = 0;
             maxLevel = (int)(fileName.charAt(0))-48;
@@ -595,16 +586,16 @@ public class batch {
             for(i=0;i<n;i++){
               nC = TauArgusUtils.getVarCodeLevelChildren(varNo,i, level);
               if ((level[0]==maxLevel) && (nC > 0)){
-                 TauArgus.SetVarCodeActive(varNo, i, false);
+                 TAUARGUS.SetVarCodeActive(varNo, i, false);
                  nRecode++;
               }
             }
             if (nRecode > 0){
-              if (TauArgus.DoActiveRecode(varNo)) {
+              if (TAUARGUS.DoActiveRecode(varNo)) {
                 variable.recoded = true;
-                TauArgus.ApplyRecode();}
+                TAUARGUS.ApplyRecode();}
               else{
-                TauArgus.UndoRecode(variable.index);
+                TAUARGUS.UndoRecode(variable.index);
                 throw new ArgusException ("There was a problem recoding this variable");
               }
             }
@@ -630,7 +621,7 @@ public class batch {
  //        catch (FileNotFoundException  ex) { };
          catch (IOException ex) {};
 
-         TauArgus.ApplyRecode();
+         TAUARGUS.ApplyRecode();
         }
 
     }
