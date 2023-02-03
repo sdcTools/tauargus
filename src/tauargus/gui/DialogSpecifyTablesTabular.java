@@ -30,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import tauargus.model.Application;
 import tauargus.model.ArgusException;
@@ -250,7 +251,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
                                     .addComponent(radioButtonAdditivityForce)
                                     .addComponent(radioButtonAdditivityNone)
                                     .addComponent(radioButtonAdditivityRecompute))))
-                        .addContainerGap(12, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         panelVariablesLayout.setVerticalGroup(
             panelVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -650,7 +651,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelVariables, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(panelVariables, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                     .addComponent(panelCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelSafetyRules, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -797,6 +798,13 @@ public class DialogSpecifyTablesTabular extends DialogBase {
     private void checkBoxKeepStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkBoxKeepStatusItemStateChanged
         radioButtonUseGivenStatus.setSelected(checkBoxKeepStatus.isSelected());
         radioButtonUseSafetyRules.setEnabled(!checkBoxKeepStatus.isSelected());
+        if (checkBoxKeepStatus.isSelected()) {
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(DialogSpecifyTablesTabular.this,
+                        "This could potentially cause inconsistencies between statussen.\nE.g. when unsafe cells are copied to empty totals or when protected cells are used.",
+                        "Use with caution!", JOptionPane.WARNING_MESSAGE);
+            });
+        }
     }//GEN-LAST:event_checkBoxKeepStatusItemStateChanged
 
     private void radioButtonAdditivityRecomputeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioButtonAdditivityRecomputeItemStateChanged

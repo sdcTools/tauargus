@@ -1182,13 +1182,22 @@ public class TableSet {
         this.isAdditive = true;
         //index
         int[] StatusList = null;
+        double[] LPLList = null;
+        double[] UPLList = null;
         if (computeTotals && keepStatus){
         // Save status of all cells
             int[] Status = new int[1];
+            double[] LPL = new double[1];
+            double[] UPL = new double[1];
             StatusList = new int[this.numberOfCells()];
+            LPLList = new double[this.numberOfCells()];
+            UPLList = new double[this.numberOfCells()];
             for (int nc=0;nc<this.numberOfCells();nc++){
                 tauArgus.GetTableCellStatus(this.index, nc, Status);
-                        StatusList[nc]=Status[0];
+                StatusList[nc]=Status[0];
+                tauArgus.GetTableCellProtectionLevels(this.index, nc, LPL, UPL);
+                LPLList[nc]=LPL[0];
+                UPLList[nc]=UPL[0];
             }
         }
         if (!tauArgus.CompletedTable(index, errorCodeArr, fileNameJJ, computeTotals, setCalculatedTotalsAsSafe, Application.isProtectCoverTable())) {
@@ -1206,7 +1215,11 @@ public class TableSet {
         // Reload status of all cells
             if (StatusList == null) throw new ArgusException("Something went wrong in reloading cell status: StatusList = null\n");
             for (int nc=0; nc<this.numberOfCells(); nc++) {
-                tauArgus.SetTableCellStatus(this.index, nc, StatusList[nc]);
+                // Only keep Status if not empty and not unknown
+                if (!(StatusList[nc]==CellStatus.UNKNOWN.getValue() || StatusList[nc]==CellStatus.EMPTY.getValue() || StatusList[nc]==CellStatus.EMPTY_NONSTRUCT.getValue())){
+                    tauArgus.SetTableCellStatus(this.index, nc, StatusList[nc]);
+                    tauArgus.SetTableCellProtectionLevels(this.index, nc, LPLList[nc], UPLList[nc]);
+                }
             }
         }
 

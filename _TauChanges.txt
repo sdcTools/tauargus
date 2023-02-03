@@ -386,3 +386,30 @@ Since release 4.2.2
 --------------------------------------------------------------
 date	   : Jan 7, 2022
 summary	   : CKM save table options added when using "write batch"
+
+date	   : Jun 27, 2022
+summary	   : New ptable read function to allow for new format
+
+date	   : Jul 7, 2022
+summary	   : Small bug fixed: in batch maxtime of Modular was set i.s.o. maxtime of Optimal when using <SUPPRESS> OPT(1,25)
+
+date	   : Jul 27, 2022
+summary	   : Set default option for CTA "do you prefer expert version" to "No"
+
+date	   : Sep 9, 2022
+summary	   : Allow "keep status" when making non-additive tabular data additive, including protection levels
+
+date	   : Jan 7, 2023
+summary	   : Added <RECODE> facility to batch
+
+date    : Feb 3, 2023
+summary	   : Added checks for <READTABLE>
+
+date    : Feb 3, 2023
+summary	   : No <SAFETYRULE> with tabular input in batch means "Use Status"
+
+date    : Feb 3, 2023
+summary	   : Write Batch now includes <SPECIFYTABLE> for tabular input
+
+above to be released in 4.2.4
+--------------------------------------------------------------

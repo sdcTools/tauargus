@@ -586,6 +586,11 @@ public class SaveTable {
             }
             if (tableSet.computeTotals){ 
                 out.write("<br>Missing totals have been computed\n");
+                if (tableSet.keepStatus){
+                    out.write("<br>Statusses are kept. This could potentially cause inconsistencies between statussen.\n");
+                    out.write("<br>E.g. when unsafe cells are copied to empty totals or when protected cells are used.\n");
+                    out.write("<br>Be sure to check the results.");
+                }
             }    
         }
         catch (IOException ex) {}
@@ -617,11 +622,9 @@ public class SaveTable {
             BufferedWriter out = new BufferedWriter(new FileWriter(reportfile));
             writeKopHtml(tableSet, out, false);
 
-            if (tableSet.computeTotals){ 
-                out.write("<br>Missing totals have been computed\n");
-            }
             out.write("<p>\n");
-            out.write("<h2>Sensitivity Rule:</h2><h3>\n");
+            //out.write("<h2>Sensitivity Rule:</h2><h3>\n");
+            out.write("<h2>Sensitivity Rule:</h2>\n");
             if (tableSet.ckmProtect && !tableSet.respVar.isResponse()){
                 out.write("None used for Noise addition using the Cell Key Method<br>\n");
             }
@@ -684,7 +687,7 @@ public class SaveTable {
             if (tableSet.weighted){out.write("Sample weights have been used<br>\n");}
             if (tableSet.minTabVal !=0){out.write("Minimum lower bound for each cell " + tableSet.minTabVal + "<br>\n");} 
 
-            out.write("</h3>\n");
+            //out.write("</h3>\n");
    
             switch (tableSet.suppressed) {
                 case TableSet.SUP_JJ_OPT : 

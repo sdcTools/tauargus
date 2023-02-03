@@ -1035,6 +1035,8 @@ public class OptiSuppress {
         double[] maxJump = new double[1]; 
         int[] numberJump = new int[1]; 
         int[] errorCode = new int[1]; 
+        /*int[] solutionType = new int[1];*/
+        /*int stopRule;*/
         double[] usedTime = new double[1];
         
         final PropertyChangeSupport pcs = new PropertyChangeSupport(TableService.class);
@@ -1132,13 +1134,15 @@ public class OptiSuppress {
                     TauArgusUtils.DeleteFile(Application.getTempFile("JJRound"+xs+".OUT"));
                     TauArgusUtils.DeleteFile(Application.getTempFile("JJStat"+xs+".OUT"));
                     result = TAUROUNDER.DoRound(Solvername, Application.getTempFile("JJ"+xs+".IN"), X, upperBound, lowerBound, 0,  
+                                              /*stopRule,*/
                                               Application.getTempFile("JJ"+xs+".OUT"), 
                                               Application.getTempFile("JJstat"+xs+".OUT"),
                                               LicenceFile, 
                                               Application.getTempFile("JJRound"+xs+".log"),
                                               maxRoundTime, 0,
                                               Application.getTempDir()+"/",
-                                               maxJump, numberJump , usedTime, errorCode); //, activityListener );
+                                              maxJump, numberJump , usedTime, /*solutionType,*/
+                                              errorCode); //, activityListener );
                     // Only Optimal is implemented currently, so set manually solutionType = 0;
                     solutionType = 0; 
                     //if (solutionType > 2) {throw new ArgusException("Rounding error code = "+TAUARGUS.GetErrorString(errorCode[0]) + "\noccured in subtable "+j);}             

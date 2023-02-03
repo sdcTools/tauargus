@@ -292,12 +292,49 @@ public class DialogWriteBatchFile extends DialogBase {
                         batch.write(hs); batch.newLine();
                     }
                 }
+                else{ //tabular input
+                    tableSet= TableService.getTable(0);
+                    hs = "<SPECIFYTABLE>     ";
+                    for (k=0;k<tableSet.expVar.size();k++){
+                        variable = tableSet.expVar.get(k);  
+                        hs = hs + StrUtils.quote(variable.name); 
+                    }
+                    variable = tableSet.respVar;
+                    hs = hs + "|";
+                    if (variable!=null){ hs = hs + StrUtils.quote(variable.name); } 
+                    variable = tableSet.shadowVar;
+                    hs = hs + "|";
+                    if (variable!=null){ hs = hs + StrUtils.quote(variable.name); } 
+                    variable = tableSet.costVar;
+                    hs = hs + "|";
+                    switch (tableSet.costFunc) {
+                        case TableSet.COST_VAR:
+                            if (variable!=null){ hs = hs + StrUtils.quote(variable.name);}
+                            break;
+                        case TableSet.COST_UNITY:
+                            hs = hs + "-2";
+                            break;
+                        case TableSet.COST_FREQ:
+                            hs = hs + "-1";
+                            break;
+                        case TableSet.COST_DIST:
+                            hs = hs + "-3";
+                            break;
+                        default:
+                            break;
+                    }
+                    if (tableSet.lambda!=1) hs = hs + "|" + Double.toString(tableSet.lambda);
+                    batch.write(hs); batch.newLine();
+                }
+                
+                
                 if (metadata.dataOrigin == Metadata.DATA_ORIGIN_MICRO){  
                     batch.write("<READMICRODATA>"); batch.newLine();            
                 } else{ // tabular input
                     batch.write("<READTABLE>");
                     tableSet= TableService.getTable(0);
-                    if(tableSet.computeTotals){ batch.write(" 1");}
+                    batch.write(" "+tableSet.additivity);
+                    if(tableSet.computeTotals && tableSet.keepStatus){batch.write("T");}
                     batch.newLine(); 
                 }
 

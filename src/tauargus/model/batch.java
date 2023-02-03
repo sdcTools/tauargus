@@ -231,15 +231,11 @@ public class batch {
                         reportProgress("Tables from microdata have been read");
                         break;
                     case ("<READTABLE>"): 
-                        if (status == 3) { throw new ArgusException ("TODO Add automatic Use Status"); }
+                        if (status == 3) { 
+                            TableService.setUseStatusOnly(true);
+                            status = 4;
+                        }
                         if (status != 4){ throw new ArgusException ("This keyword (" + token + ") is not allowed in this position"); }
-//                        token = tokenizer.nextToken();
-//                        if (token.equals("")){token = "0";}
-//                        if (!token.equals("0") && !token.equals("1") && !token.equals("2")) { 
-//                            throw new ArgusException ("Illegal parameter (" + token + ") for ReadTable");}
-//                        int computeTotals = 0;
-//                        if ( token.equals("1")){computeTotals = 1;}
-//                        if ( token.equals("2")){computeTotals = 2;}
                         if (!readTablesBatch()) {throw new ArgusException ("Something wrong in readTablesBatch()");}
                         reportProgress("Tables have been read");
                         break;
@@ -477,12 +473,15 @@ public class batch {
             if (!hs.equals("0") && !hs.equals("1") && !hs.equals("2")) { 
                 throw new ArgusException ("Illegal parameter (" + hs + ") for ReadTable");}
             additivity = Integer.parseInt(hs); // additivity will be 0, 1 or 2
-            if (!tail[0].equals("")){
+            if (!tail[0].equals("") && additivity==1){ // keepStatus can only be used when additivity = 1 (compute totals)
                 hs = nextChar(tail);
-                if (hs.equals("T")||hs.equals("t")) keepStatus = true;
-                else {
-                    if (hs.equals("F")||hs.equals("f")) keepStatus = false;
-                    else throw new ArgusException("Invalid option " + hs + "\n");
+                if (hs.equals("T")||hs.equals("t")){
+                    keepStatus = true;
+                    SystemUtils.writeLogbook("Using \"KeepStatus\" could potentially cause inconsistencies between statussen.\n"+
+                                             "E.g. when unsafe cells are copied to empty totals or when protected cells are used.");
+                }
+                else { // F is default anyway
+                    if (!(hs.equals("F")||hs.equals("f"))) throw new ArgusException("Invalid option " + hs + "\n");
                 }
             }
             
@@ -518,7 +517,7 @@ public class batch {
         int[] level = new int[1];
         TableSet tableSet;
         Metadata metadata;
-       Variable variable;
+        Variable variable;
         //<RECODE>  1,Size,"D:\Argus\TauData\Size.grc"
         //<RECODE> TabNo, VarName, hrc-file or maximum treelevel
 
@@ -812,7 +811,7 @@ public class batch {
                                     tableset.CountSecondaries() + " cells have been suppressed");
                 break;
             case "RND"://TabNo, RoundingBase, Steps, Time, Partitions, StopRule
-                        // OK after Roundbase: Default Step = 0 (no step), time = 10, Nopartitions part = 0, stoprule = 2(optimal)
+                       // OK after Roundbase: Default Step = 0 (no step), time = 10, Nopartitions part = 0, stoprule = 2(optimal)
                 if (n==0) {throw new ArgusException("Linked tables is not possible for Rounding");}
                 if (Application.solverSelected == Application.SOLVER_CPLEX)
                     reportProgressInfo("Whether controlled rounding can be used when Cplex is selected as solver, " +
@@ -865,7 +864,7 @@ public class batch {
                     token = nextToken(tail);
                     tableset.roundStoppingRule  = Integer.parseInt(token); 
                     if (tableset.roundStoppingRule <= 0 || tableset.roundStoppingRule > 2)
-                        throw new ArgusException("Illegal value for max time: " + tableset.roundStoppingRule );
+                        throw new ArgusException("Illegal value for Stopping Rule (valid: 1,2,3): " + tableset.roundStoppingRule );
                     token = nextChar(tail); 
                 }else{
                     if (!token.equals(")")) throw new ArgusException("a komma(,) or \")\" expected");

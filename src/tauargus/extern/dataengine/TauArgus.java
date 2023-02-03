@@ -220,6 +220,10 @@ public class TauArgus {
     return TauArgusJavaJNI.TauArgus_GetTableCellValue(swigCPtr, this, TableIndex, CellIndex, CellResponse);
   }
 
+  public boolean GetTableCellProtectionLevels(int TableIndex, int CellIndex, double[] lpl, double[] upl) {
+    return TauArgusJavaJNI.TauArgus_GetTableCellProtectionLevels(swigCPtr, this, TableIndex, CellIndex, lpl, upl);
+  }
+
   public boolean GetTableCellStatus(int TableIndex, int CellIndex, int[] CellStatus) {
     return TauArgusJavaJNI.TauArgus_GetTableCellStatus(swigCPtr, this, TableIndex, CellIndex, CellStatus);
   }
@@ -254,6 +258,10 @@ public class TauArgus {
 
   public boolean SetTableCellStatus(int TableIndex, int[] DimIndex, int CelStatus) {
     return TauArgusJavaJNI.TauArgus_SetTableCellStatus__SWIG_0(swigCPtr, this, TableIndex, DimIndex, CelStatus);
+  }
+
+  public boolean SetTableCellProtectionLevels(int TableIndex, int CellIndex, double LPL, double UPL) {
+    return TauArgusJavaJNI.TauArgus_SetTableCellProtectionLevels(swigCPtr, this, TableIndex, CellIndex, LPL, UPL);
   }
 
   public boolean SetTableCellStatus(int TableIndex, int CellIndex, int CellStatus) {

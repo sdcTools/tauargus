@@ -61,6 +61,7 @@ public class TauArgusJavaJNI {
   public final static native boolean TauArgus_PrepareHITAS(long jarg1, TauArgus jarg1_, int jarg2, String jarg3, String jarg4, String jarg5);
   public final static native boolean TauArgus_SetTableSafety(long jarg1, TauArgus jarg1_, int jarg2, boolean jarg3, int[] jarg4, int[] jarg5, boolean jarg6, int[] jarg7, int[] jarg8, int[] jarg9, int[] jarg10, int[] jarg11, int[] jarg12, int[] jarg13, boolean jarg14, boolean jarg15, boolean jarg16, boolean jarg17, boolean jarg18, boolean jarg19, int jarg20, double jarg21, int jarg22, int[] jarg23);
   public final static native boolean TauArgus_GetTableCellValue(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, double[] jarg4);
+  public final static native boolean TauArgus_GetTableCellProtectionLevels(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, double[] jarg4, double[] jarg5);
   public final static native boolean TauArgus_GetTableCellStatus(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, int[] jarg4);
   public final static native boolean TauArgus_GetTableCell(long jarg1, TauArgus jarg1_, int jarg2, int[] jarg3, double[] jarg4, double[] jarg5, double[] jarg6, double[] jarg7, double[] jarg8, double[] jarg9, double[] jarg10, double[] jarg11, int[] jarg12, int[] jarg13, double[] jarg14, double[] jarg15, int[] jarg16, double[] jarg17, int[] jarg18, double[] jarg19, double[] jarg20, int[] jarg21, int[] jarg22, double[] jarg23, double[] jarg24, double[] jarg25, double[] jarg26);
   public final static native boolean TauArgus_SetTable(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, int[] jarg4, boolean jarg5, int jarg6, int jarg7, int jarg8, int jarg9, String jarg10, int jarg11, double jarg12, double jarg13, int jarg14, boolean jarg15);
@@ -70,6 +71,7 @@ public class TauArgusJavaJNI {
   public final static native boolean TauArgus_SetVarCodeActive(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, boolean jarg4);
   public final static native boolean TauArgus_GetStatusAndCostPerDim(long jarg1, TauArgus jarg1_, int jarg2, int[] jarg3, double[] jarg4);
   public final static native boolean TauArgus_SetTableCellStatus__SWIG_0(long jarg1, TauArgus jarg1_, int jarg2, int[] jarg3, int jarg4);
+  public final static native boolean TauArgus_SetTableCellProtectionLevels(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, double jarg4, double jarg5);
   public final static native boolean TauArgus_SetTableCellStatus__SWIG_1(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, int jarg4);
   public final static native boolean TauArgus_UndoRecode(long jarg1, TauArgus jarg1_, int jarg2);
   public final static native boolean TauArgus_ExploreFile(long jarg1, TauArgus jarg1_, String jarg2, int[] jarg3, int[] jarg4, int[] jarg5);

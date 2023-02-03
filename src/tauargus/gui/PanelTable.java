@@ -163,7 +163,6 @@ public class PanelTable extends javax.swing.JPanel {
     private Color getCKMBackgroundColor(Cell cell, Code code){
         if (tableSet.ckmProtect){
             float maxColor = Math.max(Math.abs(tableSet.minDiff), Math.abs(tableSet.maxDiff));
-            //float maxColor = (float) Math.max(Math.abs(tableSet.minDiff), Math.abs(tableSet.maxDiff));
             float diff = (float) Math.abs(cell.CKMValue - cell.response);
             if (diff >= maxColor) diff = maxColor;
             int R, G, B = 255; // darkest: (85,85,255) brightest: (235,235,255)
@@ -172,9 +171,9 @@ public class PanelTable extends javax.swing.JPanel {
             if (diff > 0){
                 return(new Color(R,G,B));
             }
-            return getBackgroundColor(code); // gray background depending on level in hierarchy
+            return getBackgroundColor(code); // blue background depending on amount of Information Loss
         } else {
-            return getBackgroundColor(code); // gray background depending on level in hierarchy
+            return getBackgroundColor(code); // blue background depending on amount of Information Loss
         }
     }
     

@@ -344,6 +344,12 @@ public class TableService {
             }
     }
     
+    public static void setUseStatusOnly(boolean useStatusOnly){
+        for (TableSet table : tables){
+            table.useStatusOnly = useStatusOnly;
+        }
+    }
+    
     public static void readTables(PropertyChangeListener propertyChangeListener) throws ArgusException, FileNotFoundException, IOException {
         PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(TableService.class);
         propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
