@@ -61,6 +61,9 @@ import tauargus.service.TableService;
 import tauargus.utils.SingleListSelectionModel;
 import tauargus.utils.TauArgusUtils;
 import tauargus.utils.TreeUtils;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
 
 public class DialogGlobalRecode extends DialogBase {
 
@@ -248,7 +251,8 @@ public class DialogGlobalRecode extends DialogBase {
                     treeCode.setVisible(fromTree);
                     buttonUndo.setEnabled(variable.recoded);
                     buttonApply.setEnabled(!variable.recoded);
-                    buttonRead.setEnabled(!fromTree);
+                    //buttonRead.setEnabled(!fromTree);
+                    buttonRead.setEnabled(true);
                     if (fromTree) {
                         buildTree();
                         labelTreeResult.setText("");
@@ -746,13 +750,13 @@ public class DialogGlobalRecode extends DialogBase {
                 LOGGER.info("Var: " + variable.name + " has been recoded\n"); // VarName(CurrentVar) 
                 SystemUtils.writeLogbook("Var: " + variable.name + " has been recoded");
                 buildTree();
-                if (Application.isAnco()) {
-//                    int i= JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "", JOptionPane.YES_NO_OPTION);
-//                    if (i == JOptionPane.YES_OPTION){
+//                if (Application.isAnco()) {
+                    int i= JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "", JOptionPane.YES_NO_OPTION);
+                    if (i == JOptionPane.YES_OPTION)
                        saveRecodeInfo(true);
-                       JOptionPane.showMessageDialog(this, "Reading back has not yet been implemented");
+//                       JOptionPane.showMessageDialog(this, "Reading back has not yet been implemented");
 //                    }
-                }
+//                }
             } else {
                 JOptionPane.showMessageDialog(this, "This hierarchical recoding could not be applied");
                 labelTreeResult.setText("Tree recode could not be applied");
@@ -812,19 +816,74 @@ public class DialogGlobalRecode extends DialogBase {
             if (fileChooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
                 String recodeListFile = fileChooser.getSelectedFile().toString();
                 TauArgusUtils.putDataDirInRegistry(recodeListFile);
-                try {
-                    variable.applyRecodeTree(recodeListFile);
-                    variable.recoded = true;
-                    buildTree();
-                    ((AbstractTableModel)tableVariables.getModel()).fireTableDataChanged();
-                    buttonUndo.setEnabled(true);
-                    // buttonApply.setEnabled(false);
-                    labelTreeResult.setText("Tree recode has been applied successfully");
-                    labelTreeResult.setForeground(Color.black);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+ // This does not work. It will immediately apply the recode file7  
+//                try {
+//                    variable.applyRecodeTree(recodeListFile);
+//                    variable.recoded = true;
+//                    buildTree();
+//                    ((AbstractTableModel)tableVariables.getModel()).fireTableDataChanged();
+//                    buttonUndo.setEnabled(true);
+//                    // buttonApply.setEnabled(false);
+//                    labelTreeResult.setText("Tree recode has been applied successfully");
+//                    labelTreeResult.setForeground(Color.black);
+//                } catch (Exception ex) {
+//                    JOptionPane.showMessageDialog(this, ex.getMessage());
+
+             int i, r, j, nc; String hs,xs;
+             j = TauArgusUtils.getNumberOfCodes(variable.index);
+             int[] Codes = new int[j];
+             buildTree();
+             r = treeCode.getRowCount(); nc = 0; xs = "";
+             try (BufferedReader reader = new BufferedReader(new FileReader(recodeListFile))){
+                 String regel = reader.readLine();
+                 if (!StringUtils.equals(regel, "<TREERECODE>")) {
+                  throw new ArgusException("First line does not start with \"<TREERECODE>\"");
+                 }
+                 while ((regel = reader.readLine()) != null) {
+                  if (StringUtils.isNotBlank(regel)) {
+                      j = TauArgusUtils.getCodeIndex(variable.index, regel);
+                      hs = String.valueOf(j);
+                      if (j == -1){ 
+                          throw new ArgusException("Code (" + regel + ") not found");
+                     
+                      }
+                      Codes[nc] = j;
+                      nc = nc + 1;
+                      xs = xs + " Code: " + Integer.toString(nc) +  " waarde " + Integer.toString(j);
+//                }                      
+                    } 
                 }
+// Read all codes. We need the inverse order to close all teh necessary nodes
+                for(i=0; i<nc; i++) 
+                  for(j=i+1; j<nc; j++){
+                    if ( Codes[i] < Codes[j] )  
+                    { r = Codes[j]; Codes[j] = Codes[i]; Codes[i] = r;}
+                  }
+                for(i=0; i<nc; i++) {
+                    treeCode.collapseRow(Codes[i]);}
+              
+//      //      tauArgus.UndoRecode(index);
+//            String regel = reader.readLine();
+//            if (!StringUtils.equals(regel, "<TREERECODE>")) {
+//                throw new ArgusException("First line does not start with \"<TREERECODE>\"");
+//            }
+//            while ((regel = reader.readLine()) != null) {
+//                if (StringUtils.isNotBlank(regel)) {
+//                    int codeIndex = TauArgusUtils.getCodeIndex(index, regel);
+//                    if (codeIndex == -1) {
+//                        throw new ArgusException("Code (" + regel + ") not found");
+//                    } 
+//                    treeCode.
+//                    tauArgus.SetVarCodeActive(index, codeIndex, false);
+//                }
+//            }
+//            tauArgus.DoActiveRecode(index);
+              }
+                catch (Exception ex) {
+//            tauArgus.UndoRecode(index);
+              JOptionPane.showMessageDialog(this, ex.getMessage());
             }
+          }
         } else {
             if (fileChooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
                 String fileName = fileChooser.getSelectedFile().toString();
