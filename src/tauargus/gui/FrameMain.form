@@ -333,12 +333,10 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" pref="884" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="toolBar" alignment="1" max="32767" attributes="0"/>
+                  <Component id="toolBar" alignment="0" pref="884" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="884" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -347,7 +345,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="toolBar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="667" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="669" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -356,7 +354,11 @@
   <SubComponents>
     <Container class="javax.swing.JToolBar" name="toolBar">
       <Properties>
-        <Property name="floatable" type="boolean" value="false"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+            <EmptyBorder/>
+          </Border>
+        </Property>
         <Property name="rollover" type="boolean" value="true"/>
         <Property name="borderPainted" type="boolean" value="false"/>
       </Properties>
@@ -372,13 +374,11 @@
               <Image iconType="3" name="/tauargus/resources/OpenMicrodata.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Open Microdata..."/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonOpenMicrodataActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="buttonOpenTable">
           <Properties>
@@ -389,6 +389,7 @@
               <Image iconType="3" name="/tauargus/resources/OpenTable.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Open Table..."/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -400,6 +401,7 @@
               <Image iconType="3" name="/tauargus/resources/OpenTableSet.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Open TableSet..."/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -414,6 +416,7 @@
               <Image iconType="3" name="/tauargus/resources/OpenBatch.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Open Batch Process..."/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -433,6 +436,7 @@
               <Image iconType="3" name="/tauargus/resources/SpecifyMetadata.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Specify Metadata"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -447,6 +451,7 @@
               <Image iconType="3" name="/tauargus/resources/SpecifyTables.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Specify Tables"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -463,6 +468,7 @@
               <Image iconType="3" name="/tauargus/resources/SelectTable.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Select Table"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -477,6 +483,7 @@
               <Image iconType="3" name="/tauargus/resources/linked.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Linked Tables"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -493,6 +500,7 @@
               <Image iconType="3" name="/tauargus/resources/SaveTable.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Save Table"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -507,6 +515,7 @@
               <Image iconType="3" name="/tauargus/resources/ViewReport.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="View Report"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -521,6 +530,7 @@
               <Image iconType="3" name="/tauargus/resources/apriori.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Generate Apriori"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="name" type="java.lang.String" value="" noResource="true"/>
@@ -535,6 +545,7 @@
               <Image iconType="3" name="/tauargus/resources/Help.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Help"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -552,6 +563,7 @@
               <Image iconType="3" name="/tauargus/resources/options.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Options"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -563,6 +575,7 @@
               <Image iconType="3" name="/tauargus/resources/about.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="About"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -581,6 +594,20 @@
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Container class="javax.swing.JToolBar" name="jToolBar1">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
+            <Property name="rollover" type="boolean" value="true"/>
+          </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+        </Container>
+      </SubComponents>
     </Container>
   </SubComponents>
 </Form>

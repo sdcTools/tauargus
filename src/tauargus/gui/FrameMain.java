@@ -313,6 +313,17 @@ public class FrameMain extends javax.swing.JFrame {
 
         panelTable.setVisible(TableService.numberOfTables() != 0);
         if (TableService.numberOfTables() != 0) {panelTable.enableHiddenFeatures(Application.isAnco());}
+        
+        if (Application.numberOfMetadatas() > 0) {
+            String titlefile;
+            if (TableService.numberOfTables() > 0){
+                titlefile = TableService.getTable(panelTable.getTableNumber()).metadata.dataFile;
+            }
+            else{
+                titlefile = Application.getMetadata(0).dataFile;
+            }
+            this.setTitle("TauArgus \t" + titlefile);
+        }
     }
     
     public void organiseAnco(){
@@ -357,6 +368,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonOptions = new javax.swing.JButton();
         buttonAbout = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jToolBar1 = new javax.swing.JToolBar();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemOpenMicrodata = new javax.swing.JMenuItem();
@@ -391,26 +403,23 @@ public class FrameMain extends javax.swing.JFrame {
         setTitle("TauArgus");
         setExtendedState(getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
 
-        toolBar.setFloatable(false);
+        toolBar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         toolBar.setRollover(true);
         toolBar.setBorderPainted(false);
 
         buttonOpenMicrodata.setAction(openMicrodataAction);
         buttonOpenMicrodata.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/OpenMicrodata.png"))); // NOI18N
         buttonOpenMicrodata.setToolTipText("Open Microdata...");
+        buttonOpenMicrodata.setBorderPainted(false);
         buttonOpenMicrodata.setFocusable(false);
         buttonOpenMicrodata.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonOpenMicrodata.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        buttonOpenMicrodata.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonOpenMicrodataActionPerformed(evt);
-            }
-        });
         toolBar.add(buttonOpenMicrodata);
 
         buttonOpenTable.setAction(openTableAction);
         buttonOpenTable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/OpenTable.png"))); // NOI18N
         buttonOpenTable.setToolTipText("Open Table...");
+        buttonOpenTable.setBorderPainted(false);
         buttonOpenTable.setFocusable(false);
         buttonOpenTable.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonOpenTable.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -418,6 +427,7 @@ public class FrameMain extends javax.swing.JFrame {
 
         buttonOpenTableSet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/OpenTableSet.png"))); // NOI18N
         buttonOpenTableSet.setToolTipText("Open TableSet...");
+        buttonOpenTableSet.setBorderPainted(false);
         buttonOpenTableSet.setFocusable(false);
         buttonOpenTableSet.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonOpenTableSet.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -430,6 +440,7 @@ public class FrameMain extends javax.swing.JFrame {
 
         buttonOpenBatchProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/OpenBatch.png"))); // NOI18N
         buttonOpenBatchProcess.setToolTipText("Open Batch Process...");
+        buttonOpenBatchProcess.setBorderPainted(false);
         buttonOpenBatchProcess.setFocusable(false);
         buttonOpenBatchProcess.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonOpenBatchProcess.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -444,6 +455,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonSpecifyMetadata.setAction(specifyMetadataAction);
         buttonSpecifyMetadata.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/SpecifyMetadata.png"))); // NOI18N
         buttonSpecifyMetadata.setToolTipText("Specify Metadata");
+        buttonSpecifyMetadata.setBorderPainted(false);
         buttonSpecifyMetadata.setFocusable(false);
         buttonSpecifyMetadata.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonSpecifyMetadata.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -452,6 +464,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonSpecifyTables.setAction(specifyTablesAction);
         buttonSpecifyTables.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/SpecifyTables.png"))); // NOI18N
         buttonSpecifyTables.setToolTipText("Specify Tables");
+        buttonSpecifyTables.setBorderPainted(false);
         buttonSpecifyTables.setFocusable(false);
         buttonSpecifyTables.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonSpecifyTables.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -461,6 +474,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonSelectTable.setAction(selectTableAction);
         buttonSelectTable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/SelectTable.png"))); // NOI18N
         buttonSelectTable.setToolTipText("Select Table");
+        buttonSelectTable.setBorderPainted(false);
         buttonSelectTable.setFocusable(false);
         buttonSelectTable.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonSelectTable.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -469,6 +483,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonLinkedTables.setAction(LinkedTablesAction);
         buttonLinkedTables.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/linked.png"))); // NOI18N
         buttonLinkedTables.setToolTipText("Linked Tables");
+        buttonLinkedTables.setBorderPainted(false);
         buttonLinkedTables.setFocusable(false);
         buttonLinkedTables.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonLinkedTables.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -478,6 +493,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonSaveTable.setAction(saveTableAction);
         buttonSaveTable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/SaveTable.png"))); // NOI18N
         buttonSaveTable.setToolTipText("Save Table");
+        buttonSaveTable.setBorderPainted(false);
         buttonSaveTable.setFocusable(false);
         buttonSaveTable.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonSaveTable.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -486,6 +502,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonViewReport.setAction(viewReportAction);
         buttonViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/ViewReport.png"))); // NOI18N
         buttonViewReport.setToolTipText("View Report");
+        buttonViewReport.setBorderPainted(false);
         buttonViewReport.setFocusable(false);
         buttonViewReport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonViewReport.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -494,6 +511,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonGenerateApriori.setAction(GenerateAprioriAction);
         buttonGenerateApriori.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/apriori.png"))); // NOI18N
         buttonGenerateApriori.setToolTipText("Generate Apriori");
+        buttonGenerateApriori.setBorderPainted(false);
         buttonGenerateApriori.setFocusable(false);
         buttonGenerateApriori.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonGenerateApriori.setName(""); // NOI18N
@@ -503,6 +521,7 @@ public class FrameMain extends javax.swing.JFrame {
 
         buttonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/Help.png"))); // NOI18N
         buttonHelp.setToolTipText("Help");
+        buttonHelp.setBorderPainted(false);
         buttonHelp.setFocusable(false);
         buttonHelp.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonHelp.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -516,6 +535,7 @@ public class FrameMain extends javax.swing.JFrame {
         buttonOptions.setAction(OptionsAction);
         buttonOptions.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/options.png"))); // NOI18N
         buttonOptions.setToolTipText("Options");
+        buttonOptions.setBorderPainted(false);
         buttonOptions.setFocusable(false);
         buttonOptions.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonOptions.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -523,6 +543,7 @@ public class FrameMain extends javax.swing.JFrame {
 
         buttonAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/about.png"))); // NOI18N
         buttonAbout.setToolTipText("About");
+        buttonAbout.setBorderPainted(false);
         buttonAbout.setFocusable(false);
         buttonAbout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonAbout.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -535,18 +556,22 @@ public class FrameMain extends javax.swing.JFrame {
 
         jScrollPane1.setMaximumSize(new java.awt.Dimension(0, 0));
 
+        jToolBar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jToolBar1.setRollover(true);
+        jScrollPane1.setViewportView(jToolBar1);
+
         menuFile.setMnemonic('F');
         menuFile.setText("File");
 
         menuItemOpenMicrodata.setAction(openMicrodataAction);
-        menuItemOpenMicrodata.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemOpenMicrodata.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         menuItemOpenMicrodata.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/OpenMicrodata.png"))); // NOI18N
         menuItemOpenMicrodata.setMnemonic('M');
         menuItemOpenMicrodata.setText("Open Microdata...");
         menuFile.add(menuItemOpenMicrodata);
 
         menuItemOpenTable.setAction(openTableAction);
-        menuItemOpenTable.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemOpenTable.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         menuItemOpenTable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/OpenTable.png"))); // NOI18N
         menuItemOpenTable.setMnemonic('T');
         menuItemOpenTable.setText("Open Table...");
@@ -589,7 +614,7 @@ public class FrameMain extends javax.swing.JFrame {
         menuSpecify.setText("Specify");
 
         menuItemSpecifyMetadata.setAction(specifyMetadataAction);
-        menuItemSpecifyMetadata.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemSpecifyMetadata.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         menuItemSpecifyMetadata.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/SpecifyMetadata.png"))); // NOI18N
         menuItemSpecifyMetadata.setMnemonic('M');
         menuItemSpecifyMetadata.setText("Metadata...");
@@ -756,17 +781,16 @@ public class FrameMain extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addComponent(toolBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 667, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -918,10 +942,6 @@ public class FrameMain extends javax.swing.JFrame {
             }
         catch (argus.model.ArgusException ex){JOptionPane.showMessageDialog(null, ex.getMessage());}
     }//GEN-LAST:event_menuItemContentActionPerformed
-
-    private void buttonOpenMicrodataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOpenMicrodataActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonOpenMicrodataActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAbout;
@@ -940,6 +960,7 @@ public class FrameMain extends javax.swing.JFrame {
     private javax.swing.JButton buttonViewReport;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuHelp;

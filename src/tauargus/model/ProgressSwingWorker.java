@@ -47,8 +47,8 @@ public abstract class ProgressSwingWorker<T, V> extends SwingWorker<T, V> {
             }
         };
 
-        dialogRounderProgress = new DialogRounderProgress(null, true);
-        dialogProgress = new DialogProgress(null, true);
+        dialogRounderProgress = new DialogRounderProgress(Application.windowInfo, true);
+        dialogProgress = new DialogProgress(Application.windowInfo, true);
         
         if (progressType == ROUNDER)
         {

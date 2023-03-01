@@ -251,23 +251,30 @@ public class DialogGlobalRecode extends DialogBase {
                     treeCode.setVisible(fromTree);
                     buttonUndo.setEnabled(variable.recoded);
                     buttonApply.setEnabled(!variable.recoded);
-                    //buttonRead.setEnabled(!fromTree);
                     buttonRead.setEnabled(true);
                     if (fromTree) {
-                        buildTree();
-                        labelTreeResult.setText("");
+                        try{
+                            buildTree();
+                            if (variable.recoded){
+                                labelTreeResult.setText("Tree recode has been applied successfully");
+                                labelTreeResult.setToolTipText(null);
+                            }
+                            else{
+                                labelTreeResult.setText("Tree structure for global recode");
+                                labelTreeResult.setToolTipText(null);
+                            }
+                        }
+                        catch (Exception ex){
+                            JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());        
+                        }
                     } else {
-                        labelRecodeData.setText("Edit box for global recode");
-                        textAreaRecodeData.setText("");
-                        textFieldMissing1.setText("");
-                        textFieldMissing2.setText("");
-                        textFieldCodelist.setText("");
                         if (variable.recoded) {
                             try {
                                 RecodeInfo recodeInfo = variable.readRecodeFile(variable.currentRecodeFile);
                                 textFieldCodelist.setText(variable.currentRecodeCodeListFile);
                                 if (recodeInfo != null) {
-                                    labelRecodeData.setText(variable.currentRecodeFile);
+                                    labelRecodeData.setText("Recode has been applied successfully");
+                                    labelRecodeData.setToolTipText(null);
                                     textAreaRecodeData.setText(recodeInfo.getRecodeData());
                                     textFieldMissing1.setText(recodeInfo.getMissing1());
                                     textFieldMissing2.setText(recodeInfo.getMissing2());
@@ -275,6 +282,14 @@ public class DialogGlobalRecode extends DialogBase {
                                 }
                                } catch (ArgusException | IOException  ex) {
                                 JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());}
+                        }
+                        else{
+                            labelRecodeData.setText("Edit box for global recode");
+                            labelRecodeData.setToolTipText(null);
+                            textAreaRecodeData.setText("");
+                            textFieldMissing1.setText("");
+                            textFieldMissing2.setText("");
+                            textFieldCodelist.setText("");
                         }
                         textAreaWarning.setText("");
                     }
@@ -335,7 +350,14 @@ public class DialogGlobalRecode extends DialogBase {
             tableVariables.setRowSelectionInterval(0, 0);
         }
         
-        labelRecodeData.setText("Edit box for global recode");
+        if (!variable.recoded){
+            labelRecodeData.setText("Edit box for global recode");
+            labelTreeResult.setText("Tree structure for global recode");
+        }
+        else{
+            labelRecodeData.setText("Recode has been applied successfully");
+            labelTreeResult.setText("Tree recode has been applied successfully");
+        }
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -414,8 +436,6 @@ public class DialogGlobalRecode extends DialogBase {
             }
         });
         tableVariables.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tableVariables.setShowHorizontalLines(false);
-        tableVariables.setShowVerticalLines(false);
         tableVariables.getTableHeader().setReorderingAllowed(false);
         scrollPaneVariables.setViewportView(tableVariables);
 
@@ -449,9 +469,9 @@ public class DialogGlobalRecode extends DialogBase {
             .addGroup(panelRecodeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelRecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonRead, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonApply, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                    .addComponent(buttonUndo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buttonRead, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonApply, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonUndo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         panelRecodeLayout.setVerticalGroup(
@@ -463,7 +483,7 @@ public class DialogGlobalRecode extends DialogBase {
                 .addComponent(buttonApply)
                 .addGap(18, 18, 18)
                 .addComponent(buttonUndo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         panelClose.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -481,7 +501,7 @@ public class DialogGlobalRecode extends DialogBase {
             panelCloseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCloseLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buttonClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonClose, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         panelCloseLayout.setVerticalGroup(
@@ -489,7 +509,7 @@ public class DialogGlobalRecode extends DialogBase {
             .addGroup(panelCloseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(buttonClose)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         panelMissing.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Missing values"));
@@ -516,13 +536,15 @@ public class DialogGlobalRecode extends DialogBase {
         panelMissingLayout.setVerticalGroup(
             panelMissingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMissingLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(panelMissingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMissing1)
                     .addComponent(textFieldMissing1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMissingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMissing2)
-                    .addComponent(textFieldMissing2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(textFieldMissing2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelRecodeData.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -534,6 +556,7 @@ public class DialogGlobalRecode extends DialogBase {
         scrollPaneRecodeData.setViewportView(textAreaRecodeData);
 
         labelCodelist.setText("Codelist for recode:");
+        labelCodelist.setName(""); // NOI18N
 
         buttonCodelist.setText("...");
         buttonCodelist.addActionListener(new java.awt.event.ActionListener() {
@@ -550,6 +573,7 @@ public class DialogGlobalRecode extends DialogBase {
         textAreaWarning.setColumns(20);
         textAreaWarning.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
         textAreaWarning.setRows(5);
+        textAreaWarning.setPreferredSize(new java.awt.Dimension(232, 69));
         jScrollPane1.setViewportView(textAreaWarning);
 
         javax.swing.GroupLayout panelRecodeDataLayout = new javax.swing.GroupLayout(panelRecodeData);
@@ -558,16 +582,16 @@ public class DialogGlobalRecode extends DialogBase {
             panelRecodeDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelRecodeDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelRecodeDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneRecodeData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                    .addComponent(labelRecodeData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelCodelist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelRecodeDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelRecodeData, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelCodelist, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelRecodeDataLayout.createSequentialGroup()
-                        .addComponent(textFieldCodelist)
+                        .addComponent(textFieldCodelist, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonCodelist))
-                    .addComponent(labelWarning, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                        .addComponent(buttonCodelist, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1)
+                    .addComponent(scrollPaneRecodeData))
                 .addContainerGap())
         );
         panelRecodeDataLayout.setVerticalGroup(
@@ -576,13 +600,13 @@ public class DialogGlobalRecode extends DialogBase {
                 .addContainerGap()
                 .addComponent(labelRecodeData)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPaneRecodeData)
+                .addComponent(scrollPaneRecodeData, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelCodelist)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelRecodeDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textFieldCodelist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonCodelist))
+                .addGroup(panelRecodeDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(buttonCodelist)
+                    .addComponent(textFieldCodelist, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelWarning)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -591,6 +615,7 @@ public class DialogGlobalRecode extends DialogBase {
         );
 
         panelTree.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelTree.setPreferredSize(new java.awt.Dimension(250, 427));
 
         labelMaxLevel.setText("Maximum level:");
 
@@ -602,7 +627,13 @@ public class DialogGlobalRecode extends DialogBase {
             }
         });
 
+        treeCode.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        treeCode.setMinimumSize(new java.awt.Dimension(12, 20));
         scrollPaneCodeTree.setViewportView(treeCode);
+
+        labelTreeResult.setMaximumSize(new java.awt.Dimension(66, 16));
+        labelTreeResult.setMinimumSize(new java.awt.Dimension(66, 16));
+        labelTreeResult.setPreferredSize(new java.awt.Dimension(66, 16));
 
         javax.swing.GroupLayout panelTreeLayout = new javax.swing.GroupLayout(panelTree);
         panelTree.setLayout(panelTreeLayout);
@@ -610,27 +641,26 @@ public class DialogGlobalRecode extends DialogBase {
             panelTreeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTreeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelTreeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneCodeTree, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addGroup(panelTreeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelTreeLayout.createSequentialGroup()
                         .addComponent(labelMaxLevel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(comboBoxMaxLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(labelTreeResult, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboBoxMaxLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelTreeResult, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrollPaneCodeTree, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                .addGap(8, 8, 8))
         );
         panelTreeLayout.setVerticalGroup(
             panelTreeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTreeLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(labelTreeResult, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelTreeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMaxLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboBoxMaxLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPaneCodeTree)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelTreeResult, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPaneCodeTree, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -645,33 +675,34 @@ public class DialogGlobalRecode extends DialogBase {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelRecode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelMissing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelMissing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelRecodeData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelRecodeData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelTree, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {panelRecodeData, panelTree});
-
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelTree, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(scrollPaneVariables, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelRecode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelMissing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelRecodeData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panelTree, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelRecodeData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(scrollPaneVariables, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(panelRecode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panelClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panelMissing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        panelRecodeData.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -688,8 +719,9 @@ public class DialogGlobalRecode extends DialogBase {
             if (fromTree) {
                 buildTree();
             }
-            labelTreeResult.setText("");
+            labelTreeResult.setText("Tree structure for global recode");
             labelTreeResult.setForeground(Color.black);
+            labelTreeResult.setToolTipText(null);
             labelWarning.setText("");
             labelWarning.setForeground(Color.black);
             LOGGER.info("Recode for var: " + variable.name + " has been reversed\n"); // VarName(CurrentVar)
@@ -747,16 +779,11 @@ public class DialogGlobalRecode extends DialogBase {
                 labelTreeResult.setText("Tree recode has been applied successfully");
                 labelTreeResult.setForeground(Color.black);
                 ((AbstractTableModel)tableVariables.getModel()).fireTableDataChanged();
-                LOGGER.info("Var: " + variable.name + " has been recoded\n"); // VarName(CurrentVar) 
+                LOGGER.log(Level.INFO, "Var: {0} has been recoded\n", variable.name); 
                 SystemUtils.writeLogbook("Var: " + variable.name + " has been recoded");
                 buildTree();
-//                if (Application.isAnco()) {
-                    int i= JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "", JOptionPane.YES_NO_OPTION);
-                    if (i == JOptionPane.YES_OPTION)
-                       saveRecodeInfo(true);
-//                       JOptionPane.showMessageDialog(this, "Reading back has not yet been implemented");
-//                    }
-//                }
+                int i = JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "", JOptionPane.YES_NO_OPTION);
+                saveRecodeInfo(i == JOptionPane.YES_OPTION);
             } else {
                 JOptionPane.showMessageDialog(this, "This hierarchical recoding could not be applied");
                 labelTreeResult.setText("Tree recode could not be applied");
@@ -862,6 +889,8 @@ public class DialogGlobalRecode extends DialogBase {
                 for(i=0; i<nc; i++) {
                     treeCode.collapseRow(Codes[i]);}
               
+                labelTreeResult.setText(recodeListFile);
+                labelTreeResult.setToolTipText(recodeListFile);
 //      //      tauArgus.UndoRecode(index);
 //            String regel = reader.readLine();
 //            if (!StringUtils.equals(regel, "<TREERECODE>")) {
@@ -894,6 +923,7 @@ public class DialogGlobalRecode extends DialogBase {
                         RecodeInfo recodeInfo = variable.readRecodeFile(fileName);
                         if (recodeInfo != null) {
                             labelRecodeData.setText(fileName);
+                            labelRecodeData.setToolTipText(fileName);
                             textAreaRecodeData.setText(recodeInfo.getRecodeData());
                             textFieldMissing1.setText(recodeInfo.getMissing1());
                             textFieldMissing2.setText(recodeInfo.getMissing2());
@@ -911,10 +941,13 @@ public class DialogGlobalRecode extends DialogBase {
 
     private void saveRecodeInfo(Boolean forTreeRecode) {
         RecodeInfo recodeInfo = new RecodeInfo(textAreaRecodeData.getText(), textFieldMissing1.getText(), textFieldMissing2.getText(), textFieldCodelist.getText());
-        String message;
-        message = "Recode information has been changed.\nSave recodefile?";
-        if (forTreeRecode){message = "Do you want to save the recoded tree information";}
-        int i = JOptionPane.showConfirmDialog(this, message, "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
+        int i;
+        if (forTreeRecode){ // You only get here when you want to save the tree recode
+            i = JOptionPane.YES_OPTION;
+        }
+        else{
+            i = JOptionPane.showConfirmDialog(this, "Recode information has been changed.\nSave recodefile?", "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
+        }
         if (i == JOptionPane.YES_OPTION) {
 //        String hs = SystemUtils.getRegString("general", "datadir", "");
 //        if (!hs.equals("")){
@@ -1037,48 +1070,6 @@ public class DialogGlobalRecode extends DialogBase {
         }   
         return maxDepth;
     }
-
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(DialogGlobalRecode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(DialogGlobalRecode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(DialogGlobalRecode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(DialogGlobalRecode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the dialog */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                DialogGlobalRecode dialog = new DialogGlobalRecode(new javax.swing.JFrame(), true);
-//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-//                    @Override
-//                    public void windowClosing(java.awt.event.WindowEvent e) {
-//                        System.exit(0);
-//                    }
-//                });
-//                dialog.setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonApply;

@@ -1206,7 +1206,7 @@ public class OptiSuppress {
                 if(solutionType ==2){solutionString=solutionString+"Rapid";}
                 solutionString=solutionString+"</b>" + 
                      "; LowerBound:" + StrUtils.formatDouble(lowerBound[0], tableSet.respVar.nDecimals) +
-                     ", UpperBound: "+ StrUtils.formatDouble(lowerBound[0], tableSet.respVar.nDecimals) + "<br>";
+                     ", UpperBound: "+ StrUtils.formatDouble(upperBound[0], tableSet.respVar.nDecimals) + "<br>";
             }
             Date endDate = new Date();
             long diff = endDate.getTime()-startDate.getTime();
@@ -1220,10 +1220,12 @@ public class OptiSuppress {
             tableSet.solverUsed = Application.solverSelected;
 //            hs = ""; Not used????
 //            if (tableSet.roundUnitCost){ hs = "\nUnit cost function has been used.";} Not used????
-            SystemUtils.writeLogbook("Table has been rounded.\n" + 
-                                        "Rounding base:   "+ tableSet.roundBase + ".\n"+
-                                        "Max jump:        " + StrUtils.formatDouble(tableSet.roundMaxJump, tableSet.respVar.nDecimals) + ".\n"+
-                                        "Number of steps: " + tableSet.roundJumps + ".");
+            SystemUtils.writeLogbook("Table has been rounded\n" + 
+                                        "Rounding base:   "+ tableSet.roundBase + "\n"+
+                                        "Max jump:        " + StrUtils.formatDouble(tableSet.roundMaxJump, tableSet.respVar.nDecimals) + "\n"+
+                                        "Number of steps: " + tableSet.roundJumps + "\n" +
+                                        "Lowerbound:" + StrUtils.formatDouble(lowerBound[0], tableSet.respVar.nDecimals) + "\n" +
+                                        "Upperbound:" + StrUtils.formatDouble(upperBound[0], tableSet.respVar.nDecimals));
             SystemUtils.writeLogbook("End of the rounding procedure");
         } catch(Exception ex){ 
             throw new ArgusException("Error in the rounding procedure\n" + ex.getMessage());

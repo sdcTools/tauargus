@@ -429,6 +429,10 @@ public class PanelTable extends javax.swing.JPanel {
         return -1;
     }
     
+    public int getTableNumber(){
+        return this.tableSet.index;
+    }
+    
     public void setTable(TableSet tableSet) {
         this.tableSet = tableSet;
         this.tauArgus = Application.getTauArgusDll();
