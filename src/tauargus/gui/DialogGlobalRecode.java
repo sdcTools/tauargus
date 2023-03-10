@@ -64,6 +64,7 @@ import tauargus.utils.TreeUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.util.Enumeration;
 
 public class DialogGlobalRecode extends DialogBase {
 
@@ -688,9 +689,9 @@ public class DialogGlobalRecode extends DialogBase {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelTree, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelRecodeData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(panelRecodeData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scrollPaneVariables, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(panelRecode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -750,9 +751,10 @@ public class DialogGlobalRecode extends DialogBase {
     }//GEN-LAST:event_buttonCloseActionPerformed
 
     private void comboBoxMaxLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxMaxLevelActionPerformed
-        int selectedIndex = comboBoxMaxLevel.getSelectedIndex(); int maxDepth = 0;
+        int selectedIndex = comboBoxMaxLevel.getSelectedIndex(); //int maxDepth = 0;
         if (selectedIndex != -1) {
-            maxDepth = expand(selectedIndex + 1);
+            //maxDepth = expand(selectedIndex + 1);
+            expand(selectedIndex + 1);
         }
     }//GEN-LAST:event_comboBoxMaxLevelActionPerformed
 
@@ -782,8 +784,9 @@ public class DialogGlobalRecode extends DialogBase {
                 LOGGER.log(Level.INFO, "Var: {0} has been recoded\n", variable.name); 
                 SystemUtils.writeLogbook("Var: " + variable.name + " has been recoded");
                 buildTree();
-                int i = JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "", JOptionPane.YES_NO_OPTION);
-                saveRecodeInfo(i == JOptionPane.YES_OPTION);
+                int i = JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
+                if (i == JOptionPane.YES_OPTION) 
+                    saveRecodeInfo(true);
             } else {
                 JOptionPane.showMessageDialog(this, "This hierarchical recoding could not be applied");
                 labelTreeResult.setText("Tree recode could not be applied");
@@ -843,54 +846,48 @@ public class DialogGlobalRecode extends DialogBase {
             if (fileChooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
                 String recodeListFile = fileChooser.getSelectedFile().toString();
                 TauArgusUtils.putDataDirInRegistry(recodeListFile);
- // This does not work. It will immediately apply the recode file7  
-//                try {
-//                    variable.applyRecodeTree(recodeListFile);
-//                    variable.recoded = true;
-//                    buildTree();
-//                    ((AbstractTableModel)tableVariables.getModel()).fireTableDataChanged();
-//                    buttonUndo.setEnabled(true);
-//                    // buttonApply.setEnabled(false);
-//                    labelTreeResult.setText("Tree recode has been applied successfully");
-//                    labelTreeResult.setForeground(Color.black);
-//                } catch (Exception ex) {
-//                    JOptionPane.showMessageDialog(this, ex.getMessage());
-
-             int i, r, j, nc; String hs,xs;
-             j = TauArgusUtils.getNumberOfCodes(variable.index);
-             int[] Codes = new int[j];
-             buildTree();
-             r = treeCode.getRowCount(); nc = 0; xs = "";
-             try (BufferedReader reader = new BufferedReader(new FileReader(recodeListFile))){
-                 String regel = reader.readLine();
-                 if (!StringUtils.equals(regel, "<TREERECODE>")) {
-                  throw new ArgusException("First line does not start with \"<TREERECODE>\"");
-                 }
-                 while ((regel = reader.readLine()) != null) {
-                  if (StringUtils.isNotBlank(regel)) {
-                      j = TauArgusUtils.getCodeIndex(variable.index, regel);
-                      hs = String.valueOf(j);
-                      if (j == -1){ 
-                          throw new ArgusException("Code (" + regel + ") not found");
-                     
-                      }
-                      Codes[nc] = j;
-                      nc = nc + 1;
-                      xs = xs + " Code: " + Integer.toString(nc) +  " waarde " + Integer.toString(j);
+                int i, r, j, nc; 
+                String xs;
+                j = TauArgusUtils.getNumberOfCodes(variable.index);
+                int[] Codes = new int[j];
+                buildTree();
+                //r = treeCode.getRowCount(); 
+                nc = 0; 
+                xs = "";
+                try (BufferedReader reader = new BufferedReader(new FileReader(recodeListFile))){
+                    String regel = reader.readLine();
+                    if (!StringUtils.equals(regel, "<TREERECODE>")) {
+                        throw new ArgusException("First line does not start with \"<TREERECODE>\"");
+                    }
+                    while ((regel = reader.readLine()) != null) {
+                        if (StringUtils.isNotBlank(regel)) {
+                            j = TauArgusUtils.getCodeIndex(variable.index, regel);
+                            //hs = String.valueOf(j);
+                            if (j == -1){ 
+                                throw new ArgusException("Code (" + regel + ") not found");
+                            }
+                            Codes[nc] = j;
+                            nc = nc + 1;
+                            xs = xs + " Code: " + Integer.toString(nc) +  " waarde " + Integer.toString(j);
 //                }                      
-                    } 
-                }
-// Read all codes. We need the inverse order to close all teh necessary nodes
-                for(i=0; i<nc; i++) 
-                  for(j=i+1; j<nc; j++){
-                    if ( Codes[i] < Codes[j] )  
-                    { r = Codes[j]; Codes[j] = Codes[i]; Codes[i] = r;}
-                  }
-                for(i=0; i<nc; i++) {
-                    treeCode.collapseRow(Codes[i]);}
+                        } 
+                    }
+// Read all codes. We need the inverse order to close all the necessary nodes
+                    for(i=0; i<nc; i++) {
+                        for(j=i+1; j<nc; j++){
+                            if ( Codes[i] < Codes[j] ) { 
+                                r = Codes[j]; 
+                                Codes[j] = Codes[i]; 
+                                Codes[i] = r;
+                            }
+                        }
+                    }
+                    for(i=0; i<nc; i++) {
+                        treeCode.collapseRow(Codes[i]);
+                    }
               
-                labelTreeResult.setText(recodeListFile);
-                labelTreeResult.setToolTipText(recodeListFile);
+                    labelTreeResult.setText(recodeListFile);
+                    labelTreeResult.setToolTipText(recodeListFile);
 //      //      tauArgus.UndoRecode(index);
 //            String regel = reader.readLine();
 //            if (!StringUtils.equals(regel, "<TREERECODE>")) {
@@ -907,12 +904,12 @@ public class DialogGlobalRecode extends DialogBase {
 //                }
 //            }
 //            tauArgus.DoActiveRecode(index);
-              }
+                }
                 catch (Exception ex) {
 //            tauArgus.UndoRecode(index);
-              JOptionPane.showMessageDialog(this, ex.getMessage());
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
             }
-          }
         } else {
             if (fileChooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
                 String fileName = fileChooser.getSelectedFile().toString();
