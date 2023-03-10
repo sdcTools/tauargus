@@ -133,7 +133,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="buttonOK">
       <Properties>
-        <Property name="label" type="java.lang.String" value="Apply"/>
+        <Property name="text" type="java.lang.String" value="Apply"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonOKActionPerformed"/>
@@ -141,7 +141,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="buttonCancel">
       <Properties>
-        <Property name="label" type="java.lang.String" value="Close"/>
+        <Property name="text" type="java.lang.String" value="Cancel"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCancelActionPerformed"/>

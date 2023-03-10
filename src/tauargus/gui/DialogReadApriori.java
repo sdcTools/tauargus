@@ -96,14 +96,14 @@ public class DialogReadApriori extends DialogBase {
 
         chkExpandTrivialLevels.setText("Expand for trivial levels");
 
-        buttonOK.setLabel("Apply");
+        buttonOK.setText("Apply");
         buttonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonOKActionPerformed(evt);
             }
         });
 
-        buttonCancel.setLabel("Close");
+        buttonCancel.setText("Cancel");
         buttonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonCancelActionPerformed(evt);

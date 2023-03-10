@@ -1364,7 +1364,6 @@ public class PanelTable extends javax.swing.JPanel {
 
         labelDecimals.setText("Number of decimals:");
 
-        comboBoxDecimals.setMaximumRowCount(15);
         comboBoxDecimals.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" }));
         comboBoxDecimals.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1401,7 +1400,7 @@ public class PanelTable extends javax.swing.JPanel {
             .addGroup(panelBottomButtonsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelBottomButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(buttonTableSummary, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                    .addComponent(buttonTableSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 108, Short.MAX_VALUE)
                     .addComponent(buttonSelectView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(panelBottomButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBottomButtonsLayout.createSequentialGroup()
