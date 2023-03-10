@@ -1,0 +1,25 @@
+   <SEPARATOR> ";"
+id 3
+    <HOLDING>
+geo_m 2
+    <RECODEABLE>
+    <TOTCODE> "Total"
+sex 1
+    <RECODEABLE>
+    <TOTCODE> "Total"
+age_m 2
+    <RECODEABLE>
+    <TOTCODE> "Total"
+yae_h 2
+    <RECODEABLE>
+    <TOTCODE> "Total"
+usual_resident 1
+    <RECODEABLE>
+    <TOTCODE> "Total"
+spv_cov_imputation_flag 1
+    <RECODEABLE>
+    <TOTCODE> "Total"
+record_key 17
+	<RECORDKEY>
+    <DECIMALS> 15
+	<PFILE> "20160511_szenario_5a.txt"

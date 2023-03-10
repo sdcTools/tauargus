@@ -1,0 +1,31 @@
+   <SEPARATOR> ";"
+Size "99"
+    <RECODEABLE>
+    <TOTCODE> "Total"
+Region "99"
+    <RECODEABLE>
+    <TOTCODE> "Total"
+    <DISTANCE> 2 4 4 4 4
+    <CODELIST> "REGION.CDL"
+    <HIERARCHICAL>
+    <HIERCODELIST> "region2.hrc"
+    <HIERLEADSTRING> "@"
+Var2
+    <NUMERIC>
+    <DECIMALS> 2
+FreqVar
+    <FREQUENCY>
+Var2_Shadow
+    <NUMERIC> <SHADOW>
+Var2_Cost
+    <NUMERIC> <COSTVAR>
+Top1
+    <MAXSCORE>
+Top2
+    <MAXSCORE>
+StatusVar
+    <STATUS>
+LowerProtLevel
+    <NUMERIC> <LOWERPL>
+UpperProtLevel
+    <NUMERIC> <UPPERPL>

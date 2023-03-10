@@ -1,0 +1,29 @@
+<SEPARATOR> ";"
+Sex 1
+  <RECODEABLE>
+  <HIERARCHICAL>
+  <HIERCODELIST> "dim_sex.hrc"
+  <HIERLEADSTRING> "@"
+Age 1
+  <RECODEABLE>
+  <HIERARCHICAL>
+  <HIERCODELIST> "dim_age.hrc"
+  <HIERLEADSTRING> "@"  
+HighIncome 1
+  <NUMERIC>
+  <CKM> N
+Savings 4
+  <NUMERIC>
+  <CKM> T(3)
+  <INCLUDEZEROS> N
+  <SEPARATION> Y
+  <PARITY> N
+  <SCALING> F(0.03,0.30,1000,3,0.5,0.2)
+Weigt 3
+  <WEIGHT>
+Key 10
+  <RECORDKEY>
+  <DECIMALS> 8
+  <PFILE> "ptab_freq.txt"
+  <PFILE_CONT> "ptab_savings_all.txt"
+  <PFILE_SEP>  "ptab_savings_smallcells.txt"
