@@ -20,4 +20,4 @@ jobs:
           architecture: x86      
 
       - name: Build with Ant
-        run: ant clean jar
+        run: ant -Dplatforms.JDK_1.8_Zulu_32_bit.home=$(JAVA_HOME) clean jar
