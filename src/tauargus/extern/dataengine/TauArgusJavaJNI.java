@@ -68,6 +68,7 @@ public class TauArgusJavaJNI {
   public final static native boolean TauArgus_SetVariable(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, int jarg4, int jarg5, int jarg6, String jarg7, String jarg8, String jarg9, boolean jarg10, String jarg11, String jarg12, boolean jarg13, boolean jarg14, boolean jarg15, boolean jarg16, boolean jarg17, boolean jarg18);
   public final static native boolean TauArgus_DoActiveRecode(long jarg1, TauArgus jarg1_, int jarg2);
   public final static native boolean TauArgus_GetVarNumberOfCodes(long jarg1, TauArgus jarg1_, int jarg2, int[] jarg3, int[] jarg4);
+  public final static native boolean TauArgus_GetTotalNumberOfCodes(long jarg1, TauArgus jarg1_, int jarg2, int[] jarg3);
   public final static native boolean TauArgus_SetVarCodeActive(long jarg1, TauArgus jarg1_, int jarg2, int jarg3, boolean jarg4);
   public final static native boolean TauArgus_GetStatusAndCostPerDim(long jarg1, TauArgus jarg1_, int jarg2, int[] jarg3, double[] jarg4);
   public final static native boolean TauArgus_SetTableCellStatus__SWIG_0(long jarg1, TauArgus jarg1_, int jarg2, int[] jarg3, int jarg4);

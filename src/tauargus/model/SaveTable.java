@@ -587,7 +587,7 @@ public class SaveTable {
             if (tableSet.computeTotals){ 
                 out.write("<br>Missing totals have been computed\n");
                 if (tableSet.keepStatus){
-                    out.write("<br>Statusses are kept. This could potentially cause inconsistencies between statussen.\n");
+                    out.write("<br>Statusses are kept. This could potentially cause inconsistencies between statusses.\n");
                     out.write("<br>E.g. when unsafe cells are copied to empty totals or when protected cells are used.\n");
                     out.write("<br>Be sure to check the results.");
                 }

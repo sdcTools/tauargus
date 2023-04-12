@@ -229,32 +229,32 @@ public class Variable implements Cloneable {
             writer.write(recodeInfo.getRecodeData() + "\n");
         }
     }
-
-        public void writeRecodeTreeFile(String fileName) throws IOException {
-         int[] isParent = new int[1];
-         int[] isActive = new int[1];
-         int[] isMissing = new int[1];
-         int[] level = new int[1];
-         int[] nChild = new int[1];
-         String[] code = new String[1];
-         String currentCode;
-       int[] nc = new int[1]; int[]nac = new int[1]; 
-       int i, j;
-       try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-           writer.write("<TREERECODE>\n");
+  
+    public void writeRecodeTreeFile(String fileName) throws IOException {
+        int[] isParent = new int[1];
+        int[] isActive = new int[1];
+        int[] isMissing = new int[1];
+        int[] level = new int[1];
+        int[] nChild = new int[1];
+        String[] code = new String[1];
+        String currentCode;
+        int[] nc = new int[1];
+        int i, j;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write("<TREERECODE>\n");
 // write here the recoded tree   
-            tauArgus.GetVarNumberOfCodes(index, nc, nac);
+            tauArgus.GetTotalNumberOfCodes(index, nc);
             for (i=0; i<nc[0]-1;i++){
-               tauArgus.GetVarCodeProperties(index, i, isParent, isActive, isMissing, level, nChild, code); 
-               if ( isActive[0] == 1 && nChild[0] > 0) { //is a node
-                  currentCode = code[0]; 
-                  tauArgus.GetVarCodeProperties(index, i+1, isParent, isActive, isMissing, level, nChild, code); 
-                  if (isActive[0] == 0){
-                     writer.write(currentCode + "\n"); 
-                  }
-               }   
+                tauArgus.GetVarCodeProperties(index, i, isParent, isActive, isMissing, level, nChild, code);
+                if ( isActive[0] == 1 && nChild[0] > 0) { //is a node
+                    currentCode = code[0]; 
+                    tauArgus.GetVarCodeProperties(index, i+1, isParent, isActive, isMissing, level, nChild, code); 
+                    if (isActive[0] == 0){
+                        writer.write(currentCode + "\n"); 
+                    }
+                }   
             }
-       }
+        }
     }
 
     public void recode(RecodeInfo recodeInfo) throws ArgusException {

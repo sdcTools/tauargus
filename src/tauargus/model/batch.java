@@ -477,7 +477,7 @@ public class batch {
                 hs = nextChar(tail);
                 if (hs.equals("T")||hs.equals("t")){
                     keepStatus = true;
-                    SystemUtils.writeLogbook("Using \"KeepStatus\" could potentially cause inconsistencies between statussen.\n"+
+                    SystemUtils.writeLogbook("Using \"KeepStatus\" could potentially cause inconsistencies between statusses.\n"+
                                              "E.g. when unsafe cells are copied to empty totals or when protected cells are used.");
                 }
                 else { // F is default anyway

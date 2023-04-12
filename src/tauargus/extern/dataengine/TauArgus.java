@@ -248,6 +248,10 @@ public class TauArgus {
     return TauArgusJavaJNI.TauArgus_GetVarNumberOfCodes(swigCPtr, this, VarIndex, NumberOfCodes, NumberOfActiveCodes);
   }
 
+  public boolean GetTotalNumberOfCodes(int VarIndex, int[] NumberOfCodes) {
+    return TauArgusJavaJNI.TauArgus_GetTotalNumberOfCodes(swigCPtr, this, VarIndex, NumberOfCodes);
+  }
+
   public boolean SetVarCodeActive(int VarIndex, int CodeIndex, boolean Active) {
     return TauArgusJavaJNI.TauArgus_SetVarCodeActive(swigCPtr, this, VarIndex, CodeIndex, Active);
   }

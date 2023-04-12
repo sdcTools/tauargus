@@ -1634,7 +1634,6 @@ public class DialogSpecifyTablesMicro extends DialogBase {
         scrollPaneTables.setViewportView(tableTables);
 
         buttonComputeTables.setText("Compute tables");
-        buttonComputeTables.setToolTipText("");
         buttonComputeTables.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonComputeTablesActionPerformed(evt);

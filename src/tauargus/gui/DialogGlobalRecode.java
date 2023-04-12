@@ -64,6 +64,7 @@ import tauargus.utils.TreeUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Enumeration;
 
 public class DialogGlobalRecode extends DialogBase {
@@ -786,18 +787,20 @@ public class DialogGlobalRecode extends DialogBase {
                 buildTree();
                 int i = JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
                 if (i == JOptionPane.YES_OPTION) 
-                    saveRecodeInfo(true);
+                    saveRecodeInfo(true); // true = for treebased recoding
             } else {
                 JOptionPane.showMessageDialog(this, "This hierarchical recoding could not be applied");
                 labelTreeResult.setText("Tree recode could not be applied");
                 labelTreeResult.setForeground(Color.red);
             }
-        } else {
+        } 
+        else {
             RecodeInfo recodeInfo = new RecodeInfo(
-                    textAreaRecodeData.getText(), 
-                    textFieldMissing1.getText(), 
-                    textFieldMissing2.getText(), 
-                    textFieldCodelist.getText());
+                textAreaRecodeData.getText(), 
+                textFieldMissing1.getText(), 
+                textFieldMissing2.getText(), 
+                textFieldCodelist.getText());
+            
             try {
                 variable.recode(recodeInfo);
                 buttonApply.setEnabled(false);
@@ -968,14 +971,14 @@ public class DialogGlobalRecode extends DialogBase {
                 }
                 else // Save a real tree
                 {
-                    try {
+                    try{
                        variable.writeRecodeTreeFile(variable.currentRecodeFile); 
                     } catch (Exception ex) {
                        JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
-                   }
-                   return;    
-                 }
-                }    
+                    }
+                    return;    
+                }
+            }    
         }
         if(forTreeRecode){return;}
         // we do not need a temp recode file for a hierarchical recode
