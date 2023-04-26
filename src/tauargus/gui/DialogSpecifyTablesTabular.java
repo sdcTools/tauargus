@@ -801,7 +801,7 @@ public class DialogSpecifyTablesTabular extends DialogBase {
         if (checkBoxKeepStatus.isSelected()) {
             SwingUtilities.invokeLater(() -> {
                 JOptionPane.showMessageDialog(DialogSpecifyTablesTabular.this,
-                        "This could potentially cause inconsistencies between statussen.\nE.g. when unsafe cells are copied to empty totals or when protected cells are used.",
+                        "This could potentially cause inconsistencies between statusses.\nE.g. when unsafe cells are copied to empty totals or when protected cells are used.",
                         "Use with caution!", JOptionPane.WARNING_MESSAGE);
             });
         }
