@@ -2,6 +2,10 @@
 # Makefile for making needed dll's
 # use "make 32BIT=true" to compile for 32 bit system (default)
 # use "make 32BIT=false" to compile for 64 bit system
+# use "make SOLVER=foo" to compile only for selected LP-solvers
+#	    where foo s a comma separated list
+#	    Allowed solvers: CP=Cplex, XP=Xpress, SC=SCIP
+#	    So e.g. "make SOLVER=SC,CP" would only compile for Cplex and SCIP
 ######################################################################################
 
 # In this setup all submodules are at the same directory level as tauargus
@@ -39,6 +43,27 @@ MKDIR            = mkdir
 RM               = rm -f
 CP               = cp -p
 
+# Solvers
+SOLVER = CP,XP,SC# default is all three
+comma:=,
+null:=
+space:= $(null) #
+ifeq (,$(SOLVER)) # if not specified, use defaults
+    USEDSOLVERS = CP XP SC
+else
+    USEDSOLVERS = $(subst $(comma), $(space), $(SOLVER))
+endif
+
+ifneq (,$(findstring CP,$(USEDSOLVERS)))
+	CSPTARGETS += CPLEX
+endif
+ifneq (,$(findstring XP,$(USEDSOLVERS)))
+	CSPTARGETS += XPRESS
+endif
+ifneq (,$(findstring SC,$(USEDSOLVERS)))
+	CSPTARGETS += SCIP
+endif
+
 # This will override the settings in the subsystem Makefiles
 # This way the GCC and JAVA and SWIG versions can easily be set the same 
 # for all subsystems while the subsystem Makefiles can be used on their own as well
@@ -53,13 +78,13 @@ MYMAKEFLAGS      = 'JAVADIR=$(JAVADIR)' 'GNUDIR=$(GNUDIR)' 'BITS=$(BITS)'\
 all: modular rounder arguslib
 
 CSP:
-	$(MAKE) $(MYMAKEFLAGS) clean all -C $(CSPDIR)
+	$(MAKE) $(MYMAKEFLAGS) clean $(CSPTARGETS) -C $(CSPDIR)
 
 CRP:
-	$(MAKE) $(MYMAKEFLAGS) clean all -C $(CRPDIR)
+	$(MAKE) $(MYMAKEFLAGS) clean all SOLVER=$(SOLVER) -C $(CRPDIR)
 
 modular: CSP
-	$(MAKE) $(MYMAKEFLAGS) clean all -C $(TAUHITASDIR)
+	$(MAKE) $(MYMAKEFLAGS) clean all SOLVER=$(SOLVER) -C $(TAUHITASDIR)
 
 rounder: CRP
 	$(MAKE) $(MYMAKEFLAGS) clean all -C $(TAUROUNDERDIR)
