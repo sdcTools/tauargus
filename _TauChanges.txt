@@ -413,3 +413,6 @@ summary	   : Write Batch now includes <SPECIFYTABLE> for tabular input
 
 above to be released in 4.2.4
 --------------------------------------------------------------
+
+date	   : Aug 4, 2023
+summary	   : Scrollbar available in selection pane in SelectTableMicroDialog
