@@ -780,7 +780,6 @@ public class DialogSpecifyTablesMicro extends DialogBase {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        listExplanatoryVariables.setPreferredSize(new java.awt.Dimension(70, 80));
         listExplanatoryVariables.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listExplanatoryVariablesValueChanged(evt);
@@ -809,7 +808,6 @@ public class DialogSpecifyTablesMicro extends DialogBase {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        listSelectedExplanatoryVariables.setPreferredSize(new java.awt.Dimension(70, 80));
         listSelectedExplanatoryVariables.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listSelectedExplanatoryVariablesValueChanged(evt);
@@ -834,14 +832,15 @@ public class DialogSpecifyTablesMicro extends DialogBase {
         );
         panelExplanatoryVariablesLayout.setVerticalGroup(
             panelExplanatoryVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelExplanatoryVariablesLayout.createSequentialGroup()
-                .addGroup(panelExplanatoryVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelExplanatoryVariablesLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelExplanatoryVariablesLayout.createSequentialGroup()
+                .addGroup(panelExplanatoryVariablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(scrollPaneExplanatoryVariables, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneSelectedExplanatoryVariables, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelExplanatoryVariablesLayout.createSequentialGroup()
                         .addComponent(buttonExplanatoryAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonExplanatoryDelete))
-                    .addComponent(scrollPaneSelectedExplanatoryVariables)
-                    .addComponent(scrollPaneExplanatoryVariables))
+                        .addComponent(buttonExplanatoryDelete)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -853,7 +852,6 @@ public class DialogSpecifyTablesMicro extends DialogBase {
             public Object getElementAt(int i) { return strings[i]; }
         });
         listResponseVariables.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        listResponseVariables.setPreferredSize(new java.awt.Dimension(70, 80));
         listResponseVariables.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listResponseVariablesValueChanged(evt);
