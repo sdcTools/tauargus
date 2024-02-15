@@ -174,12 +174,6 @@ public class DialogHypercubeParameters extends DialogBase {
         labelMaxSubTable.setLabelFor(textFieldMaxSubTable);
         labelMaxSubTable.setText("Max sub-table size");
 
-        textFieldMaxSubCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldMaxSubCodeActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelMemoryModelLayout = new javax.swing.GroupLayout(panelMemoryModel);
         panelMemoryModel.setLayout(panelMemoryModelLayout);
         panelMemoryModelLayout.setHorizontalGroup(
@@ -208,14 +202,15 @@ public class DialogHypercubeParameters extends DialogBase {
                 .addComponent(radioButtonGHSizeLarge)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioButtonGHSizeManual)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMemoryModelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMaxSubCode)
                     .addComponent(textFieldMaxSubCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMemoryModelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMaxSubTable)
-                    .addComponent(textFieldMaxSubTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(textFieldMaxSubTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         buttonOk.setText("OK");
@@ -323,10 +318,6 @@ public class DialogHypercubeParameters extends DialogBase {
             dispose();
         }
     }//GEN-LAST:event_buttonOkActionPerformed
-
-    private void textFieldMaxSubCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldMaxSubCodeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldMaxSubCodeActionPerformed
    private void storeGHMiterParameters(){
        tableset.ghMiterApplySingleton = checkBoxSingleton.isSelected();
        tableset.ghMiterApriory = checkBoxAPriori.isSelected();

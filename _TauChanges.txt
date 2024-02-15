@@ -416,3 +416,14 @@ above to be released in 4.2.4
 
 date	   : Aug 4, 2023
 summary	   : Scrollbar available in selection pane in SelectTableMicroDialog
+
+Parameter calculation GHMIter for Large Model corrected, now consistent with general model
+
+Scrollbar added to info window (e.g. when calculating Intervalle)
+
+date	   : Jan 15, 2024
+summary    : LOWERMARG and UPPERMARG can be set in solveroption dialog (Anco option) => TauArgusJava.dll version 1.1.4.12
+
+date       : Jan 19, 2024
+summary    : improved speed of processAprioriFile in TableSet
+summary    : cleaned some code

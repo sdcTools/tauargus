@@ -1776,7 +1776,7 @@ public class PanelTable extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonTableSummaryActionPerformed
 
     private void buttonPrioryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrioryActionPerformed
-       DialogReadApriori dialog = new DialogReadApriori(null, true);
+       DialogReadApriori dialog = new DialogReadApriori(getParentFrame(), true);
        dialog.SetAprioyTable(tableSet.index);
        dialog.ShowDialog();  
       ((AbstractTableModel)table.getModel()).fireTableDataChanged();
@@ -1818,7 +1818,7 @@ public class PanelTable extends javax.swing.JPanel {
                     adjustColumnWidths();
                     updateSuppressButtons();
                     if ((tableSet.auditExactDisclosure + tableSet.auditPartialDisclosure)>0){
-                        if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,"Do you want to see the report?")){
+                        if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,"Do you want to see the report?","",JOptionPane.YES_NO_OPTION)){
                             DialogHtmlViewer dialog = new DialogHtmlViewer(new javax.swing.JFrame(), true);
                             dialog.showDialog("Audit result","file:////"+ Application.getTempFile("audit_"+tableSet.index+ ".html"));
                         }

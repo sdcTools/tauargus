@@ -62,10 +62,7 @@ import tauargus.utils.SingleListSelectionModel;
 import tauargus.utils.TauArgusUtils;
 import tauargus.utils.TreeUtils;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.Enumeration;
 
 public class DialogGlobalRecode extends DialogBase {
 
@@ -373,9 +370,10 @@ public class DialogGlobalRecode extends DialogBase {
             }
         });
 
+        pack();
+
         setLocationRelativeTo(this.getParent());
         
-        pack();
         setVisible(true);
     }
 
@@ -930,7 +928,7 @@ public class DialogGlobalRecode extends DialogBase {
                             textFieldCodelist.setText(recodeInfo.getCodeList());
                             variable.currentRecodeFile = fileName;
                         }
-                    } catch (Exception ex) {
+                    } catch (IOException | ArgusException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
                 } 
@@ -964,7 +962,7 @@ public class DialogGlobalRecode extends DialogBase {
                 if (!forTreeRecode){
                    try {
                        variable.writeRecodeFile(variable.currentRecodeFile, recodeInfo);
-                   } catch (Exception ex) {
+                   } catch (IOException ex) {
                        JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
                    }
                    return;
@@ -973,7 +971,7 @@ public class DialogGlobalRecode extends DialogBase {
                 {
                     try{
                        variable.writeRecodeTreeFile(variable.currentRecodeFile); 
-                    } catch (Exception ex) {
+                    } catch (IOException ex) {
                        JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
                     }
                     return;    
@@ -987,7 +985,7 @@ public class DialogGlobalRecode extends DialogBase {
         variable.currentRecodeFile = f.getAbsolutePath();
         try {
             variable.writeRecodeFile(variable.currentRecodeFile, recodeInfo);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
         }
     }

@@ -64,7 +64,6 @@ public class DialogBase extends javax.swing.JDialog {
      * Creates new form DialogBase
      * @param parent the Frame of the mainFrame.
      * @param modal boolean to set the modal status
-     * @param controller the controller of the view.
      */
     public DialogBase(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

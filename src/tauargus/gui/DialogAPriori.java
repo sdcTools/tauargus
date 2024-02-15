@@ -17,7 +17,6 @@
 
 package tauargus.gui;
 
-import argus.utils.SystemUtils;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -658,7 +657,7 @@ public class DialogAPriori extends DialogBase {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             String aprioriFile = fileChooser.getSelectedFile().toString();
             
-            if( aprioriFile.indexOf(".")<0)
+            if( !aprioriFile.contains(".") )
                 aprioriFile+=".hst";
 
             textFieldAprioryFile.setText(aprioriFile);

@@ -55,4 +55,15 @@ public class ClassPathHack {
         }
 
     }
+    
+    public static synchronized void loadLibrary(java.io.File jar) {
+    try {            
+        java.net.URL url = jar.toURI().toURL();
+        java.lang.reflect.Method method = java.net.URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{java.net.URL.class});
+        method.setAccessible(true); /*promote the method to public access*/
+        method.invoke(Thread.currentThread().getContextClassLoader(), new Object[]{url});
+        } catch (Exception ex) {
+            throw new RuntimeException("Cannot load library from jar file '" + jar.getAbsolutePath() + "'. Reason: " + ex.getMessage());
+        }
+    }
 }

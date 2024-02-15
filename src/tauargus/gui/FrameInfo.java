@@ -57,7 +57,22 @@ public class FrameInfo extends javax.swing.JFrame {
             jTextAreaProgress.setCaretPosition(jTextAreaProgress.getDocument().getLength());
         }
     }
-        
+
+    public void replaceLastLine (String s){
+        {
+            String[] Lines = jTextAreaProgress.getText().split("\n");
+            String LastLine = Lines[Lines.length-1];
+            int start;
+            try{
+                start = jTextAreaProgress.getLineStartOffset(Lines.length - 1);
+                jTextAreaProgress.replaceRange(s, start, start + LastLine.length());
+                jTextAreaProgress.setCaretPosition(jTextAreaProgress.getDocument().getLength());
+            }
+            catch(Exception ex){
+            }
+        }
+    }
+    
     public void addLabel (String s){
           if (this.isVisible()){jLabelHeader.setText(s);}
     }

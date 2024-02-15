@@ -44,6 +44,8 @@ public class DialogReadApriori extends DialogBase {
     
     /**
      * Creates new form ReadApriori
+     * @param parent Frame
+     * @param modal boolean
      */
     public DialogReadApriori(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -75,6 +77,7 @@ public class DialogReadApriori extends DialogBase {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("APriori filename");
 
@@ -182,8 +185,9 @@ public class DialogReadApriori extends DialogBase {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOKActionPerformed
-        TableSet currentTable = TableService.getTable(apTableNumber); // is 0 altijd de current table ???
-        int[][] aPrioryStatus = new int[10][2];///check: is OK, 1e index = 5 waardes, 2e index slechts 2
+        TableSet currentTable = TableService.getTable(apTableNumber); // is 0 always the current table ???
+        //int[][] aPrioryStatus = new int[10][2];///check: is OK, 1st index = 5 values, 2nd index only 2 ???? BUT THEN WHY [10][2] ????
+        int[][] aPrioryStatus = new int[5][2];///check: is OK, 1st index = 5 values, 2nd index only 2 values
 
         try{
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -203,6 +207,7 @@ public class DialogReadApriori extends DialogBase {
                     }  
                 }   
             setCursor(Cursor.getDefaultCursor());
+            buttonCancel.setText("Close");
         }
         catch (ArgusException ex){
                 setCursor(Cursor.getDefaultCursor());
@@ -216,6 +221,7 @@ public class DialogReadApriori extends DialogBase {
     
     public void ShowDialog()
     {
+        pack();
         setLocationRelativeTo(this.getParent());
         setVisible(true);
     }

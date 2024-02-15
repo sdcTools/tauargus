@@ -237,8 +237,8 @@ public class TableSet {
             roundSolType[i] = 0;
         }
     }
-    int modularOptions = 0;
-    boolean scalingUsed = false;
+    //int modularOptions = 0; Never used???
+    //boolean scalingUsed = false; Never used???
     public double minTabVal = 0;
     public double maxTabVal;
     public int minDiff = 0;
@@ -247,7 +247,7 @@ public class TableSet {
     public boolean keepStatus = KEEP_STATUS;
     public boolean useStatusOnly = false;
     public int additivity = ADDITIVITY_CHECK;
-    boolean negIsAbsolute = false;
+    //boolean negIsAbsolute = false; Never used???
     public boolean hasBeenAudited = false;
     public int auditExactDisclosure = 0;
     public int auditPartialDisclosure = 0;
@@ -259,9 +259,9 @@ public class TableSet {
             ghMiterRatio[i] = 0;
         }
     }
-    int APriory = -1;
+    //int APriory = -1; Never used???
     
-    private TreeMap<Integer,Long> CKMStatistics = new TreeMap<>();
+    private final TreeMap<Integer,Long> CKMStatistics = new TreeMap<>(); // Can be final???
     private long nEmpty;
     
     private static String[][] codeList;
@@ -277,7 +277,26 @@ public class TableSet {
     private static final String[] code = new String[1];
     
     private final CKMInfoLoss InfoLoss = new CKMInfoLoss();
+    
+    // To be able to set lower and uppermarg per table
+    private double lowermarg=0.99;
+    private double uppermarg=1.01;
+    
+    public void SetLowerMarg(double value){
+        this.lowermarg = value;
+    }
+    
+    public double GetLowerMarg(){
+        return this.lowermarg;
+    }
 
+    public void SetUpperMarg(double value){
+        this.uppermarg = value;
+    }
+
+    public double GetUpperMarg(){
+        return this.uppermarg;
+    }
 
     public TableSet(Metadata metadata) {
         this.metadata = metadata;
@@ -290,7 +309,7 @@ public class TableSet {
 //        frequencyMarge[0] = 10;
 //        zeroRange = 10;
 //        manualMarge = 10;
-// TODO Onlogische plaats om hier de structuur te vullen. Probleem in batch.
+// TODO Strange place to fill structure here. Problem in batch.
         if (metadata.dataOrigin == Metadata.DATA_ORIGIN_TABULAR && !Application.isBatch()) {
             for (Variable variable : metadata.variables) {
                 if (variable.type == tauargus.model.Type.CATEGORICAL) {
@@ -526,7 +545,7 @@ public class TableSet {
     }
 
     private boolean buildCell(Tokenizer tokenizer, String[] codes, Cell cell) throws ArgusException {
-        final double EPSILON = 0.000000001;
+        final double MYEPSILON = 0.000000001;
         boolean hasStatus = false; 
         String hs;
 
@@ -557,40 +576,41 @@ public class TableSet {
                     break;
                 case RESPONSE:
                     if (value.equals("") || value.equals("-")){ cell.status = CellStatus.EMPTY;}
-                    else
-                    try{cell.response = StrUtils.toDouble(value);} catch(Exception ex)
-                      {throw new ArgusException (ex.getMessage());}
+                    else{
+                        try {cell.response = StrUtils.toDouble(value);} 
+                        catch(argus.model.ArgusException ex){throw new ArgusException (ex.getMessage());}
+                    }
                     break;
                 case SHADOW:
                     if ((value.equals("") || value.equals("-"))){break;}
-                    try{cell.shadow = StrUtils.toDouble(value);} catch(Exception ex)
-                      {throw new ArgusException (ex.getMessage());}
+                    try {cell.shadow = StrUtils.toDouble(value);} 
+                    catch(argus.model.ArgusException ex){throw new ArgusException (ex.getMessage());}
                     break;
                 case COST:
                     if ((value.equals("") || value.equals("-"))){break;}
-                    try{ cell.cost = StrUtils.toDouble(value);} catch(Exception ex)
-                      {throw new ArgusException (ex.getMessage());}
+                    try{ cell.cost = StrUtils.toDouble(value);} 
+                    catch(argus.model.ArgusException ex){throw new ArgusException (ex.getMessage());}
                     break;
                 case FREQUENCY:
                     if (value.equals("") || value.equals("-")){ cell.status = CellStatus.EMPTY; break;}// cell.freq=0;}
-                    try{cell.freq = StrUtils.toInteger(value);} catch(Exception ex)
-                      {throw new ArgusException (ex.getMessage());}
+                    try{cell.freq = StrUtils.toInteger(value);} 
+                    catch(argus.model.ArgusException ex){throw new ArgusException (ex.getMessage());}
                     break;
                 case TOP_N:
                     if ((value.equals("") || value.equals("-"))){iTop++;break;}
-                    try{cell.maxScore[iTop] = StrUtils.toDouble(value);} catch(Exception ex)
-                      {throw new ArgusException (ex.getMessage());}
+                    try{cell.maxScore[iTop] = StrUtils.toDouble(value);} 
+                    catch(argus.model.ArgusException ex){throw new ArgusException (ex.getMessage());}
                     iTop++;
                     break;
                 case LOWER_PROTECTION_LEVEL:
                     if ((value.equals("") || value.equals("-"))){break;}
-                    try{cell.lower = StrUtils.toDouble(value);} catch(Exception ex)
-                      {throw new ArgusException (ex.getMessage());}
+                    try{cell.lower = StrUtils.toDouble(value);} 
+                    catch(argus.model.ArgusException ex){throw new ArgusException (ex.getMessage());}
                     break;
                 case UPPER_PROTECTION_LEVEL:
                     if ((value.equals("") || value.equals("-"))){break;}
-                    try{cell.upper = StrUtils.toDouble(value);} catch(Exception ex)
-                      {throw new ArgusException (ex.getMessage());}
+                    try{cell.upper = StrUtils.toDouble(value);} 
+                    catch(argus.model.ArgusException ex){throw new ArgusException (ex.getMessage());}
                     break;
                 case STATUS:
                     hasStatus = true;
@@ -711,11 +731,11 @@ public class TableSet {
             for (int j = 0; j < iTop; j++) {
                 X = X + cell.maxScore[j];
             }
-            if (X > cell.response + EPSILON) {
+            if (X > cell.response + MYEPSILON) {
                 throw new ArgusException("Sum of topN " + X + " should not exceed the cell total " + cell.response);
             }
             if (X > cell.response) {
-                cell.maxScore[0] = cell.maxScore[0] - EPSILON;
+                cell.maxScore[0] = cell.maxScore[0] - MYEPSILON;
             }
             for (int j = 1; j < iTop; j++) {
                 if (cell.maxScore[j] > cell.maxScore[j - 1]) {
@@ -811,8 +831,7 @@ public class TableSet {
         // end Added 26-08-2022
         nDim = expVar.size();
         File[] files = SystemUtils.getFiles(metadata.dataFile);
-        for (int f = 0; f < files.length; f++) {
-            File file = files[f];
+        for (File file : files) {
             FileInputStream fis = null;
             FileChannel fileChannel = null;
             InputStreamReader isr = null;
@@ -827,7 +846,7 @@ public class TableSet {
                 Tokenizer tokenizer = new Tokenizer(reader);
                 propertyChangeSupport.firePropertyChange("activityMain", null, "Phase 2 for file: " + file.getName());
                 long fileLength = file.length();
-            nextline:
+                nextline:
                 while (tokenizer.nextLine() != null) {
                     updateProgress(fileChannel.position(), fileLength, tokenizer.getLineNumber(), propertyChangeSupport);
                     int iExp = 0;
@@ -879,15 +898,15 @@ public class TableSet {
                         s = s.substring(0, s.length() - 2);
                         throw new ArgusException(" Error in line " + tokenizer.getLineNumber() + " of table file: " + file.getCanonicalPath() + "\n"
                                 + tauArgus.GetErrorString(errorCode) + "\n"
-                                + " Codes: " + s + "\n"
-                                + " code nr: " + varListIndex);
+                                        + " Codes: " + s + "\n"
+                                                + " code nr: " + varListIndex);
                     }
                 }
             }
             finally{fis.close();
-                    fileChannel.close();
-                    isr.close();
-                    reader.close();
+            fileChannel.close();
+            isr.close();
+            reader.close();
             }
         }
         
@@ -915,21 +934,29 @@ public class TableSet {
             throw new ArgusException("Error in specifying table " + index + "\n" + tauArgus.GetErrorString(errorCode));
         }
 
-        // dan de tweede ronde door het bestand;
+        // go through file second time;
 
         propertyChangeSupport.firePropertyChange("activityMain", null, "Phase 3");
 
         // prepare the code lists for checking the doubles in a cover table
-        int nMax = 0, varNo;
+        int varNo;
         if ((Application.isProtectCoverTable()) ){
-            for (i=0;i<expVar.size();i++){ varNo = expVar.get(i).index;
-                if (nMax < TauArgusUtils.getNumberOfActiveCodes(varNo)){nMax = TauArgusUtils.getNumberOfActiveCodes(varNo);}
-            }
-            codeList = new String[expVar.size()][nMax];
-            codeListLevel  = new int[expVar.size()][nMax];
-            codeListNChild  = new int[expVar.size()][nMax];   
+            //for (i=0;i<expVar.size();i++){ varNo = expVar.get(i).index;
+            //    if (nMax < TauArgusUtils.getNumberOfActiveCodes(varNo)){nMax = TauArgusUtils.getNumberOfActiveCodes(varNo);}
+            //}
+            // To save memory, making use of Jagged Arrays, i.e. each row can have different number of elements
+            //codeList = new String[expVar.size()][nMax];
+            //codeListLevel  = new int[expVar.size()][nMax];
+            //codeListNChild  = new int[expVar.size()][nMax];   
+            codeList = new String[expVar.size()][];
+            codeListLevel  = new int[expVar.size()][];
+            codeListNChild  = new int[expVar.size()][];   
             int n;      
-            for (i=0;i<expVar.size();i++){ varNo = expVar.get(i).index;
+            for (i=0;i<expVar.size();i++){ 
+                varNo = expVar.get(i).index;
+                codeList[i] = new String[TauArgusUtils.getNumberOfActiveCodes(varNo)];
+                codeListLevel[i] = new int[TauArgusUtils.getNumberOfActiveCodes(varNo)];
+                codeListNChild[i] = new int[TauArgusUtils.getNumberOfActiveCodes(varNo)];
                 n = -1;
                 for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
                     tauArgus.GetVarCodeProperties(varNo, j, isParent, isActive, isMissing, level, nChild, code);
@@ -956,7 +983,7 @@ public class TableSet {
 
 // prepare the code lists for checking the doubles in a cover table
 // Lijkt dubbel op    
-        if ((Application.isProtectCoverTable()) ){
+        /*if ((Application.isProtectCoverTable()) ){
             for (i=0;i<expVar.size();i++){ varNo = expVar.get(i).index;
                 if (nMax < TauArgusUtils.getNumberOfActiveCodes(varNo)){nMax = TauArgusUtils.getNumberOfActiveCodes(varNo);}
             }
@@ -966,11 +993,8 @@ public class TableSet {
                     codeList[i][j] = TauArgusUtils.getCode(varNo, j).trim();
                 }
             }
-        }
-
-
-        for (int f = 0; f < files.length; f++) {
-            File file = files[f];
+        }*/
+        for (File file : files) {
             FileInputStream fis = null;
             FileChannel fileChannel = null;
             InputStreamReader isr = null;
@@ -986,7 +1010,7 @@ public class TableSet {
                         for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
                             tauArgus.GetVarCodeProperties(varNo, j, isParent, isActive, isMissing, level, nChild, code); 
                             writer.print(j + " code:" + code[0] + "; parent: " + isParent[0] + "; nchild:" + nChild[0] +
-                                            "; level:"+ level[0] +"\n");
+                                    "; level:"+ level[0] +"\n");
                         }        
                     }
                 }
@@ -1005,11 +1029,13 @@ public class TableSet {
                         continueBogusCovertable = false;
                         if (Application.isProtectCoverTable()){
                             for (i=0;i<nDim;i++){
-                                bogusIndex[i] = -1;
-                                varNo = expVar.get(i).index;
-                                for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
-                                    if (codes[i].trim().equals(codeList[i][j])) {bogusIndex[i] = j; break;}
-                                }
+                                //bogusIndex[i] = -1;
+                                //varNo = expVar.get(i).index;
+                                //for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
+                                //    if (codes[i].trim().equals(codeList[i][j])) {bogusIndex[i] = j; break;}
+                                //}
+                                //Faster to use buildin search. indexOf returns -1 if not found
+                                bogusIndex[i] = Arrays.asList(codeList[i]).indexOf(codes[i].trim());
                                 if (codes[i].equals(expVar.get(i).totCode)){bogusIndex[i] = 0;}
                             }
                             nDim = expVar.size();
@@ -1018,7 +1044,7 @@ public class TableSet {
                                 bogusRange[i][0] = bogusIndex[i];
                                 bogusRange[i][1] = bogusIndex[i];
                             }
-    
+                            
                             for (i=0;i<expVar.size();i++){        
                                 varNo = expVar.get(i).index;
                                 bogusRange[i][0] = getBogusMother(i, bogusIndex[i]); //varNo
@@ -1032,12 +1058,12 @@ public class TableSet {
                             boolean b = false;
                             int errorCode = 0;
                             int numberOfRetries = 0;
-//                          Prevent to submit empty cells                        
+                            // Prevent to submit empty cells
                             if (cell.status == CellStatus.EMPTY) {b=true;} 
-//                            SystemUtils.writeLogbook(codes[0]+","+ codes[1]+","+ codes[2]);
+                            // SystemUtils.writeLogbook(codes[0]+","+ codes[1]+","+ codes[2]);
                             while (!b && numberOfRetries < varlist.length) {
                                 b = tauArgus.SetInTable(index, codes, cell.shadow, cell.cost, cell.response, cell.freq, cell.maxScore, cell.holdingMaxScore,
-                                        cell.status.getValue(), cell.lower, cell.upper, errorCodeArr, varListIndexArr);
+                                cell.status.getValue(), cell.lower, cell.upper, errorCodeArr, varListIndexArr);
                                 if (!b) {
                                     errorCode = errorCodeArr[0];
                                     if (errorCode == Application.ERR_CODEDOESNOTEXIST) {
@@ -1048,8 +1074,8 @@ public class TableSet {
                                             codes[varListIndex] = variable.padCode(codes[varListIndex]);
                                         }
                                     } else {
-                                        // Has been filled already;
-                                        // We could check on conflicting values/statusses;
+                                    // Has been filled already;
+                                    // We could check on conflicting values/statusses;
                                         if (errorCode == Application.ERR_CELLALREADYFILLED){
                                             numberOfRetries = varlist.length + 1;
                                             if (!(Application.isProtectCoverTable()) ) {
@@ -1058,25 +1084,27 @@ public class TableSet {
                                                     s = s + codes[j] + ",";
                                                 }
                                                 throw new ArgusException(tauArgus.GetErrorString(errorCode) + s);
-                                            } else { 
+                                            } else {
                                                 b=true;
                                                 // Check for conflicting values/statuses for cover table;
-                                                // bepaal dimarray;
-                                                // Haal cel op;
-                                                // maak overzicht;
-                                        
+                                                // determine dimarray;
+                                                // get cel;
+                                                // make overview;
                                                 for (i=0;i<expVar.size();i++){
-                                                    dimIndex[i] = -1;
-                                                    varNo = expVar.get(i).index;
-                                                    codes[i]=codes[i].trim();
-                                                    for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
-                                                        if (codes[i].trim().equals(codeList[i][j])) {dimIndex[i] = j; break;}
-                                                    }
+                                                    //dimIndex[i] = -1;
+                                                    //varNo = expVar.get(i).index;
+                                                    //codes[i]=codes[i].trim();
+                                                    //for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
+                                                    //    if (codes[i].trim().equals(codeList[i][j])) {dimIndex[i] = j; break;}
+                                                    //}
+                                                    //Making use of build-in search is faster
+                                                    //indexOf returns -1 if not found
+                                                    dimIndex[i] = Arrays.asList(codeList[i]).indexOf(codes[i].trim());
                                                 }
-
+                    
                                                 Cell doubleCell = new Cell();
                                                 doubleCell = getCell(dimIndex);
-                                             
+
                                                 if (doubleCell.response != cell.response ||
                                                         doubleCell.status != cell.status||
                                                         doubleCell.lower != cell.lower ||
@@ -1109,19 +1137,19 @@ public class TableSet {
                                                     }
                                                     writer.println("------------------------------------------------");
                                                 }
-                                                doubleCell = null;  
+                                                doubleCell = null;
                                             }
                                         }
                                     }
                                 }
                             }
-                            
+
                             if (!b) {
                                 SystemUtils.writeLogbook("Something wrong");
                                 throw new ArgusException(tauArgus.GetErrorString(errorCode));
                             }
-                        
-                            // The bogus loop for the cover table 
+
+                            // The bogus loop for the cover table
                             if (Application.isProtectCoverTable()){
                                 //increase the loop
                                 bogusIndex[nDim-1]++;
@@ -1132,11 +1160,11 @@ public class TableSet {
                                     else continueBogusCovertable = false;
                                 }
                                 if (continueBogusCovertable )
-                                for (i=0;i<expVar.size();i++){        
-                                    varNo = expVar.get(i).index;
-                                    if (bogusRange[i][0] == 0) {codes[i]="";}
-                                    else {codes[i] = getVarCode(varNo, bogusIndex[i]);}
-                                }
+                                    for (i=0;i<expVar.size();i++){
+                                        varNo = expVar.get(i).index;
+                                        if (bogusRange[i][0] == 0) {codes[i]="";}
+                                        else {codes[i] = getVarCode(varNo, bogusIndex[i]);}
+                                    }
                             }
                         }
                         while (continueBogusCovertable);
@@ -1149,10 +1177,10 @@ public class TableSet {
                 } // per record;
             }
             finally {
-              fis.close();
-              fileChannel.close();
-              isr.close();
-              reader.close();
+                fis.close();
+                fileChannel.close();
+                isr.close();
+                reader.close();
             }
         } // per file;
         if (Application.isProtectCoverTable()) {
@@ -1524,9 +1552,9 @@ public class TableSet {
             if (!tokenizer.nextToken().equals("(")) {
                 throw new ArgusException("Missing left parenthesis.");
             }
-            List<Integer> parameters = new ArrayList<Integer>();
+            List<Integer> parameters = new ArrayList<>();
             do {
-                parameters.add(Integer.parseInt(tokenizer.nextToken()));
+                parameters.add(Integer.valueOf(tokenizer.nextToken()));
                 token = tokenizer.nextToken();
             } while (token.equals(","));
             if (!tokenizer.nextToken().equals(")")) {
@@ -1638,7 +1666,7 @@ public class TableSet {
                         throw new ArgusException("WGT command needs 1 parameter.");
                     }
                     int k = parameters.get(0);
-                    // 0 = geen gewicht, 1 = alleen gewicht, 2 = ook in de regels
+                    // 0 = no weights, 1 = only weights, 2 = also adjust rules
                     if (k < 0 || k > 3) {
                         throw new ArgusException("Value for WGT should be 0 or 1.");
                     }
@@ -1741,7 +1769,6 @@ public class TableSet {
     }
 
     public static int getCellStatus(TableSet tableSet, int[] dimArray){
-        boolean oke; 
         int[] cellStatus = new int[1];
         double[] x = new double[1];
 //        double[] x1 = new double[1]; Not used ?????
@@ -1768,7 +1795,7 @@ public class TableSet {
         int[] holdnr = new int[MAX_TOP_N_VAR];
         int[] peepsrt = new int[1];
         int[] peepsrthold = new int[1];
-        oke = tauArgus.GetTableCell(tableSet.index, dimArray, x, ix, xcta,
+        tauArgus.GetTableCell(tableSet.index, dimArray, x, ix, xcta,
                                     xckm,
                                     x2, x3, x10, x11, cf, cellStatus, x4,
                                     x5, cfh,   hms, holdnr,
@@ -1841,7 +1868,7 @@ public class TableSet {
         tableSet.historyUsed++;
         lineInfo = "";
         nMax = 0;
-        for (i=0;i<5;i++){
+        for (i=0;i<5;i++){            // Where does 5 come from?
             for (j=0;j<1;j++){
                 aPrioryStatus[i][j] = 0;
             }
@@ -1851,11 +1878,19 @@ public class TableSet {
             n = TauArgusUtils.getNumberOfActiveCodes(tableSet.expVar.get(i).index);
             if (n>nMax){nMax = n;}
         }
-        codeList = new String[tableSet.expVar.size()][nMax];
-        codeListLevel  = new int[tableSet.expVar.size()][nMax];
-        codeListNChild  = new int[tableSet.expVar.size()][nMax];
+        
+        //To save memory, making use of Jagged Arrays, i.e. each row can have different number of elements
+        //codeList = new String[tableSet.expVar.size()][nMax];
+        codeList = new String[tableSet.expVar.size()][]; 
+        //codeListLevel  = new int[tableSet.expVar.size()][nMax];
+        codeListLevel  = new int[tableSet.expVar.size()][];
+        //codeListNChild  = new int[tableSet.expVar.size()][nMax];
+        codeListNChild  = new int[tableSet.expVar.size()][];
      
         for (i=0;i<tableSet.expVar.size();i++){ varNo = tableSet.expVar.get(i).index;
+            codeList[i] = new String[TauArgusUtils.getNumberOfActiveCodes(varNo)];
+            codeListLevel[i] = new int[TauArgusUtils.getNumberOfActiveCodes(varNo)];
+            codeListNChild[i] = new int[TauArgusUtils.getNumberOfActiveCodes(varNo)];
             n = -1;
             for (j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
                 codeList[i][j] = TauArgusUtils.getCode(varNo, j).trim();
@@ -1868,6 +1903,7 @@ public class TableSet {
                 } 
             }
         }
+
         try {in = new BufferedReader(new FileReader(fileName));}
         catch (FileNotFoundException ex){ throw new ArgusException("Apriory file "+fileName+" could not be found.");}
         Tokenizer tokenizer = new Tokenizer(in);
@@ -1899,6 +1935,7 @@ public class TableSet {
                 outBound.write("<table><tr><td><b>Codes</b></td><td><b>Old apriory bound</b></td><td><b>New apriory bound</b></td><td><b>Result</b></td></tr>");outBound.newLine();
             }
 
+            // Start processing the file
             boolean firstLine = true;
             while ((tokenizer.nextLine()) != null) {
                 regel = tokenizer.getLine();  
@@ -1909,17 +1946,20 @@ public class TableSet {
                     }
                     firstLine = false;
                 }
-     //Note I used to replace tabs by spaces.
-     //First get the codes
+                //Note I used to replace tabs by spaces.
+                //First get the codes
                 oke = true; codesString = "";
                 for (i=0;i<tableSet.expVar.size();i++){
                     codes[i] = tokenizer.nextField(separator).trim();
                     codesString = codesString + codes[i]+";";
-                    dimIndex[i] = -1;
-                    varNo = tableSet.expVar.get(i).index;
-                    for (j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
-                        if (codes[i].equals(codeList[i][j])) {dimIndex[i] = j; break;}
-                    }
+                    //dimIndex[i] = -1;
+                    //varNo = tableSet.expVar.get(i).index;
+                    //for (j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
+                    //    if (codes[i].equals(codeList[i][j])) {dimIndex[i] = j; break;}
+                    //}
+                    // Much faster to use buildin search
+                    //indexOf returns -1 if not found;
+                    dimIndex[i] = Arrays.asList(codeList[i]).indexOf(codes[i]);
                     if (codes[i].equals(tableSet.expVar.get(i).totCode)){dimIndex[i] = 0;}
                     lineInfo =  "Line number "+tokenizer.getLineNumber() + "\n"+ 
                                 "Line: " + regel;
@@ -1963,27 +2003,34 @@ public class TableSet {
                                     }
                                     oke = false;
                         } //switch
-                    } catch(Exception ex){}     
-     
-                } //if oke
+                    } catch(argus.model.ArgusException | ArgusException ex){throw new ArgusException("Error in apriori type " + apType);}     
+                } // end if oke-loop
                 // processs the information
                 if (oke){ 
                 //build the loop for the bogus levels
                     int nDim;
                     Boolean toGo;
                     nDim = tableSet.expVar.size();
-                    for (i=0;i<tableSet.expVar.size();i++){ 
+                    //This for-loop is processed for expandBogus=true as well and then replaced in next for-loop?????
+                    //So effectively only processed when expandBogus=false????
+                    /*for (i=0;i<nDim;i++){ 
                         bogusRange[i][0] = dimIndex[i];
                         bogusRange[i][1] = dimIndex[i];
-                    }
+                    }*/
                     if (expandBogus){
-                        for (i=0;i<tableSet.expVar.size();i++){        
+                        for (i=0;i<nDim;i++){        
                             varNo = tableSet.expVar.get(i).index;
                             bogusRange[i][0] = getBogusMother(i, dimIndex[i]); //varNo
                             bogusRange[i][1] = getBogusChild(i, varNo, dimIndex[i]);
                             dimIndex[i] = bogusRange[i][0];
                         }
-                    } 
+                    }
+                    else{
+                        for (i=0;i<nDim;i++){ 
+                            bogusRange[i][0] = dimIndex[i];
+                            bogusRange[i][1] = dimIndex[i];
+                        }                        
+                    }
                     toGo = true;
 
                     while (toGo){    
@@ -2053,7 +2100,8 @@ public class TableSet {
                             case "AB": throw new ArgusException ("Change apriory bounds is not yet possible; was neither in the old TAU-Argus");
                             case "PL": 
                                 hs = "";
-                                if ( (x1<0) || (x2 < 0) || (x1+x2<0)) {
+                                //if ( (x1<0) || (x2 < 0) || (x1+x2<0)) {
+                                if ( (x1<0) || (x2<0) ) { // if (x1+x2)<0 then x1<0 and/or x2<0
                                     hs = "Illegal values for the protection levels: "+ x1 + ".. "+x2;
                                     oke = false;
                                 }
@@ -2097,9 +2145,9 @@ public class TableSet {
                             if (n > 0) {n--; dimIndex[n]++;}
                             else toGo = false;
                         }
-                    } // end of the oke loop (correct codes)
-                } //end ToGo loop
-            }
+                    } // end of the ToGo loop 
+                } //end of the oke loop (correct codes)
+            } //end of apriori file reached
             //fileCompleted = true; Not used ?????
             if (report) {
                 outStatus.write("</table>"); outStatus.newLine();outStatus.write("<EOF>   ");outStatus.newLine();
@@ -2131,10 +2179,10 @@ public class TableSet {
             throw new ArgusException(errorMessage+ lineInfo);  
         }else{
             DialogErrorApriori dialog = new DialogErrorApriori(null, true);
-            dialog.aprioriErrorMessage = errorMessage + "\n\n"+ lineInfo;
+            dialog.SetaprioriErrorMessage(errorMessage + "\n\n"+ lineInfo);
             dialog.initWindow();
             dialog.setVisible(true);
-            return dialog.aprioriErrorContinue;
+            return dialog.GetaprioriErrorContinue();
         }
     }
    
@@ -2174,21 +2222,20 @@ public class TableSet {
             SaveTable.writeJJ(tableSet, Application.getTempFile("AddErr.JJ"), false, false, 1, false, false);
         }catch (ArgusException ex){}
        
-        try{
-            BufferedWriter out = new BufferedWriter(new FileWriter(Application.getTempFile("AdditErr.txt")));
+        try(BufferedWriter out = new BufferedWriter(new FileWriter(Application.getTempFile("AdditErr.txt")));){
             BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("AddErr.JJ")));
-            hs = in.readLine();
+            hs = in.readLine(); // skip first line
             hs = in.readLine();
             n=0;
             try {
                 n = StrUtils.toInteger(hs);
-            }catch(Exception ex){}
+            }catch(argus.model.ArgusException ex){}
             
-            for (i=0;i<n;i++){hs = in.readLine();}
-            hs = in.readLine();
+            for (i=0;i<n;i++){hs = in.readLine();} // skip n lines
+            hs = in.readLine(); 
             try{
                 nRel = StrUtils.toInteger(hs);
-            }catch(Exception ex){}
+            }catch(argus.model.ArgusException ex){}
             
             out.write("Overview of the non-additive cells"); out.newLine();
             out.write(Streep);  out.newLine();
@@ -2202,7 +2249,7 @@ public class TableSet {
                 p = hs.indexOf(":");
                 try{
                     n = StrUtils.toInteger(hs.substring(1,p));
-                }catch(Exception ex){}
+                }catch(argus.model.ArgusException ex){}
                 
                 hs = hs.substring(p+1);
                 hs1 = hs;
@@ -2210,7 +2257,7 @@ public class TableSet {
                 cn = 0;
                 try{
                     cn = StrUtils.toInteger(hs.substring(0,p));
-                }catch(Exception ex){}
+                }catch(argus.model.ArgusException ex){}
                 
                 tauArgus.GetTableCellValue(tableIndex, cn, x);
                 xTot = x[0]; xSub = 0;
@@ -2219,7 +2266,7 @@ public class TableSet {
                     p = hs1.indexOf("(");
                     try{
                         cn = StrUtils.toInteger(hs1.substring(0,p));
-                    }catch(Exception ex){}
+                    }catch(argus.model.ArgusException ex){}
                     
                     tauArgus.GetTableCellValue(tableIndex, cn, x);
                     xSub = xSub + x[0];
@@ -2236,7 +2283,7 @@ public class TableSet {
                     p = hs.indexOf("(");
                     try{
                         cn = StrUtils.toInteger(hs.substring(0,p));
-                    }catch(Exception ex){}
+                    }catch(argus.model.ArgusException ex){}
                     
                     tauArgus.GetTableCellValue(tableIndex, cn, x);
                     regel = String.format(Locale.US, "%."+deci+"f", x[0]);
@@ -2248,7 +2295,7 @@ public class TableSet {
                         p = hs.indexOf("(");
                         try{
                             cn = StrUtils.toInteger(hs.substring(0,p));
-                        }catch(Exception ex){}
+                        }catch(argus.model.ArgusException ex){}
                         
                         tauArgus.GetTableCellValue(tableIndex, cn, x);
                         regel = String.format(Locale.US, "%."+deci+"f", x[0]);

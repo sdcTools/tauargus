@@ -58,9 +58,9 @@ public class DialogInfo extends DialogBase {
         };    
  
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        JRootPane rootPane = new JRootPane();
-        rootPane.registerKeyboardAction(actionListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        return rootPane;
+        JRootPane MyrootPane = new JRootPane();
+        MyrootPane.registerKeyboardAction(actionListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        return MyrootPane;
     }
 
     /**
@@ -152,8 +152,7 @@ public class DialogInfo extends DialogBase {
             jTextAreaInfo.setText("The file " + fn + " could not be displayed; sorry"); 
         }
         else { 
-            try{  
-                BufferedReader reader = new BufferedReader(new FileReader(fn));
+            try(BufferedReader reader = new BufferedReader(new FileReader(fn));){  
                 while ( (hs = reader.readLine()) != null){
                     jTextAreaInfo.append(hs + "\n");
                 }

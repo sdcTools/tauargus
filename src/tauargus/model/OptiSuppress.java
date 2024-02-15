@@ -26,6 +26,7 @@ package tauargus.model;
  */
 
 import argus.utils.SystemUtils;
+import java.awt.HeadlessException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -63,7 +64,7 @@ import static tauargus.utils.TauArgusUtils.ShowWarningMessage;
 import tauargus.utils.Tokenizer;
 
 public class OptiSuppress {
-    public static double JJZero, JJZero1, JJZero2, JJFeasTol, JJOptTol, JJMinViola, JJMaxSlack,CTATolerance;
+    public static double JJZero, JJZero1, JJZero2, JJFeasTol, JJOptTol, JJMinViola, JJMaxSlack, CTATolerance;
     public static int JJInfinity, JJMaxColslp, JJMaxRowslp, JJMaxCutsPool, JJMaxCutsIter;
              
     private static final String[] SOLVERNAME={"NO","XPRESS", "CPLEX", "SCIP" }; 
@@ -95,7 +96,7 @@ public class OptiSuppress {
         JJMaxCutsIter = 50;
         
         CTATolerance  = 0.00001;
-     
+        
         try{
             JJZero = StrUtils.toDouble(SystemUtils.getRegString("solveroptions", "zero", "0.0000001"));
             JJZero1 = StrUtils.toDouble(SystemUtils.getRegString("solveroptions", "zero1", "0.0000001"));
@@ -112,10 +113,23 @@ public class OptiSuppress {
             JJMaxCutsIter = StrUtils.toInteger(SystemUtils.getRegString("solveroptions", "maxcutsiter", "50"));
       
             CTATolerance = StrUtils.toDouble(SystemUtils.getRegString("solveroptions", "ctatolerance", "0.00001"));
-              
-        } catch (ArgusException ex){ }             
+            
+          } catch (ArgusException ex){ }             
     }
     
+    //From hitas header file:      
+    //#define JJZERO          101
+    //#define JJZERO1         102
+    //#define JJZERO2         103
+    //#define JJINF           104
+    //#define JJMAXCOLSLP     105
+    //#define JJMAXROWSLP     106
+    //#define JJMAXCUTSPOOL   107
+    //#define JJMAXCUTSITER   108
+    //#define JJMINVIOLA      109
+    //#define JJMAXSLACK      110
+    //#define JJFEASTOL       111
+    //#define JJOPTTOL        112   
     private static void setJJParamIntauHitas(){
       TAUHITAS.SetJJconstantsDbl(101, JJZero);
       TAUHITAS.SetJJconstantsDbl(102, JJZero1);
@@ -129,20 +143,6 @@ public class OptiSuppress {
       TAUHITAS.SetJJconstantsDbl(110, JJMaxSlack);
       TAUHITAS.SetJJconstantsDbl(111, JJFeasTol);
       TAUHITAS.SetJJconstantsDbl(112, JJOptTol);
-  
-//From hitas header file:      
-//#define JJZERO          101
-//#define JJZERO1         102
-//#define JJZERO2         103
-//#define JJINF           104
-//#define JJMAXCOLSLP     105
-//#define JJMAXROWSLP     106
-//#define JJMAXCUTSPOOL   107
-//#define JJMAXCUTSITER   108
-//#define JJMINVIOLA      109
-//#define JJMAXSLACK      110
-//#define JJFEASTOL       111
-//#define JJOPTTOL        112        
     }
     
 /**
@@ -162,7 +162,6 @@ public class OptiSuppress {
         if (tableSet.expVar.get(1).hierarchical != Variable.HIER_NONE  ){
           throw new  ArgusException("The network does not allow a hierarchy in the second dimension");
         }
-        return;
     }
  /**
   * Applies the network solution (by Jordi) 
@@ -185,7 +184,7 @@ public class OptiSuppress {
        try {
          hs = SystemUtils.getApplicationDirectory(OptiSuppress.class).getCanonicalPath();
          } 
-       catch (Exception ex) {}
+       catch (IOException | URISyntaxException ex) {JOptionPane.showMessageDialog(null, ex.toString());}
        hs = "\"" + hs + "/main1H2D.exe\"";
        commandline.add(StrUtils.unQuote(hs));
        commandline.add(Application.getTempFile("NetInH.tmp"));
@@ -244,34 +243,32 @@ public class OptiSuppress {
         SystemUtils.writeLogbook("Start of Audit procedure");       
         SaveTable.writeJJ(tableSet, Application.getTempFile("Anneke.JJ"), false, false, 0, false, false);
         //Write Rounding parameter file
-        try {
-        BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("Anneke.txt")));
-        out2.write(Application.getTempFile("Anneke.JJ")); out2.newLine();
-        out2.write ("NoLongerNeeded"); out2.newLine();
-        out2.write (Application.getTempFile("Anneke.Out")); out2.newLine();
-        out2.write (Application.getTempFile("Anneke.txt")); out2.newLine();
-        out2.write ("primsec"); out2.newLine();
-        out2.write ("without"); out2.newLine();
-        out2.write ("2"); out2.newLine();
-        out2.write ("1"); out2.newLine();
-        out2.write ("0"); out2.newLine();
-        out2.write ("0"); out2.newLine();
-        out2.write ("50"); out2.newLine();
-        out2.write ("50"); out2.newLine();
-        out2.write ("0"); out2.newLine();
-        out2.write ("5"); out2.newLine();
-        if  (Application.solverSelected == Application.SOLVER_NO) {out2.write ("GLPK");}
-        if  (Application.solverSelected == Application.SOLVER_CPLEX) {out2.write ("cplex");}
-        if  (Application.solverSelected == Application.SOLVER_XPRESS) {out2.write ("xpress");}
-        if  (Application.solverSelected == Application.SOLVER_SOPLEX) {out2.write ("GLPK");}
-        out2.newLine();
-        
-        if  (Application.solverSelected == Application.SOLVER_CPLEX) {
-            out2.write (TauArgusUtils.GetCplexLicenceFile());}
-        else{out2.write ("NoLicenceSpecified");}
-        out2.newLine();
-        out2.close();
-        }        
+        try (BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("Anneke.txt")))) {
+            out2.write(Application.getTempFile("Anneke.JJ")); out2.newLine();
+            out2.write ("NoLongerNeeded"); out2.newLine();
+            out2.write (Application.getTempFile("Anneke.Out")); out2.newLine();
+            out2.write (Application.getTempFile("Anneke.txt")); out2.newLine();
+            out2.write ("primsec"); out2.newLine();
+            out2.write ("without"); out2.newLine();
+            out2.write ("2"); out2.newLine();
+            out2.write ("1"); out2.newLine();
+            out2.write ("0"); out2.newLine();
+            out2.write ("0"); out2.newLine();
+            out2.write ("50"); out2.newLine();
+            out2.write ("50"); out2.newLine();
+            out2.write ("0"); out2.newLine();
+            out2.write ("5"); out2.newLine();
+            if  (Application.solverSelected == Application.SOLVER_NO) {out2.write ("GLPK");}
+            if  (Application.solverSelected == Application.SOLVER_CPLEX) {out2.write ("cplex");}
+            if  (Application.solverSelected == Application.SOLVER_XPRESS) {out2.write ("xpress");}
+            if  (Application.solverSelected == Application.SOLVER_SOPLEX) {out2.write ("GLPK");}
+            out2.newLine();
+                
+            if  (Application.solverSelected == Application.SOLVER_CPLEX) {
+                out2.write (TauArgusUtils.GetCplexLicenceFile());}
+            else{out2.write ("NoLicenceSpecified");}
+            out2.newLine();
+        }
         catch (IOException ex){
           throw new ArgusException("A problem was encountered when writing the parameter file for audit");} 
         
@@ -362,7 +359,7 @@ public class OptiSuppress {
     public static void RunCTA (TableSet tableSet, boolean doExpert)throws ArgusException, FileNotFoundException, IOException{
         String command = "", tolStr, solFile = "", solver = "", hs = ""; double eps;
         ArrayList<String> commandline = new ArrayList<>();
-        boolean oke; int result, tabNo, i;
+        int result, tabNo, i;
         int cn; double orgVal, ctaVal;
         int[] nSec; nSec = new int[1];
         String[] solverNames = {"cplex", "xpress", "glpk", "cbc", "sym"};
@@ -420,13 +417,14 @@ public class OptiSuppress {
                 case Application.SOLVER_NO: throw new ArgusException("No solver has been selected so CTA cannot be applied");            
             }
         }
-        BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("CTA.bat")));
-        out2.write(command); out2.newLine();
-        out2.write ("pause"); out2.newLine();
-        out2.close();
+        try (BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("CTA.bat")))) {
+            out2.write(command); out2.newLine();
+            out2.write ("pause"); out2.newLine();
+        }
+        catch (Exception ex){JOptionPane.showMessageDialog(null, ex.toString());}
         
         solFile = Application.getTempDir() + "/CTA_" + solver + ".sol";        
-        oke = TauArgusUtils.DeleteFile(solFile);
+        TauArgusUtils.DeleteFile(solFile);
         
         // In expert mode, no additional progress window needed, i.e. silent = true = doExpert
         result = ExecUtils.execCommand(commandline, Application.getTempDir(),doExpert,"Run CTA program");
@@ -479,9 +477,7 @@ public class OptiSuppress {
         //Read rthe results back
         nSec[0]=0;
 
-        BufferedReader reader = null;       
-        try{ 
-            reader = new BufferedReader(new FileReader(solFile)); 
+        try(BufferedReader reader = new BufferedReader(new FileReader(solFile))) { 
             Tokenizer tokenizer = new Tokenizer(reader);
             while ((tokenizer.nextLine()) != null) {
                 cn = Integer.parseInt(tokenizer.nextToken());
@@ -493,7 +489,6 @@ public class OptiSuppress {
             tokenizer.close();
         }
         catch(FileNotFoundException | NumberFormatException ex){JOptionPane.showMessageDialog(null, ex.toString());}
-        finally {if (reader != null) reader.close();}
          
         Date endDate = new Date();
         long diff = endDate.getTime()-startDate.getTime();
@@ -535,7 +530,7 @@ public class OptiSuppress {
                 kop = hs.substring(0, 11);
                 out2.write(kop.substring(0, 6) + "    0 " + hs.substring(12)); out2.newLine();
                 out2.write(kop.substring(0, 6) + "    1 " + hs.substring(12)); out2.newLine();
-                out2.write(kop.substring(0, 6) + "    2 " + zeroline.format("%" + aant + "s",zeroline)); out2.newLine();
+                out2.write(kop.substring(0, 6) + "    2 " + String.format("%" + aant + "s",zeroline)); out2.newLine();
                 try {
                     hs = in.readLine();
                 } catch (IOException ex){
@@ -557,7 +552,7 @@ public class OptiSuppress {
             out2.write (Application.getTempFile("hitassec.txt")); out2.newLine();
             out2.close();
         }
-        catch (Exception ex){}
+        catch (IOException ex){}
     }
     
     /**
@@ -575,9 +570,10 @@ public class OptiSuppress {
      * After removing some files in TEMP AHitas will protect the table.\n
      * ReadSecondaries will finally give the results back to the engine.
      * 
-     * @param tableSet
      * @param VarNo
+     * @param expVarNo
      * @param propertyChangeListener
+     * @param tableSet
      * @return
      * @throws ArgusException
      * @throws FileNotFoundException
@@ -698,15 +694,24 @@ public class OptiSuppress {
         int n= tableSet.respVar.nDecimals;
         try{
             tmpOut = new BufferedWriter(new FileWriter(Application.getTempFile("NPF.txt"), true));
-      
-            tmpOut.write("DECIMALS=" + n);       tmpOut.newLine();
+            tmpOut.write("[Frequency rule]"); tmpOut.newLine();
+            tmpOut.write("MINCOUNT="+tableSet.minFreq[0]); tmpOut.newLine();tmpOut.newLine();
+            
+            tmpOut.write("[Safety ranges]"); tmpOut.newLine();
+            tmpOut.write("LOWERMARG="+ SystemUtils.getRegString("optimal", "LOWERMARG", "0.99")); tmpOut.newLine();
+            tmpOut.write("UPPERMARG="+ SystemUtils.getRegString("optimal", "UPPERMARG", "1.01")); tmpOut.newLine(); tmpOut.newLine();
+            
+            tmpOut.write("[Misc]"); tmpOut.newLine();
+            tmpOut.write("DECIMALS=" + n); tmpOut.newLine();
             // TODO vogelen voor PQ regel
-            tmpOut.write ("MAXWEIGHT="+ tableSet.maxScaleCost); tmpOut.newLine(); tmpOut.newLine();
+            tmpOut.write ("MAXWEIGHT="+ tableSet.maxScaleCost); tmpOut.newLine();
             tmpOut.write ("MINTABVAL="+ tableSet.minTabVal); tmpOut.newLine();
             tmpOut.write ("MAXTABVAL="+ tableSet.maxTabVal); tmpOut.newLine(); tmpOut.newLine();
+            
+            tmpOut.write("[Costs]"); tmpOut.newLine();
             if (tableSet.costFunc == TableSet.COST_DIST){
                 tmpOut.write("[Distance cost function]"); tmpOut.newLine();
-                tmpOut.write("DISTANCE = 1"); tmpOut.newLine();
+                tmpOut.write("DISTANCE=1"); tmpOut.newLine();
                 for(i=0;i<tableSet.expVar.size();i++){
                     variable = tableSet.expVar.get(i);
                     hs = "D" + Integer.toString(i+1).trim() + " =";
@@ -717,11 +722,16 @@ public class OptiSuppress {
                         }  
                     }
                     else {
-                        tmpOut.write(" 1 1 1 1 1");
+                        for (int j=0;j<Variable.MAX_NUMBER_OF_DIST;j++){
+                            tmpOut.write(" 1"); // Equal cost 1 for up to distance MAX_NUMBER_OF_DIST
+                        }
                     }
                     tmpOut.newLine();
                 }
-            }        
+            }  
+            else{
+                tmpOut.write("DISTANCE=0"); tmpOut.newLine();
+            }
             tmpOut.close();
         }
         catch (IOException ex){
@@ -733,7 +743,7 @@ public class OptiSuppress {
             if ( !Application.isBatch() && Application.isAnco() ){ 
              fs1 = "";   
              try{fs1 = SystemUtils.getApplicationDirectory(FrameMain.class).getCanonicalPath();}
-             catch (Exception ex){}
+             catch (IOException | URISyntaxException ex){JOptionPane.showMessageDialog(null, ex.toString());}
              fs1 = fs1 +"\\SarahStop.txt";  
              fs2 = SystemUtils.getRegString("general", "datadir", "");
              fs2 = TauArgusUtils.getFilePath(fs2);
@@ -814,23 +824,23 @@ public class OptiSuppress {
 
     private static void ReadSecondaries(TableSet tableSet) throws ArgusException{
         int[] nSecondaries = new int[1]; 
-        boolean oke;
         File fileSecondaries = new File(Application.getTempFile("hitassec.txt"));
         if (! fileSecondaries.exists() ) {throw new ArgusException("Error in modular;\nNo outputfile found");}
-        oke = TAUARGUS.SetSecondaryHITAS(tableSet.index , nSecondaries);
+        TAUARGUS.SetSecondaryHITAS(tableSet.index , nSecondaries);
         tableSet.nSecond = nSecondaries[0];
         tableSet.suppressed = TableSet.SUP_HITAS;
         tableSet.solverUsed = Application.solverSelected;
     }
     
     private static void ControleerHITAStabtxt(TableSet tableSet){
-        String regelOut,token, status, freq; 
+        String regelOut, token, status, freq; 
         int  i;
         Double respVal, lpl, epsilon, x;
-        int[] GTIndex = new int[tableSet.expVar.size()];
-        for (i=0;i<tableSet.expVar.size();i++){
-            GTIndex[i] = 0;
-        }
+        // GTIndex is never used???
+        //int[] GTIndex = new int[tableSet.expVar.size()];
+        //for (i=0;i<tableSet.expVar.size();i++){
+        //    GTIndex[i] = 0;
+        //}
     
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator('.');
@@ -855,54 +865,49 @@ public class OptiSuppress {
         normalPrecision.setGroupingUsed(false);
     
         epsilon = 1.0 / ( 10^(i+1));
-        try{
-            BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("Hitastab.txt")));
-  
+
+        try(BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("Hitastab.txt")))) {
             Tokenizer tokenizer;
             tokenizer = null;
             try{
                 tokenizer = new Tokenizer(new BufferedReader(new FileReader(Application.getTempFile("Hitastab.kld"))));
-            } catch (Exception ex) {}
-    
-            // Get number of characters of largest value, not necessary the total general
-            // This value is only used to write HitasTab a bit more readable   
+            } catch (FileNotFoundException ex) {JOptionPane.showMessageDialog(null, ex.toString());}
             double x1, x2;
             x1 = Math.abs(tableSet.maxTabVal);
             x2 = Math.abs(tableSet.minTabVal);
             x1 = Math.max(x1,x2);
             int aant = (int) Math.ceil((Math.log(x1)/Math.log(10)));
-            if (x2<0) 
+            if (x2<0)
                 aant = aant + 1;
             if (tableSet.respVar.nDecimals > 0)
                 aant = aant + tableSet.respVar.nDecimals + 1;
-        
             while (tokenizer.nextLine() != null) {
                 regelOut = "";
                 for (i=0;i<tableSet.expVar.size();i++){
                     token = tokenizer.nextToken();
-                    regelOut = regelOut +token.format("%6s", token);
+                    regelOut = regelOut +String.format("%6s", token);
                 }
                 if (tableSet.expVar.size()==1){regelOut=regelOut+regelOut;}
                 regelOut=regelOut.substring(1);
                 token = tokenizer.nextToken();  //Value
-                respVal = Double.parseDouble(token);
-                regelOut = regelOut + " " + token.format("%" + aant + "s", token);
+                respVal = Double.valueOf(token);
+                regelOut = regelOut + " " + String.format("%" + aant + "s", token);
                 status = tokenizer.nextToken();  //Status
                 freq = tokenizer.nextToken();
                 if ( (respVal == 0) && status.equals("z") ){
                     if ( Application.isProtectCoverTable()){
                         if (tokenizer.getLine().equals("0")) {regelOut = regelOut + " n ";}
-                        else {regelOut = regelOut + " z ";}              
-                    } 
+                        else {regelOut = regelOut + " z ";}
+                    }
                     else {regelOut = regelOut + " z ";}
-                    regelOut = regelOut + freq + " "+ tokenizer.getLine(); 
+                    regelOut = regelOut + freq + " "+ tokenizer.getLine();
                     tokenizer.clearLine();
                 }
                 else{
                     regelOut = regelOut + " "+ status;
                     if (status.equals("u")){ //check LPL UPL
                         token = freq;
-                        lpl = Double.parseDouble(token);
+                        lpl = Double.valueOf(token);
                         x = respVal - tableSet.minTabVal;
                         if (x < 0 ) {x = 0.0;} // should not occur
                         if (lpl + epsilon > x) {lpl = x - epsilon;}
@@ -919,10 +924,9 @@ public class OptiSuppress {
                 out2.write (regelOut);
                 out2.newLine();
             }
-            tokenizer.close();
-            out2.close();
+            tokenizer.close();        
         }
-        catch (Exception ex){}
+        catch (HeadlessException | IOException | NumberFormatException ex){JOptionPane.showMessageDialog(null, ex.toString());}
     }
     
     public static void RunUWE(TableSet tableSet)throws ArgusException, IOException{
@@ -937,7 +941,7 @@ public class OptiSuppress {
         try{
             hs = SystemUtils.getApplicationDirectory(OptiSuppress.class).getCanonicalPath();
         }
-        catch (Exception ex){
+        catch (IOException | URISyntaxException ex){
             throw new ArgusException("Exception thrown: "+ex.getMessage());
         }
         hs = hs + "/EXP_ExternalUnpickerOnJJ.exe";
@@ -956,7 +960,7 @@ public class OptiSuppress {
         commandline.clear();
         try{
             hs = SystemUtils.getApplicationDirectory(OptiSuppress.class).getCanonicalPath();
-        } catch (Exception ex){
+        } catch (IOException | URISyntaxException ex){
             throw new ArgusException("Exception thrown: "+ex.getMessage());
         }    
         hs = hs + "/COIN_LargeTables.exe";
@@ -975,18 +979,22 @@ public class OptiSuppress {
             throw new ArgusException("The second step of UWE did not produce a file with secondaries.\n"+
                                      "File: "+Application.getTempFile("s.txt")+" could not be found");
         }
+        BufferedWriter  out2;
         //modify the output for reading the secondaries
-        BufferedReader  in = new BufferedReader(new FileReader(Application.getTempFile("s.txt"))); 
-        BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("s1.txt")));
-        out2.write("fop"); out2.newLine();
-        out2.write("fop"); out2.newLine();
-        while ( (hs = in.readLine()) != null){
-            hs = hs + " m";
-            out2.write(hs); out2.newLine();
+        try (BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("s.txt")))) {
+            out2 = new BufferedWriter(new FileWriter(Application.getTempFile("s1.txt")));
+            out2.write("fop");
+            out2.newLine();
+            out2.write("fop");
+            out2.newLine();
+            while ( (hs = in.readLine()) != null){
+                hs = hs + " m";
+                out2.write(hs); out2.newLine();
+            }
         }
-        in.close(); out2.close();
+        out2.close();
       
-        result = TAUARGUS.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("s1.txt"), false, nSec);
+        TAUARGUS.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("s1.txt"), false, nSec);
 
         tableSet.nSecond = nSec[0];
         Date endDate = new Date();
@@ -1090,7 +1098,7 @@ public class OptiSuppress {
              #define JJINF           102
              #define JJMINVIOLA      103
              #define JJMAXSLACK      104
-             #define JJMAXTIME	105
+             #define JJMAXTIME       105
             */
             double jjRoundZero = SystemUtils.getRegDouble("optimal", "jjRoundZero", 0.0000001);
             TAUROUNDER.SetDoubleConstant(101, jjRoundZero);
@@ -1227,7 +1235,7 @@ public class OptiSuppress {
                                         "Lowerbound:" + StrUtils.formatDouble(lowerBound[0], tableSet.respVar.nDecimals) + "\n" +
                                         "Upperbound:" + StrUtils.formatDouble(upperBound[0], tableSet.respVar.nDecimals));
             SystemUtils.writeLogbook("End of the rounding procedure");
-        } catch(Exception ex){ 
+        } catch(ArgusException ex){ 
             throw new ArgusException("Error in the rounding procedure\n" + ex.getMessage());
         }
         finally{ // cleanup
@@ -1242,8 +1250,7 @@ public class OptiSuppress {
         double cellValue;
         String[] regel = new String[1];
         TauArgusUtils.renameFile (fn, Application.getTempFile("klad"));
-        try{
-            BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("klad")));
+        try(BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("klad")));){
             BufferedWriter out2 = new BufferedWriter(new FileWriter(fn));
             regel[0] = in.readLine(); out2.write(regel[0]); out2.newLine();
             regel[0] = in.readLine(); out2.write(regel[0]); out2.newLine();
@@ -1379,63 +1386,63 @@ public class OptiSuppress {
                     for (i=0;i<nRest;i++){hs = in.readLine();}
                     j = j - nRest;
                     j = j / nac[0];
-                    BufferedWriter jjRel = new BufferedWriter(new FileWriter(Application.getTempFile("JJREL.IN")));
-                    BufferedWriter jjRelTot = new BufferedWriter(new FileWriter(Application.getTempFile("JJRELTOT.IN")));
-                    jjRel.write(j+" "); jjRel.newLine(); 
-                    for (i=0;i<nRest;i++){
-                        jjRelTot.write("0 3 :" +i + " (-1)" +(nRest + i) + " (1)" + (2 * nRest + i) + " (1)"); jjRelTot.newLine(); 
-                        nRelTot++;
-                    }                              
-
-                    i = 0;
-                    while((hs = in.readLine()) != null) {
-                        p = hs.indexOf(":");
-                        q = hs.indexOf("(");
-                        j = StrUtils.toInteger(hs.substring(p+1,q).trim());
-                        if(j<nRest){
-                            jjRel.write(hs); jjRel.newLine();  
-                            nRel++;
-                            jjRelTot.write(hs); jjRelTot.newLine();  
+                    BufferedWriter jjRelTot;
+                    try (BufferedWriter jjRel = new BufferedWriter(new FileWriter(Application.getTempFile("JJREL.IN")))) {
+                        jjRelTot = new BufferedWriter(new FileWriter(Application.getTempFile("JJRELTOT.IN")));
+                        jjRel.write(j+" ");
+                        jjRel.newLine();
+                        for (i=0;i<nRest;i++){
+                            jjRelTot.write("0 3 :" +i + " (-1)" +(nRest + i) + " (1)" + (2 * nRest + i) + " (1)"); jjRelTot.newLine();  
                             nRelTot++;
-                            i++;
+                        }   i = 0;
+                        while((hs = in.readLine()) != null) {
                             p = hs.indexOf(":");
-                            hs1 = hs.substring(0, p+1);
-                            hs2 = hs1;
-                            hs = hs.substring(p+1);
-                            while ((hs != null)  && !hs.equals("")){
-                                p = hs.indexOf("(");
-                                q = hs.indexOf(")");
-                                k = StrUtils.toInteger(hs.substring(0, p));
-                                hs1 = hs1 + " " + (k+nRest) + " " + hs.substring(p,q+1);
-                                hs2 = hs2 + " " + (k+nRest*2) + " " + hs.substring(p,q+1);
-                                hs = hs.substring(q+1).trim();
+                            q = hs.indexOf("(");
+                            j = StrUtils.toInteger(hs.substring(p+1,q).trim());
+                            if(j<nRest){
+                                jjRel.write(hs); jjRel.newLine();
+                                nRel++;
+                                jjRelTot.write(hs); jjRelTot.newLine();
+                                nRelTot++;
+                                i++;
+                                p = hs.indexOf(":");
+                                hs1 = hs.substring(0, p+1);
+                                hs2 = hs1;
+                                hs = hs.substring(p+1);
+                                while ((hs != null)  && !hs.equals("")){
+                                    p = hs.indexOf("(");
+                                    q = hs.indexOf(")");
+                                    k = StrUtils.toInteger(hs.substring(0, p));
+                                    hs1 = hs1 + " " + (k+nRest) + " " + hs.substring(p,q+1);
+                                    hs2 = hs2 + " " + (k+nRest*2) + " " + hs.substring(p,q+1);
+                                    hs = hs.substring(q+1).trim();
+                                }
+                                jjRelTot.write(hs1); jjRelTot.newLine();
+                                jjRelTot.write(hs2); jjRelTot.newLine();
+                                nRelTot = nRelTot + 2;
                             }
-                            jjRelTot.write(hs1); jjRelTot.newLine();      
-                            jjRelTot.write(hs2); jjRelTot.newLine();
-                            nRelTot = nRelTot + 2;
                         }
                     }
-                    jjRel.close();
                     jjRelTot.close();
                     //Add the relations to the JJ files
                     for (i=0;i<nac[0];i++){
                         openOut(i,true);
-                        BufferedReader relIn = new BufferedReader(new FileReader(Application.getTempFile("JJREL.IN")));
-                        hs = relIn.readLine();
-                        if (nRel == 1){ //if we have only one relation JJ has some problem. So we double the same relation. Who cares
-                            out.write(hs); out.newLine();
-                            hs =  relIn.readLine();
-                            out.write(hs); out.newLine();
-                            out.write(hs); out.newLine();
-                        }else{
-                            out.write(hs); out.newLine();
-                            for (j=0;j<nRel;j++){
+                        try (BufferedReader relIn = new BufferedReader(new FileReader(Application.getTempFile("JJREL.IN")))) {
+                            hs = relIn.readLine();
+                            if (nRel == 1){ //if we have only one relation JJ has some problem. So we double the same relation. Who cares
+                                out.write(hs); out.newLine();
                                 hs =  relIn.readLine();
                                 out.write(hs); out.newLine();
-                            }  
+                                out.write(hs); out.newLine();  
+                            }else{
+                                out.write(hs); out.newLine();
+                                for (j=0;j<nRel;j++){
+                                    hs =  relIn.readLine();
+                                    out.write(hs); out.newLine();
+                                }
+                            }
+                            out.close();
                         }
-                        out.close();
-                        relIn.close();             
                     }
                     in.close();
                     return nac[0];
@@ -1444,11 +1451,12 @@ public class OptiSuppress {
             }
             else{throw new ArgusException("Only a non hierarchical first exp var imlemented");}
         } 
-        catch(Exception ex){throw new ArgusException("Error when splitting the JJ file for rounding\n" + ex.getMessage());}
+        catch(IOException | ArgusException ex){throw new ArgusException("Error when splitting the JJ file for rounding\n" + ex.getMessage());}
     }
  
    
-    private static void joinRounded(TableSet tableSet, int nPart) {
+    private static void joinRounded(TableSet tableSet, int nPart) throws ArgusException 
+    {
     // First copy all the subfiles to the master file
     // On the fly compute the aggregate level
     // add the aggegate info at the end  
@@ -1456,32 +1464,31 @@ public class OptiSuppress {
         nSubSize=tableSet.numberOfCells()/nPart;
         double[][] xx = new double[nSubSize][2];
         for (i=0;i<nSubSize;i++){xx[i][0] = 0; xx[i][1] = 0;}
-        try{
-            BufferedWriter roundResult = new BufferedWriter(new FileWriter(Application.getTempFile("JJ.OUT")));
+        try(BufferedWriter roundResult = new BufferedWriter(new FileWriter(Application.getTempFile("JJ.OUT")));){
             n=nSubSize;
             for(i=1;i<nPart;i++){
                 hs = Integer.toString(i);     
-                BufferedReader roundIn = new BufferedReader(new FileReader(Application.getTempFile("JJ"+hs+".out")));
-                for (int j=0;j<nSubSize;j++){
-                    regel = roundIn.readLine();
-                    p1 = regel.indexOf("from");
-                    p2 = regel.indexOf("to");
-                    hs = regel.substring(p1+4, p2);
-                    xx[j][0] += StrUtils.toDouble(regel.substring(p1+4, p2));
-                    hs = regel.substring(p2+2);
-                    xx[j][1] += StrUtils.toDouble(regel.substring(p2+2));
-                    roundResult.write(n + " "+regel.substring(p1)); roundResult.newLine();
-                    n++;        
-                }       
-                roundIn.close();
+                try (BufferedReader roundIn = new BufferedReader(new FileReader(Application.getTempFile("JJ"+hs+".out")))) {
+                    for (int j=0;j<nSubSize;j++){
+                        regel = roundIn.readLine();
+                        p1 = regel.indexOf("from");
+                        p2 = regel.indexOf("to");
+                        hs = regel.substring(p1+4, p2);
+                        xx[j][0] += StrUtils.toDouble(regel.substring(p1+4, p2));
+                        hs = regel.substring(p2+2);
+                        xx[j][1] += StrUtils.toDouble(regel.substring(p2+2));
+                        roundResult.write(n + " "+regel.substring(p1)); roundResult.newLine();
+                        n++;
+                    }
+                }
             }
             for (int j=0;j<nSubSize;j++){
                 roundResult.write("" + j + " from " + xx[j][0] + " to "+ xx[j][1]); roundResult.newLine();
             } 
             roundResult.close();
         } 
-        catch (IOException ex){}
-        catch (ArgusException ex){}
+        catch (IOException ex){JOptionPane.showMessageDialog(null, ex.toString());}
+        catch (ArgusException ex){throw new ArgusException("Error when joining the JJ file for rounding\n" + ex.getMessage());}
     }
 
     public static void RunOptimal(TableSet tableSet, final PropertyChangeListener propertyChangeListener, Boolean inverseWeight, Boolean externalJJFile, int maxTime) throws ArgusException, FileNotFoundException, IOException{
@@ -1569,7 +1576,7 @@ public class OptiSuppress {
         else {
             maxTimeAllowed = maxTime;   
         }
-        result = 9998;
+        //result = 9998; //Impossible to be returned???
 
         if (Application.solverSelected == Application.SOLVER_CPLEX) hs = TauArgusUtils.GetCplexLicenceFile();
         else hs ="";
@@ -1585,15 +1592,13 @@ public class OptiSuppress {
             throw new ArgusException("No optimal solution found\n"+TAUARGUS.GetErrorString(result) +
                                      "\nSee also file: " + Application.getTempFile("FullJJ.log"));
         }
-        try{ 
-            BufferedReader  in  = new BufferedReader(new FileReader(Application.getTempFile("JJ.OUT")));    
-            BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("JJ2.OUT")));
+        try(BufferedReader  in  = new BufferedReader(new FileReader(Application.getTempFile("JJ.OUT"))); BufferedWriter out2 = new BufferedWriter(new FileWriter(Application.getTempFile("JJ2.OUT")));){
             out2.write ("fop"); out2.newLine();
             out2.write ("fop"); out2.newLine();
             while((hs = in.readLine()) != null) { 
                 out2.write(hs + " m"); out2.newLine();
             } 
-            in.close(); out2.close();
+            in.close();         
         } 
         catch (IOException ex){
             throw new ArgusException("An error occured while processing the output of Optimal");
@@ -1603,7 +1608,7 @@ public class OptiSuppress {
             jCallback.delete();
         }
         if (externalJJFile){return;}
-        result = TAUARGUS.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("JJ2.OUT"), false, nSecondary);
+        TAUARGUS.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("JJ2.OUT"), false, nSecondary);
         tableSet.suppressINFO = ReadHitasINFO("fulljj.log");
         //TestTRivialSolution
         tableSet.nSecond = nSecondary[0];
@@ -1696,12 +1701,13 @@ public class OptiSuppress {
         catch (IOException ex){return -2;}    
     }
    
-    static void TestTrivialSolution (TableSet tableSet) throws ArgusException{
+    //Not used???
+    /*static void TestTrivialSolution (TableSet tableSet) throws ArgusException{
         CellStatusStatistics stat = tableSet.getCellStatusStatistics();
         int nSafe = stat.freq[CellStatus.SAFE.getValue()] + stat.freq[CellStatus.SAFE_MANUAL.getValue()];
         if (nSafe == 0) {throw new ArgusException("All cells have been suppressed.\n" + 
                                                   "The problem might be infeasible"); }
-    }
+    }*/
 
     public static boolean RunCellKeyCont(TableSet tableSet, String PTableFileCont, String PTableFileSep)throws ArgusException, FileNotFoundException, IOException{
         long startTime = new Date().getTime();

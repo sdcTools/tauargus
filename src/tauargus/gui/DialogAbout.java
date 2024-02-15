@@ -29,7 +29,7 @@ import tauargus.model.Application;
 
 public class DialogAbout extends DialogBase {
 
-    private static final Logger LOGGER = Logger.getLogger(DialogAbout.class.getName());
+    //private static final Logger LOGGER = Logger.getLogger(DialogAbout.class.getName());
 
     // Creates new form DialogAbout
     public DialogAbout(java.awt.Frame parent, boolean modal) {
@@ -200,6 +200,8 @@ public class DialogAbout extends DialogBase {
 
     private void buttonVersionDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVersionDetailsActionPerformed
         DialogVersionDetails dialog = new DialogVersionDetails((JFrame)SwingUtilities.getAncestorOfClass(JFrame.class, this),true);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_buttonVersionDetailsActionPerformed
 

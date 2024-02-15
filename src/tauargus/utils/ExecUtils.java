@@ -28,33 +28,28 @@ import java.net.URISyntaxException;
 import java.util.List;
 import tauargus.gui.FrameInfo;
 import tauargus.model.Application;
-// Only the exec routines are left
-// The rest is to the Argus lib SystemUtils
 
 public class ExecUtils {
-//    private static String logbook;
-    
  
-   static FrameInfo windowInfo;
-//    static DialogInfo windowInfo;
-   
+    static FrameInfo windowInfo;
        
     private static void eatStream(final InputStream is, final Boolean silent) {
         Thread thread;  
         thread = new Thread() {
             @Override
             public void run() {
-                String line; //Anco
-// Anco 1.6         
-//         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                String line;
                 BufferedReader reader = null;
                 try {
                     reader = new BufferedReader(new InputStreamReader(is));
-//                    while (reader.readLine() != null) { versie Robert
-//                    }
-                    while ((line = reader.readLine()) != null) { //Anco
-                        System.out.println(line); //Anco
-                        if (!silent) windowInfo.addText(line);
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                        if (!silent) {
+                            if (!line.contains("percent complete"))
+                                windowInfo.addText(line);
+                            else
+                                windowInfo.replaceLastLine(line);
+                        }
                     }
                 } 
                 catch (IOException ex) {}
@@ -63,68 +58,6 @@ public class ExecUtils {
         thread.start();
     }
         
-    /**
-     * Finds the location of a given class file on the file system. Throws an
-     * IOException if the class cannot be found.
-     * <br>
-     * If the class is in an archive (JAR, ZIP), then the returned object will
-     * point to the archive file.
-     * <br>
-     * If the class is in a directory, the base directory will be returned with
-     * the package directory removed.
-     * <br>
-     * The
-     * <code>File.isDirectory()</code> method can be used to determine which is
-     * the case.
-     * <br>
-     *
-     * @author McDowell
-     * @param c a given class
-     * @return a File object
-     * @throws IOException
-     */
-
-/*    To ArgisLib
-    public static File getApplicationDirectory() throws IOException, FileNotFoundException {
-        Class c = ExecUtils.class;
-        if (c == null) {
-            throw new NullPointerException();
-        }
-
-        String className = c.getName();
-        String resourceName = className.replace('.', '/') + ".class";
-        ClassLoader classLoader = c.getClassLoader();
-        if (classLoader == null) {
-            classLoader = ClassLoader.getSystemClassLoader();
-        }
-        URL url = classLoader.getResource(resourceName);
-
-        String szUrl = url.toString();
-        if (szUrl.startsWith("jar:file:")) {
-            try {
-                szUrl = szUrl.substring("jar:".length(), szUrl.lastIndexOf("!"));
-                String path = FilenameUtils.getFullPath(szUrl);
-                URI uri = new URI(path);
-                return new File(uri);
-            } catch (URISyntaxException e) {
-                throw new IOException(e.toString());
-            }
-        } else if (szUrl.startsWith("file:")) {
-            try {
-                szUrl = szUrl.substring(0, szUrl.length() - resourceName.length());
-                URI uri = new URI(szUrl);
-                File file = new File(uri);
-                // strip local build path (currently build/classes)
-                return new File(uri).getParentFile().getParentFile();
-            } catch (URISyntaxException e) {
-                throw new IOException(e.toString());
-            }
-        }
-
-        throw new FileNotFoundException(szUrl);
-    }
-*/
-    
     /**
      * Start synchronously an external command. Output will be discarded.
      * 

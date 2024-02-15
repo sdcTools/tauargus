@@ -276,22 +276,24 @@ public class GHMiter {
                 j=variable.index;
                 NA = TauArgusUtils.getNumberOfActiveCodes(j);   
                 if (P4 < NA) {P4=NA;}
-                if (P5 < NExpVar) {P5 = NExpVar;}
+                //if (P5 < NExpVar) {P5 = NExpVar;} // ? Why for each i: NExpVar is fixed per table?
             }
+            if (P5 < NExpVar) {P5 = NExpVar;}
         }
         if (Linked) { P5=CoverDim; tableSet = TableService.getTable(0); }
         else        { tableSet = TableService.getTable(tIndex);}
         Hs = "";
         switch (tableSet.ghMiterSize){
-            case 0: Hs = "50960000 200 6000"; 
+            case 0: Hs = "50960000 200 6000"; // Normal
                     break;
-            case 1: P1 = 62500000 + 250 + 225000; 
-                    P1 = (P1 + 63 + P4 + 100000) * 4;
+            case 1: P1 = 62500000 + 250 + 225000; // Large
+                    //P1 = (P1 + 63 + P4 + 100000) * 4; // Why "P1 + 63 + P4" as compared to case 2: "P1 + 63 * P4" ?
+                    P1 = (P1 + 63 * P4 + 100000) * 4; 
                     Hs = Integer.toString(P1) + " 250 25000";
                     break;   
-            case 2: P1 = 9 * tableSet.ghMiterSubtable;
-                    P1 = (62500000 + tableSet.ghMiterSubcode + P1 + 63 * P4 + 100000) * 4;
-                    Hs = Integer.toString(P1)  +" " + Integer.toString(tableSet.ghMiterSubcode)+" "+ Integer.toString(tableSet.ghMiterSubtable);
+            case 2: P1 = 9 * tableSet.ghMiterSubtable; // Manual
+                    P1 = (62500000 + tableSet.ghMiterSubcode + P1 + 63 * P4 + 100000) * 4; // Why "P1 + 63 * P4" as compared to case 1: "P1 + 63 + P4" ?
+                    Hs = Integer.toString(P1)  + " " + Integer.toString(tableSet.ghMiterSubcode)+" "+ Integer.toString(tableSet.ghMiterSubtable);
                     break;             
         }
      

@@ -23,10 +23,26 @@ package tauargus.gui;
  */
 public class DialogErrorApriori extends javax.swing.JDialog {
 
-    static public boolean aprioriErrorContinue = false;
-    static public String  aprioriErrorMessage;
+    private boolean aprioriErrorContinue = false;
+    private String  aprioriErrorMessage;
+
+    public boolean GetaprioriErrorContinue(){
+        return this.aprioriErrorContinue;
+    }
+    public void SetaprioriErrorContinue(boolean b){
+        this.aprioriErrorContinue = b;
+    }
+    public String GetaprioriErrorMessage(){
+        return this.aprioriErrorMessage;
+    }
+    public void SetaprioriErrorMessage(String s){
+        this.aprioriErrorMessage = s;
+    }
+
     /**
      * Creates new form DialogErrorApriori
+     * @param parent Frame
+     * @param modal boolean
      */
     public DialogErrorApriori(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -51,7 +67,9 @@ public class DialogErrorApriori extends javax.swing.JDialog {
         TextFieldErrorMessage = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel1.setText("An error was found in the apriori file");
 
         jButton1.setText("Continue");
@@ -69,7 +87,7 @@ public class DialogErrorApriori extends javax.swing.JDialog {
         });
 
         TextFieldErrorMessage.setColumns(20);
-        TextFieldErrorMessage.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        TextFieldErrorMessage.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         TextFieldErrorMessage.setForeground(new java.awt.Color(255, 0, 0));
         TextFieldErrorMessage.setRows(5);
         jScrollPane1.setViewportView(TextFieldErrorMessage);
@@ -81,26 +99,29 @@ public class DialogErrorApriori extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 84, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(106, 106, 106)
+                                .addComponent(jButton1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton2)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(89, 89, 89)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -124,7 +145,7 @@ public class DialogErrorApriori extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    public void initWindow(){
+    public final void initWindow(){
         TextFieldErrorMessage.setText(aprioriErrorMessage + 
                 "\n\nDo you want to continue with the rest?");
     }

@@ -166,7 +166,7 @@
                   <Component id="radioButtonGHSizeLarge" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="radioButtonGHSizeManual" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="labelMaxSubCode" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textFieldMaxSubCode" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -176,6 +176,7 @@
                       <Component id="labelMaxSubTable" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textFieldMaxSubTable" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -232,9 +233,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="textFieldMaxSubCode">
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldMaxSubCodeActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="textFieldMaxSubTable">
         </Component>

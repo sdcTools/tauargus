@@ -35,19 +35,32 @@
                   <Component id="jPanel1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBoxApplyScaling" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                      <Component id="jLabelCTATolerance" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldCTATolerance" min="-2" pref="90" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jButtonDefaults" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButtonOK" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jButtonDefaults" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonOK" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jLabelLowerMarg" max="32767" attributes="0"/>
+                                      <Component id="jLabelCTATolerance" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Component id="jLabelUpperMarg" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jTextFieldLowerMarg" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldCTATolerance" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldUpperMarg" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -68,25 +81,33 @@
                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                      <Component id="jCheckBoxApplyScaling" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabelCTATolerance" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextFieldCTATolerance" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButtonOK" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelLowerMarg" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextFieldLowerMarg" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabelUpperMarg" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextFieldUpperMarg" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButtonDefaults" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonOK" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="53" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -331,10 +352,10 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jTextFieldMaxSlack" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jTextFieldMaxSlack" alignment="0" pref="87" max="32767" attributes="0"/>
                       <Component id="jTextFieldMinViola" alignment="1" max="32767" attributes="0"/>
-                      <Component id="jTextFieldOptTol" alignment="0" pref="87" max="32767" attributes="0"/>
                       <Component id="jTextFieldFeasTol" alignment="1" max="32767" attributes="0"/>
+                      <Component id="jTextFieldOptTol" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -416,11 +437,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JCheckBox" name="jCheckBoxApplyScaling">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Apply Scaling"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="jButtonDefaults">
       <Properties>
         <Property name="text" type="java.lang.String" value="Restore Defaults"/>
@@ -556,9 +572,6 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="0.0001"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldRounderMinViolaActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldRounderMaxSlack">
           <Properties>
@@ -568,5 +581,27 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JLabel" name="jLabelLowerMarg">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="LOWERMARG"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelUpperMarg">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="UPPERMARG"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldLowerMarg">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="0.99"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldUpperMarg">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="1.01"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

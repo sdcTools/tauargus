@@ -101,7 +101,7 @@ public class StrUtils {
         }
     }
     
-       public static String timeToString(int s){
+    public static String timeToString(int s){
         String hs = ""; int h=0; int m=0;
         if (s >= 3600){
            h = s/3600;
@@ -113,8 +113,8 @@ public class StrUtils {
            hs = hs + " " + m + " min"; 
            s=s-m*60;
         }
-       hs = hs + " " + s + " sec"; 
-      return hs;  
-       }
+        hs = hs + " " + s + " sec"; 
+        return hs;  
+    }
        
  }

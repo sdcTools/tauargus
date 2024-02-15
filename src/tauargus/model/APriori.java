@@ -46,7 +46,7 @@ public class APriori {
     */
     public class CartesianProductIterator
     {
-        List<int[]> codeRange = new ArrayList<int[]>();
+        List<int[]> codeRange = new ArrayList<>();
         int[] codeCntr ;
         int LinearCntr = 0;
         Integer currCntr = 0;
@@ -350,7 +350,7 @@ public class APriori {
 
             try
             {
-                Double.parseDouble(w);
+                Double.valueOf(w);
                 return wc;
             }
             catch(NumberFormatException nfe) {}
@@ -417,8 +417,7 @@ public class APriori {
      */
     public void WriteAprioriFile(String aprioriFileName, String sep, int outDim)
     { 
-        try {
-            BufferedWriter w = new BufferedWriter(new FileWriter(aprioriFileName));
+        try (BufferedWriter w = new BufferedWriter(new FileWriter(aprioriFileName));){
             for(APrioriCell c : Cells)
             {
                 if( c.MustBeIncluded())
@@ -459,7 +458,7 @@ public class APriori {
         boolean lastFieldIsANumber = true;
         try
         { 
-            Double.parseDouble(lastValue) ; 
+            Double.valueOf(lastValue) ; 
         }
         catch( NumberFormatException e) 
         {
@@ -872,7 +871,7 @@ public class APriori {
                                 //Always stop here             
                         } //switch
                     } 
-                    catch(Exception ex){}
+                    catch(argus.model.ArgusException | ArgusException ex){}
 
                     // When ignore=false in manual mode it should be possible to choose continue after error
                     // so no exceptions, or distinguise between Application.IsBatch=true and manual(false)
