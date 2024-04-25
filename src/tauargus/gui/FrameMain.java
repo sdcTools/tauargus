@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import static javax.swing.JViewport.SIMPLE_SCROLL_MODE;
@@ -136,12 +136,9 @@ public class FrameMain extends javax.swing.JFrame {
                 {
                     try {
                         metadata.readTableMetadata();
-// Anco 1.6                        
-//                    } catch (ArgusException | FileNotFoundException ex) {
-                    } catch (ArgusException ex) {
-                        JOptionPane.showMessageDialog(FrameMain.this, ex.getMessage());}
-                      catch (FileNotFoundException ex) {
-                        JOptionPane.showMessageDialog(FrameMain.this, ex.getMessage());  
+                    } 
+                    catch (ArgusException | FileNotFoundException ex) {
+                        JOptionPane.showMessageDialog(FrameMain.this, ex.getMessage());
                     }
                 }
                 Application.addMetadata(metadata);                
@@ -186,6 +183,7 @@ public class FrameMain extends javax.swing.JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             DialogSelectTable dialog = new DialogSelectTable(FrameMain.this, true);
+            dialog.setSelectedTable(currentTable.index);
             if (dialog.showDialog() == DialogSelectTable.APPROVE_OPTION) {
                 currentTable = dialog.getSelectedTable();
                 panelTable.setTable(currentTable);
@@ -209,7 +207,6 @@ public class FrameMain extends javax.swing.JFrame {
         }
         catch (ArgusException ex){
                  JOptionPane.showMessageDialog(FrameMain.this, ex.getMessage());}
-        // TODO add your handling code here:
         }
     };
     
@@ -273,9 +270,9 @@ public class FrameMain extends javax.swing.JFrame {
     private final JFileChooser fileChooser;
 
     /**
-     * NOTE Fro some silly reason the panelTable is not initialised automatically
+     * NOTE For some silly reason the panelTable is not initialised automatically
      * So I copied it by hand from previous version
-     * This concens the two statemensta after initComponents(); 
+     * This concerns the two statements after initComponents(); 
      * Also the last statement (the declaration of panelTable) disappeared so I added it manually
      * Creates new form FrameMain
      */
@@ -323,6 +320,9 @@ public class FrameMain extends javax.swing.JFrame {
                 titlefile = Application.getMetadata(0).dataFile;
             }
             this.setTitle("TauArgus \t" + titlefile);
+        }
+        else{
+            this.setTitle("TauArgus");
         }
     }
     
@@ -641,11 +641,6 @@ public class FrameMain extends javax.swing.JFrame {
         menuItemLinkedTables.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/linked.png"))); // NOI18N
         menuItemLinkedTables.setMnemonic('L');
         menuItemLinkedTables.setText("Linked Tables...");
-        menuItemLinkedTables.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemLinkedTablesActionPerformed(evt);
-            }
-        });
         menuModify.add(menuItemLinkedTables);
 
         menuItemProtectJJFormat.setMnemonic('P');
@@ -666,33 +661,18 @@ public class FrameMain extends javax.swing.JFrame {
         menuItemSaveTable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/SaveTable.png"))); // NOI18N
         menuItemSaveTable.setMnemonic('S');
         menuItemSaveTable.setText("Save Table...");
-        menuItemSaveTable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemSaveTableActionPerformed(evt);
-            }
-        });
         menuOutput.add(menuItemSaveTable);
 
         menuItemViewReport.setAction(viewReportAction);
         menuItemViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/ViewReport.png"))); // NOI18N
         menuItemViewReport.setMnemonic('V');
         menuItemViewReport.setText("View Report");
-        menuItemViewReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemViewReportActionPerformed(evt);
-            }
-        });
         menuOutput.add(menuItemViewReport);
 
         menuItemGenerateApriory.setAction(GenerateAprioriAction);
         menuItemGenerateApriory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/apriori.png"))); // NOI18N
         menuItemGenerateApriory.setMnemonic('G');
         menuItemGenerateApriory.setText("Generate Apriory...");
-        menuItemGenerateApriory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemGenerateAprioryActionPerformed(evt);
-            }
-        });
         menuOutput.add(menuItemGenerateApriory);
 
         menuItemWriteBatchFile.setMnemonic('W');
@@ -743,11 +723,6 @@ public class FrameMain extends javax.swing.JFrame {
         menuItemOptions.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tauargus/resources/options.png"))); // NOI18N
         menuItemOptions.setMnemonic('O');
         menuItemOptions.setText("Options...");
-        menuItemOptions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemOptionsActionPerformed(evt);
-            }
-        });
         menuHelp.add(menuItemOptions);
 
         menuItemSolverOptions.setMnemonic('S');
@@ -825,13 +800,7 @@ public class FrameMain extends javax.swing.JFrame {
                 }
                 specifyTablesAction.actionPerformed(evt);
             }
-// anco 1.6            
-//          catch (ArgusException | FileNotFoundException ex) {
-            catch (ArgusException ex) {
-                JOptionPane.showMessageDialog(FrameMain.this, ex.getMessage());
-                Application.clearMetadatas();
-            }                     
-            catch (FileNotFoundException ex) {
+            catch (ArgusException | FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(FrameMain.this, ex.getMessage());
                 Application.clearMetadatas();
             }                     
@@ -843,35 +812,20 @@ public class FrameMain extends javax.swing.JFrame {
         String hs="";
         DialogHtmlViewer dialog = new DialogHtmlViewer(FrameMain.this, true);
         try{hs = SystemUtils.getApplicationDirectory(FrameMain.class).getCanonicalPath();}
-        catch (Exception ex){}
+        catch (IOException | URISyntaxException ex){}
         hs = hs +"/tauNews.html";
         if (TauArgusUtils.ExistFile(hs)){
-        dialog.showDialog("News","file:////"+  hs);
-        }else{
+            dialog.showDialog("News","file:////"+  hs);
+        }
+        else{
            JOptionPane.showMessageDialog(FrameMain.this, "The news file could not be displayed; sorry"); 
         }
     }//GEN-LAST:event_menuItemNewsActionPerformed
 
     private void menuItemAncoNewsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAncoNewsActionPerformed
         DialogHtmlViewer dialog = new DialogHtmlViewer(FrameMain.this, true);
-        JOptionPane.showMessageDialog(FrameMain.this, "The Anco news file tobe implemented"); 
+        JOptionPane.showMessageDialog(FrameMain.this, "The Anco news file to be implemented"); 
     }//GEN-LAST:event_menuItemAncoNewsActionPerformed
-
-    private void menuItemSaveTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveTableActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuItemSaveTableActionPerformed
-
-    private void menuItemGenerateAprioryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGenerateAprioryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuItemGenerateAprioryActionPerformed
-
-    private void menuItemOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOptionsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuItemOptionsActionPerformed
-
-    private void menuItemLinkedTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLinkedTablesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuItemLinkedTablesActionPerformed
 
     private void menuItemOpenBatchProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenBatchProcessActionPerformed
         TauArgusUtils.getDataDirFromRegistry(fileChooser);
@@ -925,10 +879,6 @@ public class FrameMain extends javax.swing.JFrame {
         dialog.setLocationRelativeTo(FrameMain.this);
         dialog.setVisible(true);
     }//GEN-LAST:event_menuItemWriteBatchFileActionPerformed
-
-    private void menuItemViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemViewReportActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuItemViewReportActionPerformed
 
     private void menuItemProtectJJFormatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemProtectJJFormatActionPerformed
         DialogProtectJJFormat dialog = new DialogProtectJJFormat(FrameMain.this,true);

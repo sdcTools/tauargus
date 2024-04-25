@@ -37,6 +37,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import tauargus.model.Application;
+import tauargus.model.ArgusException;
 import tauargus.model.Metadata;
 import tauargus.model.ProgressSwingWorker;
 import tauargus.model.TableSet;
@@ -1725,7 +1726,13 @@ public class DialogSpecifyTablesMicro extends DialogBase {
             @Override
             protected Void doInBackground() throws Exception {
                 super.doInBackground();
-                TableService.readMicrodata(getPropertyChangeListener());
+                try{
+                    TableService.readMicrodata(getPropertyChangeListener());
+                }
+                catch (ArgusException ex){
+                    TableService.clearTables();
+                    throw new ArgusException(ex.getMessage());
+                }
                 return null;
             }
 

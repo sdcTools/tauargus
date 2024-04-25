@@ -25,7 +25,8 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class PanelTable extends javax.swing.JPanel {
       //show the UWE radio button only if the software is available and Anco option is enabled
       try {
           hs = SystemUtils.getApplicationDirectory(PanelTable.class).getCanonicalPath();
-      } catch (Exception ex) {}
+      } catch (IOException | URISyntaxException ex) {}
       radioButtonUwe.setVisible(TauArgusUtils.ExistFile(hs+"/EXP_ExternalUnpickerOnJJ.exe") && activate);
       radioButtonMarginal.setVisible(activate);
       checkBoxInverseWeight.setVisible(activate);
@@ -440,7 +441,7 @@ public class PanelTable extends javax.swing.JPanel {
 
         createCodeList();
         
-        // 2 codes are selected from the row and column variable.
+        // 2 codes are selected for the row and column variable.
         int n = tableSet.expVar.size() - 2;
         if (isSingleColumn){n=0;}
         for (int i = 0; i < n; i++) {
@@ -453,9 +454,6 @@ public class PanelTable extends javax.swing.JPanel {
         }
         
         buttonCost.setVisible(tableSet.costFunc == TableSet.COST_VAR);
-        isAdjusting = true;
-        comboBoxDecimals.setSelectedIndex(Math.min(tableSet.respVar.nDecimals,comboBoxDecimals.getMaximumRowCount()));
-        isAdjusting = false;
         Variable columnVar = null;
         if (!isSingleColumn) {columnVar = tableSet.expVar.get(1);}
         setRowColumnVariables(tableSet.expVar.get(0), columnVar);
@@ -465,6 +463,12 @@ public class PanelTable extends javax.swing.JPanel {
         else{
             if (tableSet.suppressed==TableSet.SUP_NO) radioButtonHyperCube.setSelected(true);
         }
+        
+        // Should be at the end of this function, otherwise the setSelectedIndex triggers an Action with incorrect settings
+        isAdjusting = true;
+        comboBoxDecimals.setSelectedIndex(Math.min(tableSet.respVar.nDecimals,comboBoxDecimals.getItemCount()-1));
+        isAdjusting = false;
+
         updateSuppressButtons();
     }
     
@@ -514,7 +518,6 @@ public class PanelTable extends javax.swing.JPanel {
             {
                 for (int j=MaxLevelChoice+1;j<=VarDepth;j++)
                 {
-                    //comboBoxNrOfHorLevels.addItem(Integer.toString(j+1));
                     comboBoxNrOfHorLevels.addItem(Integer.toString(j));
                 }
             }
@@ -637,7 +640,7 @@ public class PanelTable extends javax.swing.JPanel {
         String hs = "";
         try {
            hs = SystemUtils.getApplicationDirectory(PanelTable.class).getCanonicalPath();
-        } catch (Exception ex) {}
+        } catch (IOException | URISyntaxException ex) {}
         
         if (Application.isAnco()) {
                 radioButtonUwe.setVisible(TauArgusUtils.ExistFile(hs+"/EXP_ExternalUnpickerOnJJ.exe"));        
@@ -1645,11 +1648,8 @@ public class PanelTable extends javax.swing.JPanel {
                     return;
                 } 
             }
-            catch (NumberFormatException ex) {
+            catch (NumberFormatException | ParseException ex) {
                 // incorrect input
-                JOptionPane.showMessageDialog(this, ex.getMessage());
-            }
-            catch (ParseException ex){
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
             // incorrect input

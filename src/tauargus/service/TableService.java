@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
 import tauargus.extern.dataengine.IProgressListener;
 import tauargus.extern.dataengine.TauArgus;
@@ -68,7 +67,7 @@ public class TableService {
     public static void addTable(TableSet table) {
 
         table.index = tables.size();
-        boolean add = tables.add(table);
+        tables.add(table);
     }
 
     public static TableSet removeTable(int tableIndex) {
@@ -113,7 +112,8 @@ public class TableService {
         return false;
     }
 
-    boolean hasLinkedTables() {
+    // Never used ?????
+    /*boolean hasLinkedTables() {
         int n = numberOfTables();
         if (n <= 1) {
             return false;
@@ -162,11 +162,12 @@ public class TableService {
             }
         }
         return true;
-    }
+    }*/
 
     public static void readMicrodata(final PropertyChangeListener propertyChangeListener) throws ArgusException {
         final PropertyChangeSupport pcs = new PropertyChangeSupport(TableService.class);
         pcs.addPropertyChangeListener(propertyChangeListener);
+        pcs.firePropertyChange("activityMain", null, "Start reading microdata...");
 
         Metadata metadata = Application.getMetadata(0);
 
@@ -240,7 +241,13 @@ public class TableService {
             TAUARGUS.SetInFileInfo(true, metadata.fieldSeparator);
         }
             
-        TauArgusUtils.setVariables();
+        try{
+            TauArgusUtils.setVariables();
+        }
+        catch(ArgusException ex){
+            TableService.clearTables();
+            throw new ArgusException(ex.getMessage());
+        }
         pcs.firePropertyChange("activityMain", null, "Exploring datafile...");
         pcs.firePropertyChange("progressMain", null, 0);
         String s = metadata.dataFile;
@@ -379,7 +386,7 @@ public class TableService {
                 table.read(propertyChangeSupport);
             }
         }
-        catch (Exception ex) {
+        catch (IOException | ArgusException ex) {
             TAUARGUS.CleanAll();
             throw ex;
         }

@@ -94,7 +94,6 @@ public class DialogSelectTable extends DialogBase {
     }
     
     public int showDialog() {
-        tableTables.setRowSelectionInterval(0, 0);
         setLocationRelativeTo(this.getParent());
         setVisible(true);
         return returnValue;
@@ -104,7 +103,11 @@ public class DialogSelectTable extends DialogBase {
         int tableIndex = tableTables.getSelectedRow();
         return TableService.getTable(tableIndex);
     }
-
+    
+    public void setSelectedTable(int TableIndex) {
+        tableTables.setRowSelectionInterval(TableIndex, TableIndex);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

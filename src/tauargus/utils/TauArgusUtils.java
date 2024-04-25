@@ -22,6 +22,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -33,7 +34,7 @@ import tauargus.model.Metadata;
 import tauargus.model.Variable;
 
 public class TauArgusUtils {
-    private static TauArgus tauArgus = Application.getTauArgusDll();
+    private static final TauArgus tauArgus = Application.getTauArgusDll();
     
     public static int getNumberOfCodes(int varIndex) {
         int[] numberOfCodes = new int[1];
@@ -85,28 +86,35 @@ public class TauArgusUtils {
         Variable variable = Application.getVariable(varIndex); 
         int nMissings = variable.numberOfMissings();
 
-        if (variable.metadata.dataOrigin == Metadata.DATA_ORIGIN_MICRO) {
-            if (!tauArgus.SetVariable(variable.index, variable.bPos, variable.varLen, variable.nDecimals, nMissings, nMissings >= 1 ? variable.missing[0] : "",
-                    nMissings >= 2 ? variable.missing[1] : "", variable.totCode, variable.type == tauargus.model.Type.REQUEST, variable.type == tauargus.model.Type.REQUEST ? variable.requestCode[0] : "", variable.type == tauargus.model.Type.REQUEST ? variable.requestCode[1] : "", variable.isCategorical(),
-                    variable.isNumeric(), variable.type == tauargus.model.Type.WEIGHT, (variable.hierarchical != Variable.HIER_NONE), variable.type == tauargus.model.Type.HOLDING, variable.type == tauargus.model.Type.RECORD_KEY)) {
-                throw new ArgusException("Error in specification of variable " + variable.name);
-            }
-        } else if (variable.metadata.dataOrigin == Metadata.DATA_ORIGIN_TABULAR) {
-            if (!tauArgus.SetVariableForTable(variable.index, nMissings, nMissings >= 1 ? variable.missing[0] : "", 
-                                              nMissings >= 2 ? variable.missing[1] : "", 
-                                              variable.totCode, variable.nDecimals, variable.type == tauargus.model.Type.REQUEST, 
-                                              variable.type == tauargus.model.Type.REQUEST ? variable.requestCode[0] : null, 
-                                              (variable.hierarchical != Variable.HIER_NONE), variable.isNumeric(), variable.varLen)) {
-                throw new ArgusException("Error in specification of variable " + variable.index);
-            }
-        } else {
-            throw new ArgusException("Unsupported data format");
+        switch (variable.metadata.dataOrigin) {
+            case Metadata.DATA_ORIGIN_MICRO:
+                if (!tauArgus.SetVariable(variable.index, variable.bPos, variable.varLen, variable.nDecimals, nMissings, nMissings >= 1 ? variable.missing[0] : "",
+                        nMissings >= 2 ? variable.missing[1] : "", variable.totCode, variable.type == tauargus.model.Type.REQUEST, variable.type == tauargus.model.Type.REQUEST ? variable.requestCode[0] : "", variable.type == tauargus.model.Type.REQUEST ? variable.requestCode[1] : "", variable.isCategorical(),
+                        variable.isNumeric(), variable.type == tauargus.model.Type.WEIGHT, (variable.hierarchical != Variable.HIER_NONE), variable.type == tauargus.model.Type.HOLDING, variable.type == tauargus.model.Type.RECORD_KEY)) {
+                    throw new ArgusException("Error in specification of variable " + variable.name);
+                }   break;
+            case Metadata.DATA_ORIGIN_TABULAR:
+                if (!tauArgus.SetVariableForTable(variable.index, nMissings, nMissings >= 1 ? variable.missing[0] : "",
+                        nMissings >= 2 ? variable.missing[1] : "",
+                        variable.totCode, variable.nDecimals, variable.type == tauargus.model.Type.REQUEST,
+                        variable.type == tauargus.model.Type.REQUEST ? variable.requestCode[0] : null,
+                        (variable.hierarchical != Variable.HIER_NONE), variable.isNumeric(), variable.varLen)) {
+                    throw new ArgusException("Error in specification of variable " + variable.index);
+                }   break;
+            default:
+                throw new ArgusException("Unsupported data format");
         }
 
         if (variable.hierarchical == Variable.HIER_FILE) {
-            int errorCode = tauArgus.SetHierarchicalCodelist(variable.index, variable.metadata.getFilePath(variable.hierFileName), variable.leadingString);
-            if (errorCode != 1) {
-                throw new ArgusException("SetHierarchicalcodelist " + variable.hierFileName + "\nfor variable " + variable.name + " returned an error\nErrorCode : " + tauArgus.GetErrorString(errorCode));
+            try{
+                String hs = variable.metadata.getFilePath(variable.hierFileName);
+                int errorCode = tauArgus.SetHierarchicalCodelist(variable.index, hs, variable.leadingString);
+                if (errorCode != 1) {
+                    throw new ArgusException("SetHierarchicalcodelist " + variable.hierFileName + "\nfor variable " + variable.name + " returned an error\nErrorCode : " + tauArgus.GetErrorString(errorCode));
+                }
+            }
+            catch(ArgusException ex){
+                    throw new ArgusException(ex.getMessage());
             }
         }
 
@@ -129,7 +137,12 @@ public class TauArgusUtils {
         }
 
         for (int varIndex = 0; varIndex < Application.numberOfVariables(); varIndex++) {
-            setVariable(varIndex);
+            try{
+                setVariable(varIndex);
+            }
+            catch (ArgusException ex){
+                throw new ArgusException(ex.getMessage());
+            }
         }
     }
     
@@ -204,7 +217,7 @@ public class TauArgusUtils {
     
     public static long FileLastModified (String Fn){
       File f1 = new File(Fn);
-      long l = 0;
+      long l=0;
       l = f1.lastModified();
       return l;
     }
@@ -258,27 +271,22 @@ public class TauArgusUtils {
     
     public static void writeBatchFileForExec(String fn, String bat){
       if ( Application.isAnco()){
-        try {
-        BufferedWriter out = new BufferedWriter(new FileWriter(Application.getTempFile(fn)+".bat"));
-        out.write(bat); out.newLine();
-        out.write("pause"); out.newLine();
-        out.close();
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(Application.getTempFile(fn)+".bat"))) {
+            out.write(bat); out.newLine();
+            out.write("pause"); out.newLine();
         }
         catch (IOException ex){}   
       }
     }
     public static void writeBatchFileForExec(String fn, List<String> command){
-      int j;  
       if ( Application.isAnco()){
-        try {
-        BufferedWriter out = new BufferedWriter(new FileWriter(Application.getTempFile(fn)+".bat")); 
-        for (int i=0;i<command.size();i++){
-            out.write(StrUtils.quote(command.get(i))+" ");
-        }
-        out.newLine();
-        out.write("pause"); out.newLine();
-        out.close();        
-       }
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(Application.getTempFile(fn)+".bat"))) {
+            for (int i=0;i<command.size();i++){
+                out.write(StrUtils.quote(command.get(i))+" ");
+            }
+            out.newLine();
+            out.write("pause"); out.newLine();
+        }        
         catch (IOException ex){} 
       }   
     }
@@ -349,7 +357,7 @@ public class TauArgusUtils {
             try{
                 hs = SystemUtils.getApplicationDirectory(Application.class).getCanonicalPath()+  "\\" + hs ;
             }
-           catch (Exception ex){
+           catch (IOException | URISyntaxException ex){
                throw new ArgusException("Exception thrown: " + ex.getMessage());
            }
         }
