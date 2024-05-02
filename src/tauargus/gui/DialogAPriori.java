@@ -346,7 +346,7 @@ public class DialogAPriori extends DialogBase {
             }
         });
 
-        comboBoxOutVar1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxOutVar1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboBoxOutVar1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxOutVar1ActionPerformed(evt);
@@ -433,7 +433,6 @@ public class DialogAPriori extends DialogBase {
             }
         });
         table.setRowSelectionAllowed(false);
-        table.setShowVerticalLines(false);
         panelTable.add(table, java.awt.BorderLayout.CENTER);
 
         labelMapping.setText("Mapping:");
@@ -573,7 +572,8 @@ public class DialogAPriori extends DialogBase {
             comboBox.removeAllItems();
             comboBox.addItem("Other");
             for(Integer i=0; i<MaxNumber; i++)
-                comboBox.addItem("ExpVar"+ Integer.toString(i+1));
+                //comboBox.addItem("ExpVar"+ Integer.toString(i+1));
+                comboBox.addItem(apriori.VarNames.get(i));
             
             comboBox.setSelectedIndex(0);
         }
@@ -614,6 +614,7 @@ public class DialogAPriori extends DialogBase {
         {
             try
             {
+                apriori.VarNames.clear();
                 apriori.ReadSafeFile(textFieldSafeFile.getText(), textFieldSeparator.getText());  
                 
                 if( !apriori.AllCellsHaveAStatus())

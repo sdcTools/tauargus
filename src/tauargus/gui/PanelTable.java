@@ -465,9 +465,7 @@ public class PanelTable extends javax.swing.JPanel {
         }
         
         // Should be at the end of this function, otherwise the setSelectedIndex triggers an Action with incorrect settings
-        isAdjusting = true;
         comboBoxDecimals.setSelectedIndex(Math.min(tableSet.respVar.nDecimals,comboBoxDecimals.getItemCount()-1));
-        isAdjusting = false;
 
         updateSuppressButtons();
     }

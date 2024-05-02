@@ -163,6 +163,8 @@ public class APriori {
     
     public int SelectedColumnsCount = 0;
     
+    public List<String> VarNames = new ArrayList<>();
+    
     /*!
         The new status values
     */
@@ -336,6 +338,8 @@ public class APriori {
 
             if( !reIdentifier.matcher(w).matches())
                AllVars = false;
+            else
+                VarNames.add(w);
         }
         
         return AllVars;
@@ -379,9 +383,15 @@ public class APriori {
             String line = scan.nextLine();
 
             // check if we start with a variable line: just identifier strings
-            if( IsHeaderLine(line))
+            if(IsHeaderLine(line)){
                 line = scan.nextLine();
-           
+            }
+            else{ // No varnames on first line, so use "default"-naming
+                for (int i=0; i<VarNames.size();i++)
+                VarNames.set(i, "ExpVar"+ Integer.toString(i+1));
+            }
+
+          
             // at first real line, determine ceel values column = first numeric column
             int FirstNumericField = GetFirstNumericColumn(line);
             if( FirstNumericField<0)
