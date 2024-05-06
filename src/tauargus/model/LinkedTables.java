@@ -59,7 +59,7 @@ public class LinkedTables {
         return true; 
     }
     
-    public static boolean runLinkedModular(DialogLinkedTables Moeder) throws ArgusException{
+    public static boolean runLinkedModular(DialogLinkedTables Moeder, double MSC, double LM, double UM) throws ArgusException{
         String hs = ""; int i,j; TableSet tableSet0, tableSet;
         Date startDate = new Date();
         if (coverDim > 10){
@@ -84,26 +84,25 @@ public class LinkedTables {
           tableSet.maxHitasTime = tableSet0.maxHitasTime;
         }
         checkCodeList(); //checkCodeLists  //prepareLinked
-        exportTables();//exportTables
+        exportTables(MSC, LM, UM);//exportTables
         //checkHierarchies werd in de oude versie ook niet gedaan.
         runCoverTable();
         
         readResultsBack();
-       Date endDate = new Date();
-       long diff = endDate.getTime()-startDate.getTime();
-       diff = diff / 1000;
-       if ( diff == 0){ diff = 1;}
+        
+        Date endDate = new Date();
+        long diff = endDate.getTime()-startDate.getTime();
+        diff = diff / 1000;
+        if ( diff == 0){ diff = 1;}
 
-       hs = "";
-       for (i=0;i<TableService.numberOfTables();i++){
-         tableSet=TableService.getTable(i); 
-
-         
-         tableSet.processingTime = (int) diff;
-         tableSet.linkSuppressed = true;
-       hs = hs + tableSet.CountSecondaries()+ " suppressions in table "+(i+1) + "\n";
-       }
-       SystemUtils.writeLogbook("End of modular linked tables procedure\n"+
+        hs = "";
+        for (i=0;i<TableService.numberOfTables();i++){
+            tableSet=TableService.getTable(i); 
+            tableSet.processingTime = (int) diff;
+            tableSet.linkSuppressed = true;
+            hs = hs + tableSet.CountSecondaries()+ " suppressions in table "+(i+1) + "\n";
+        }
+        SystemUtils.writeLogbook("End of modular linked tables procedure\n"+
                                  TableService.numberOfTables()+" tables.\n" + 
                                  hs +  
                                  "Processing time: " + diff + " seconds");
@@ -193,7 +192,7 @@ public class LinkedTables {
      if (result != 0) { throw new ArgusException("Error running the cover table\nReturned value: "+result);}
     }
     
-    static void exportTables()throws ArgusException{
+    static void exportTables(double MSC, double LM, double UM)throws ArgusException{
         // write intermedaite files fro each table temp+i+.tab
         // then merge them into one file tempTot.tab
         // Then write the corresponding metadata file
@@ -273,9 +272,12 @@ public class LinkedTables {
         hs = "0"; if (tableSet.singletonSingletonCheck){hs = "1";} out.write( hs+", ");
         hs = "0"; if (tableSet.singletonMultipleCheck){hs = "1";} out.write( hs+", ");
         hs = "0"; if (tableSet.minFreqCheck){hs = "1";} out.write( hs);
-        if (tableSet.maxScaleCost != 20000){
-            out.write (", "+tableSet.maxScaleCost);
-        }        
+        //if (tableSet.maxScaleCost != 20000){
+        //    out.write (", "+tableSet.maxScaleCost);
+        //}
+        out.write(", "+ String.valueOf(MSC)); // Always write, even when default
+        out.write(", " + String.valueOf(LM));
+        out.write(", " + String.valueOf(UM));
         out.write (")"); out.newLine();
         out.write("<WRITETABLE> (1, 3, AS+,\""+Application.getTempFile("tempTot.txt")+"\")"); out.newLine();
         out.close();
@@ -365,11 +367,11 @@ public class LinkedTables {
              throw new ArgusException("Unable to read the hypercube results for table "+(i+1));}
          tableSet.processingTime = (int) diff;
          tableSet.linkSuppressed = true;
-         hs = hs + tableSet.CountSecondaries()+ " suppressions in table "+(i+1) + "\n";
+         hs = hs + tableSet.CountSecondaries() + " suppressions in table "+(i+1) + "\n";
        }  
        SystemUtils.writeLogbook("End of Hypercube linked tables procedure\n"+
                                 hs + 
-                               (int) diff+" seconds processing time");
+                               (int) diff +" seconds processing time");
 
        return true;
     }
@@ -577,7 +579,6 @@ public class LinkedTables {
                   coverVarSize[found]=k;
                   coverSourceTab[found] = i;
                   coverVariablesIndex[found] = tableSet.expVar.get(j).index;
-
                  }
              }
              toCoverIndex[i][j] = found;

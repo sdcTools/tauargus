@@ -79,8 +79,6 @@ public class DialogSolverOptions extends DialogBase {
         jTextFieldRounderMinViola.setText(SystemUtils.getRegString("optimal", "jjRoundMinViola", "0.0001"));
         jTextFieldRounderMaxSlack.setText(SystemUtils.getRegString("optimal", "jjRoundMaxSlack", "0.01"));
         
-        jTextFieldLowerMarg.setText(SystemUtils.getRegString("optimal", "LOWERMARG", "0.99"));
-        jTextFieldUpperMarg.setText(SystemUtils.getRegString("optimal", "UPPERMARG", "1.01"));
     }
 
     /**
@@ -132,10 +130,6 @@ public class DialogSolverOptions extends DialogBase {
         jLabel4 = new javax.swing.JLabel();
         jTextFieldRounderMinViola = new javax.swing.JTextField();
         jTextFieldRounderMaxSlack = new javax.swing.JTextField();
-        jLabelLowerMarg = new javax.swing.JLabel();
-        jLabelUpperMarg = new javax.swing.JLabel();
-        jTextFieldLowerMarg = new javax.swing.JTextField();
-        jTextFieldUpperMarg = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Solver Options");
@@ -420,16 +414,6 @@ public class DialogSolverOptions extends DialogBase {
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
-        jLabelLowerMarg.setText("LOWERMARG");
-
-        jLabelUpperMarg.setText("UPPERMARG");
-
-        jTextFieldLowerMarg.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldLowerMarg.setText("0.99");
-
-        jTextFieldUpperMarg.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldUpperMarg.setText("1.01");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -450,16 +434,9 @@ public class DialogSolverOptions extends DialogBase {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonOK))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabelLowerMarg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabelCTATolerance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(jLabelUpperMarg))
+                                .addComponent(jLabelCTATolerance)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextFieldLowerMarg)
-                                    .addComponent(jTextFieldCTATolerance)
-                                    .addComponent(jTextFieldUpperMarg, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(jTextFieldCTATolerance, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -480,15 +457,7 @@ public class DialogSolverOptions extends DialogBase {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelCTATolerance)
                             .addComponent(jTextFieldCTATolerance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelLowerMarg)
-                            .addComponent(jTextFieldLowerMarg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelUpperMarg)
-                            .addComponent(jTextFieldUpperMarg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGap(74, 74, 74)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButtonDefaults)
                             .addComponent(jButtonOK))))
@@ -525,9 +494,6 @@ public class DialogSolverOptions extends DialogBase {
         SystemUtils.putRegString("optimal", "jjRoundMinViola", jTextFieldRounderMinViola.getText());
         SystemUtils.putRegString("optimal", "jjRoundMaxSlack", jTextFieldRounderMaxSlack.getText());
         
-        SystemUtils.putRegString("optimal", "UPPERMARG", jTextFieldUpperMarg.getText());
-        SystemUtils.putRegString("optimal", "LOWERMARG", jTextFieldLowerMarg.getText());
-        
         setVisible(false);
         dispose();
     }//GEN-LAST:event_jButtonOKActionPerformed
@@ -548,9 +514,6 @@ public class DialogSolverOptions extends DialogBase {
         jTextFieldMaxCutsIter.setText("50");
         
         jTextFieldCTATolerance.setText("0.00001");
-        
-        jTextFieldUpperMarg.setText("1.01");
-        jTextFieldLowerMarg.setText("0.99");
     }//GEN-LAST:event_jButtonDefaultsActionPerformed
 
     /**
@@ -606,7 +569,6 @@ public class DialogSolverOptions extends DialogBase {
     private javax.swing.JLabel jLabelCTATolerance;
     private javax.swing.JLabel jLabelFeasTol;
     private javax.swing.JLabel jLabelInfinity;
-    private javax.swing.JLabel jLabelLowerMarg;
     private javax.swing.JLabel jLabelMaxColslp;
     private javax.swing.JLabel jLabelMaxCutsIter;
     private javax.swing.JLabel jLabelMaxCutsPool;
@@ -614,7 +576,6 @@ public class DialogSolverOptions extends DialogBase {
     private javax.swing.JLabel jLabelMaxSlack;
     private javax.swing.JLabel jLabelMinViola;
     private javax.swing.JLabel jLabelOptTol;
-    private javax.swing.JLabel jLabelUpperMarg;
     private javax.swing.JLabel jLabelZero;
     private javax.swing.JLabel jLabelZero1;
     private javax.swing.JLabel jLabelzero2;
@@ -625,7 +586,6 @@ public class DialogSolverOptions extends DialogBase {
     private javax.swing.JTextField jTextFieldCTATolerance;
     private javax.swing.JTextField jTextFieldFeasTol;
     private javax.swing.JTextField jTextFieldInfinity;
-    private javax.swing.JTextField jTextFieldLowerMarg;
     private javax.swing.JTextField jTextFieldMaxColslp;
     private javax.swing.JTextField jTextFieldMaxCutsIter;
     private javax.swing.JTextField jTextFieldMaxCutsPool;
@@ -637,7 +597,6 @@ public class DialogSolverOptions extends DialogBase {
     private javax.swing.JTextField jTextFieldRounderMaxSlack;
     private javax.swing.JTextField jTextFieldRounderMinViola;
     private javax.swing.JTextField jTextFieldRounderZero;
-    private javax.swing.JTextField jTextFieldUpperMarg;
     private javax.swing.JTextField jTextFieldZero;
     private javax.swing.JTextField jTextFieldZero1;
     private javax.swing.JTextField jTextFieldZero2;

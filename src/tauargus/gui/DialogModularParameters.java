@@ -17,6 +17,7 @@
 
 package tauargus.gui;
 import javax.swing.JTextField;
+import tauargus.model.Application;
 import tauargus.model.TableSet;
 
 public class DialogModularParameters extends DialogBase {
@@ -40,7 +41,11 @@ public class DialogModularParameters extends DialogBase {
         jTextmaxTimeOptimal.setHorizontalAlignment(JTextField.RIGHT);
         jTextmaxTimeOptimal.setVisible(forOptimal);
         jLabelMaxminutes.setVisible(forOptimal);
-        
+        jLabelLowerMarg.setVisible(Application.isAnco() && !forOptimal);
+        jLabelUpperMarg.setVisible(Application.isAnco() && !forOptimal);
+        jTextFieldUpperMarg.setVisible(Application.isAnco() && !forOptimal);
+        jTextFieldLowerMarg.setVisible(Application.isAnco() && !forOptimal);
+        pack();
     }
 
     public int showDialog() {
@@ -66,12 +71,15 @@ public class DialogModularParameters extends DialogBase {
         checkBoxSingleton = new javax.swing.JCheckBox();
         checkBoxSingletonMultiple = new javax.swing.JCheckBox();
         checkBoxMinFreq = new javax.swing.JCheckBox();
-        panelCommand = new javax.swing.JPanel();
-        buttonOk = new javax.swing.JButton();
-        buttonCancel = new javax.swing.JButton();
         jLabelmaxTimeOptimal = new javax.swing.JLabel();
         jTextmaxTimeOptimal = new javax.swing.JTextField();
         jLabelMaxminutes = new javax.swing.JLabel();
+        jLabelLowerMarg = new javax.swing.JLabel();
+        jTextFieldLowerMarg = new javax.swing.JTextField();
+        jLabelUpperMarg = new javax.swing.JLabel();
+        jTextFieldUpperMarg = new javax.swing.JTextField();
+        buttonCancel = new javax.swing.JButton();
+        buttonOk = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modular options");
@@ -93,12 +101,24 @@ public class DialogModularParameters extends DialogBase {
         checkBoxMinFreq.setSelected(true);
         checkBoxMinFreq.setText("Do Min Frequency");
 
-        buttonOk.setText("OK");
-        buttonOk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonOkActionPerformed(evt);
-            }
-        });
+        jLabelmaxTimeOptimal.setText("Max computing time");
+
+        jTextmaxTimeOptimal.setText("10");
+
+        jLabelMaxminutes.setText("minutes");
+
+        jLabelLowerMarg.setText("LOWERMARG");
+
+        jTextFieldLowerMarg.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldLowerMarg.setText("0.99");
+        jTextFieldLowerMarg.setToolTipText("");
+
+        jLabelUpperMarg.setText("UPPERMARG");
+
+        jTextFieldUpperMarg.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldUpperMarg.setText("1.01");
+        jTextFieldUpperMarg.setMaximumSize(null);
+        jTextFieldUpperMarg.setMinimumSize(null);
 
         buttonCancel.setText("Cancel");
         buttonCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -107,26 +127,12 @@ public class DialogModularParameters extends DialogBase {
             }
         });
 
-        javax.swing.GroupLayout panelCommandLayout = new javax.swing.GroupLayout(panelCommand);
-        panelCommand.setLayout(panelCommandLayout);
-        panelCommandLayout.setHorizontalGroup(
-            panelCommandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(buttonOk, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(buttonCancel)
-        );
-        panelCommandLayout.setVerticalGroup(
-            panelCommandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCommandLayout.createSequentialGroup()
-                .addComponent(buttonOk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonCancel))
-        );
-
-        jLabelmaxTimeOptimal.setText("Max computing time for Optimal");
-
-        jTextmaxTimeOptimal.setText("10");
-
-        jLabelMaxminutes.setText("minutes");
+        buttonOk.setText("OK");
+        buttonOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOkActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,12 +142,18 @@ public class DialogModularParameters extends DialogBase {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBoxSingleton)
-                            .addComponent(checkBoxSingletonMultiple)
-                            .addComponent(labelModularParameters))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelCommand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelUpperMarg)
+                                .addGap(10, 10, 10))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabelLowerMarg)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldUpperMarg, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldLowerMarg, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(checkBoxMinFreq)
@@ -150,30 +162,47 @@ public class DialogModularParameters extends DialogBase {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextmaxTimeOptimal, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelMaxminutes)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(jLabelMaxminutes))
+                            .addComponent(checkBoxSingleton)
+                            .addComponent(labelModularParameters)
+                            .addComponent(checkBoxSingletonMultiple))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(buttonOk, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonCancel)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelModularParameters)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(checkBoxSingleton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(checkBoxSingletonMultiple))
-                    .addComponent(panelCommand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(labelModularParameters)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(checkBoxSingleton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkBoxSingletonMultiple)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkBoxMinFreq)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelLowerMarg)
+                    .addComponent(jTextFieldLowerMarg, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelUpperMarg)
+                    .addComponent(jTextFieldUpperMarg, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelmaxTimeOptimal)
                     .addComponent(jTextmaxTimeOptimal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelMaxminutes))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonOk)
+                    .addComponent(buttonCancel))
+                .addContainerGap())
         );
 
         pack();
@@ -188,7 +217,9 @@ public class DialogModularParameters extends DialogBase {
         tableSet.singletonSingletonCheck = checkBoxSingleton.isSelected();
         tableSet.singletonMultipleCheck = checkBoxSingletonMultiple.isSelected();
         tableSet.minFreqCheck = checkBoxMinFreq.isSelected();
-       {tableSet.maxTimeOptimal = Integer.parseInt(jTextmaxTimeOptimal.getText());}
+        tableSet.maxTimeOptimal = Integer.parseInt(jTextmaxTimeOptimal.getText());
+        tableSet.SetLowerMarg(Double.parseDouble(jTextFieldLowerMarg.getText()));
+        tableSet.SetUpperMarg(Double.parseDouble(jTextFieldUpperMarg.getText()));
         returnValue = APPROVE_OPTION;
         setVisible(false);
         dispose();
@@ -246,10 +277,13 @@ public class DialogModularParameters extends DialogBase {
     private javax.swing.JCheckBox checkBoxMinFreq;
     private javax.swing.JCheckBox checkBoxSingleton;
     private javax.swing.JCheckBox checkBoxSingletonMultiple;
+    private javax.swing.JLabel jLabelLowerMarg;
     private javax.swing.JLabel jLabelMaxminutes;
+    private javax.swing.JLabel jLabelUpperMarg;
     private javax.swing.JLabel jLabelmaxTimeOptimal;
+    private javax.swing.JTextField jTextFieldLowerMarg;
+    private javax.swing.JTextField jTextFieldUpperMarg;
     private javax.swing.JTextField jTextmaxTimeOptimal;
     private javax.swing.JLabel labelModularParameters;
-    private javax.swing.JPanel panelCommand;
     // End of variables declaration//GEN-END:variables
 }

@@ -386,7 +386,7 @@ public class DialogLinkedTables extends DialogBase {
       DialogModularParameters paramsG = new DialogModularParameters(parentFrame, tableSet, false, true);
  
       if (paramsG.showDialog() == DialogModularParameters.APPROVE_OPTION) {
-         try {LinkedTables.runLinkedModular(this);
+         try {LinkedTables.runLinkedModular(this,tableSet.maxScaleCost,tableSet.GetLowerMarg(),tableSet.GetUpperMarg());
            try{
              BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("Inconsistent.cnt")));
              hs = in.readLine();
@@ -442,36 +442,38 @@ public class DialogLinkedTables extends DialogBase {
  * @param evt 
  */
     private void buttonSuppressHypercubeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSuppressHypercubeActionPerformed
-     String hs;
-     JFrame parentFrame = getParentFrame();
-     tableSet = TableService.getTable(0);
-     hs = "";
-     DialogHypercubeParameters paramsG = new DialogHypercubeParameters(parentFrame, true);
-       if (paramsG.showDialog(tableSet) == DialogHypercubeParameters.APPROVE_OPTION) {
-          try {LinkedTables.runLinkedGHMiter();
-            for (int i=0;i<TableService.numberOfTables();i++){
-              hs = hs + tableSet.CountSecondaries()+ " suppressions in table "+(i+1) + "\n";  
-              if (!TableService.getTable(i).ghMiterMessage.equals("")){
-                  hs = hs + TableService.getTable(i).ghMiterMessage +" for table "+ (i+1) + "\n";
-              }  
-            }
-              JOptionPane.showMessageDialog(this, "The Hypercube has finished the linked tables protection\n"+ hs+
+    String hs;
+    JFrame parentFrame = getParentFrame();
+    tableSet = TableService.getTable(0);
+    hs = "";
+    DialogHypercubeParameters paramsG = new DialogHypercubeParameters(parentFrame, true);
+        if (paramsG.showDialog(tableSet) == DialogHypercubeParameters.APPROVE_OPTION) {
+            try {
+                LinkedTables.runLinkedGHMiter();
+                for (int i=0;i<TableService.numberOfTables();i++){
+                    tableSet = TableService.getTable(i);
+                    hs = hs + tableSet.CountSecondaries()+ " suppressions in table "+(i+1) + "\n";  
+                    if (!TableService.getTable(i).ghMiterMessage.equals("")){
+                        hs = hs + TableService.getTable(i).ghMiterMessage +" for table "+ (i+1) + "\n";
+                    }  
+                }
+                JOptionPane.showMessageDialog(this, "The Hypercube has finished the linked tables protection\n"+ hs+
                       "Processing time: "+StrUtils.timeToString(tableSet.processingTime));
-             if (argus.utils.TauArgusUtils.ExistFile(Application.getTempFile("frozen.txt"))){
-             DialogInfo Info = new DialogInfo(getParentFrame(), true);
-             Info.addLabel("Overview of the frozen cells");
-             try{
-               Info.addTextFile(Application.getTempFile("frozen.txt"));}
-             catch (ArgusException ex1){}
+                if (argus.utils.TauArgusUtils.ExistFile(Application.getTempFile("frozen.txt"))){
+                DialogInfo Info = new DialogInfo(getParentFrame(), true);
+                Info.addLabel("Overview of the frozen cells");
+                try{
+                    Info.addTextFile(Application.getTempFile("frozen.txt"));
+                }
+                catch (ArgusException ex1){}
                     Info.setVisible(true);
-              }
-          }
-          catch (ArgusException ex) {
+                }
+            }
+            catch (ArgusException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
-             }
-       } 
+            }
+        } 
         // Ask GhMiterParameters for table 1
-        
     }//GEN-LAST:event_buttonSuppressHypercubeActionPerformed
 
 

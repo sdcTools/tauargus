@@ -179,7 +179,7 @@ public class batch {
                 switch (token) {
                     case "<COMMENT>":
                         break;
-                    case "<ANCO>": 
+                    case "<ANCO>":
                         Application.setAnco(true); 
                         break;
                     case ("<JJ>"): //TODO Run a JJ file}
@@ -197,7 +197,7 @@ public class batch {
                         tabularInput = true;
                         if (!(status == 0 || status == 4)){ throw new ArgusException ("This keyword (" + token + ") is not allowed in this position"); }
                         dataFile = giveRightFile(dataFile);
-                        status = 1;    
+                        status = 1;
                         break;
                     case "<OPENMETADATA>":   
                         metaDataFile =  tokenizer.nextToken();
@@ -292,7 +292,7 @@ public class batch {
                         break;
                     case ("<WRITETABLE>"): 
                         writeTableBatch();
-                        break;  
+                        break;
                     case ("<RECODE>"):
                         // <RECODE>  TabNo, VarName,RecodeFile
                         batchRecode();
@@ -326,17 +326,17 @@ public class batch {
                         }
                         break;
                     case ("<GOINTERACTIVE>"):   
-                        return 1;     
+                        return 1;
                     case ("<LOGBOOK>"): 
                         hs = StrUtils.unQuote(tokenizer.getLine());
                         SystemUtils.setLogbook(hs);
                         tokenizer.clearLine();
-                        break;    
+                        break;
                     case ("<VERSIONINFO>"): 
                         hs = StrUtils.unQuote(tokenizer.getLine());
                         writeVersionInfo(hs);
                         tokenizer.clearLine();
-                        break;                   
+                        break;
                     default:
                         throw new ArgusException ("Unknown keyword " + token);
                 }   // end switch
@@ -691,7 +691,7 @@ public class batch {
                 }  
                 reportProgress("The hypercube procedure has been applied\n" + hs);
                 break;
-            case "MOD"://TabNo, MaxTimePerSubtable
+            case "MOD"://TabNo, MaxTimePerSubtable, ApplySingelton, ApplySingletonMultiple, ApplyMinimalFrequency [, MSC, LOWERMARG, UPPERMARG]
                 token = nextChar(tail);
                 if (token.equals(",")){
                     token = nextToken(tail);
@@ -711,18 +711,42 @@ public class batch {
                     }
                     token = nextChar(tail);
                 }
-                if (linked){
-                    LinkedTables.buildCoverTable();  
-                    LinkedTables.runLinkedModular(null);
-                } 
-                else{ // single table
-                    if (token.equals(",")){ //MSC specified
-                        token = nextToken(tail);
+                if (token.equals(",")){ //MSC, LOWERMARG and/or UPPERMARG specified
+                    token = nextToken(tail);
+                    if (!token.equals("") && !linked){ // MSC specified
                         tableset.maxScaleCost = StrUtils.toDouble(token);
                         if (tableset.maxScaleCost <= 0){
                             throw new ArgusException("Illegal Max Scaling Cost: " + token);                        
                         }
                     }
+                    token = nextChar(tail);
+                    if (token.equals(",")){ // LOWERMARG and/or UPPERMARG specified
+                        token = nextToken(tail);
+                        if (!token.equals("")){
+                            tableset.SetLowerMarg(StrUtils.toDouble(token));
+                        }
+                    }
+                    token = nextChar(tail);
+                    if (token.equals(",")){ // UPPERMARG specified
+                        token = nextToken(tail);
+                        if (!token.equals("")){
+                            tableset.SetUpperMarg(StrUtils.toDouble(token));
+                        }
+                    }
+                }
+                
+                if (linked){
+                    LinkedTables.buildCoverTable();  
+                    LinkedTables.runLinkedModular(null,tableset.maxScaleCost,tableset.GetLowerMarg(),tableset.GetUpperMarg());
+                } 
+                else{ // single table
+//                    if (token.equals(",")){ //MSC specified
+//                        token = nextToken(tail);
+//                        tableset.maxScaleCost = StrUtils.toDouble(token);
+//                        if (tableset.maxScaleCost <= 0){
+//                            throw new ArgusException("Illegal Max Scaling Cost: " + token);                        
+//                        }
+//                    }
                     try{ // Make sure that PropertyChanges are not processed in batch-mode by overriding propertyChange to do nothing
                         if (Application.batchType() == Application.BATCH_COMMANDLINE){  
                             OptiSuppress.RunModular(tableset, new PropertyChangeListener(){

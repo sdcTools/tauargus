@@ -698,8 +698,8 @@ public class OptiSuppress {
             tmpOut.write("MINCOUNT="+tableSet.minFreq[0]); tmpOut.newLine();tmpOut.newLine();
             
             tmpOut.write("[Safety ranges]"); tmpOut.newLine();
-            tmpOut.write("LOWERMARG="+ SystemUtils.getRegString("optimal", "LOWERMARG", "0.99")); tmpOut.newLine();
-            tmpOut.write("UPPERMARG="+ SystemUtils.getRegString("optimal", "UPPERMARG", "1.01")); tmpOut.newLine(); tmpOut.newLine();
+            tmpOut.write("LOWERMARG="+ String.valueOf(tableSet.GetLowerMarg())); tmpOut.newLine();
+            tmpOut.write("UPPERMARG="+ String.valueOf(tableSet.GetUpperMarg())); tmpOut.newLine(); tmpOut.newLine();
             
             tmpOut.write("[Misc]"); tmpOut.newLine();
             tmpOut.write("DECIMALS=" + n); tmpOut.newLine();

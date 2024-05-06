@@ -237,8 +237,8 @@ public class TableSet {
             roundSolType[i] = 0;
         }
     }
-    //int modularOptions = 0; Never used???
-    //boolean scalingUsed = false; Never used???
+    //int modularOptions = 0; //Never used???
+    //boolean scalingUsed = false; //Never used???
     public double minTabVal = 0;
     public double maxTabVal;
     public int minDiff = 0;
@@ -247,7 +247,7 @@ public class TableSet {
     public boolean keepStatus = KEEP_STATUS;
     public boolean useStatusOnly = false;
     public int additivity = ADDITIVITY_CHECK;
-    //boolean negIsAbsolute = false; Never used???
+    //boolean negIsAbsolute = false; //Never used???
     public boolean hasBeenAudited = false;
     public int auditExactDisclosure = 0;
     public int auditPartialDisclosure = 0;
@@ -259,7 +259,7 @@ public class TableSet {
             ghMiterRatio[i] = 0;
         }
     }
-    //int APriory = -1; Never used???
+    //int APriory = -1; //Never used???
     
     private final TreeMap<Integer,Long> CKMStatistics = new TreeMap<>(); // Can be final???
     private long nEmpty;
@@ -279,8 +279,8 @@ public class TableSet {
     private final CKMInfoLoss InfoLoss = new CKMInfoLoss();
     
     // To be able to set lower and uppermarg per table
-    private double lowermarg=0.99;
-    private double uppermarg=1.01;
+    private double lowermarg = 0.99; //default
+    private double uppermarg = 1.01; //default
     
     public void SetLowerMarg(double value){
         this.lowermarg = value;
@@ -979,21 +979,26 @@ public class TableSet {
             writer.println("Overview of inconsistencies in the linked tables");
             writer.println("report generated: " + SystemUtils.now());
             writer.println("------------------------------------------------");
+            writer.close();
         }
 
 // prepare the code lists for checking the doubles in a cover table
 // Lijkt dubbel op    
-        /*if ((Application.isProtectCoverTable()) ){
-            for (i=0;i<expVar.size();i++){ varNo = expVar.get(i).index;
-                if (nMax < TauArgusUtils.getNumberOfActiveCodes(varNo)){nMax = TauArgusUtils.getNumberOfActiveCodes(varNo);}
-            }
-            codeList = new String[expVar.size()][nMax];
-            for (i=0;i<expVar.size();i++){ varNo = expVar.get(i).index;
+        if ((Application.isProtectCoverTable()) ){
+            //for (i=0;i<expVar.size();i++){ varNo = expVar.get(i).index;
+            //    if (nMax < TauArgusUtils.getNumberOfActiveCodes(varNo)){nMax = TauArgusUtils.getNumberOfActiveCodes(varNo);}
+            //}
+            //codeList = new String[expVar.size()][nMax];
+            codeList = new String[expVar.size()][];
+            for (i=0;i<expVar.size();i++){ 
+                varNo = expVar.get(i).index;
+                codeList[i] = new String[TauArgusUtils.getNumberOfActiveCodes(varNo)];
                 for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
                     codeList[i][j] = TauArgusUtils.getCode(varNo, j).trim();
                 }
             }
-        }*/
+        }
+        
         for (File file : files) {
             FileInputStream fis = null;
             FileChannel fileChannel = null;
@@ -1005,6 +1010,8 @@ public class TableSet {
                 isr = new InputStreamReader(fis);
                 reader = new BufferedReader(isr);
                 if (Application.isProtectCoverTable()){
+                    File fileIncon = new File(Application.getTempDir(), "Inconsistent.txt");
+                    writer = new PrintWriter(new BufferedWriter(new FileWriter(fileIncon)),true/*append=true*/);
                     for (i=0;i<nDim;i++){
                         varNo = expVar.get(i).index;  
                         for (int j=0;j<TauArgusUtils.getNumberOfActiveCodes(varNo);j++){
@@ -1013,6 +1020,7 @@ public class TableSet {
                                     "; level:"+ level[0] +"\n");
                         }        
                     }
+                    writer.close();
                 }
         
                 Tokenizer tokenizer = new Tokenizer(reader);
@@ -1116,6 +1124,9 @@ public class TableSet {
                                                         else{ hs = hs + codes[i]+", ";}
                                                     }
                                                     hs = hs.substring(0, hs.length() - 2);
+                                                    File fileIncon = new File(Application.getTempDir(), "Inconsistent.txt");
+                                                    writer = new PrintWriter(new BufferedWriter(new FileWriter(fileIncon)),true/*append=true*/);
+
                                                     writer.println(hs);
                                                     writer.println("line:" + tokenizer.getLineNumber());
 
@@ -1138,6 +1149,7 @@ public class TableSet {
                                                     writer.println("------------------------------------------------");
                                                 }
                                                 doubleCell = null;
+                                                writer.close();
                                             }
                                         }
                                     }
@@ -1184,7 +1196,7 @@ public class TableSet {
             }
         } // per file;
         if (Application.isProtectCoverTable()) {
-            writer.close();
+            //writer.close();
             File file = new File(Application.getTempDir(), "Inconsistent.cnt");
             writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             writer.println("" +nInconsistent); 

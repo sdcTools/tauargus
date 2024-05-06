@@ -46,19 +46,9 @@
                               <Component id="jButtonOK" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jLabelLowerMarg" max="32767" attributes="0"/>
-                                      <Component id="jLabelCTATolerance" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Component id="jLabelUpperMarg" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="jLabelCTATolerance" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="jTextFieldLowerMarg" max="32767" attributes="0"/>
-                                  <Component id="jTextFieldCTATolerance" max="32767" attributes="0"/>
-                                  <Component id="jTextFieldUpperMarg" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="jTextFieldCTATolerance" min="-2" pref="87" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -88,17 +78,7 @@
                           <Component id="jLabelCTATolerance" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextFieldCTATolerance" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabelLowerMarg" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextFieldLowerMarg" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabelUpperMarg" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextFieldUpperMarg" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButtonDefaults" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButtonOK" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -581,27 +561,5 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="jLabelLowerMarg">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="LOWERMARG"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabelUpperMarg">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="UPPERMARG"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldLowerMarg">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="0.99"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldUpperMarg">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="1.01"/>
-      </Properties>
-    </Component>
   </SubComponents>
 </Form>
