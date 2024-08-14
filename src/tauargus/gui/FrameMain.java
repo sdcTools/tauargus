@@ -833,7 +833,7 @@ public class FrameMain extends javax.swing.JFrame {
         fileChooser.setSelectedFile(new File(""));
         fileChooser.resetChoosableFileFilters();
         // filters are shown in order of declaration, setFileFilter sets the default filter
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Argus batch filea (*.arb)", "arb"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Argus batch files (*.arb)", "arb"));
         if (fileChooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
             Application.clearEverythingGui();
             String hs =fileChooser.getSelectedFile().toString();

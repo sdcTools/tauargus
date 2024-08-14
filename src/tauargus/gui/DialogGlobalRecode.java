@@ -63,6 +63,7 @@ import tauargus.utils.TauArgusUtils;
 import tauargus.utils.TreeUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import org.apache.commons.io.FilenameUtils;
 
 public class DialogGlobalRecode extends DialogBase {
 
@@ -238,7 +239,8 @@ public class DialogGlobalRecode extends DialogBase {
             public void valueChanged(ListSelectionEvent e) {
                 if (documentListener.isChanged()) {
                     documentListener.setChanged(false);
-                    saveRecodeInfo(false);
+                    saveTempRecodeFile(new RecodeInfo(textAreaRecodeData.getText(), textFieldMissing1.getText(), textFieldMissing2.getText(), textFieldCodelist.getText()));
+                    //saveRecodeInfo(false);
                 }
                 int selectedRow = tableVariables.getSelectedRow();
                 if (selectedRow != -1) {
@@ -249,6 +251,7 @@ public class DialogGlobalRecode extends DialogBase {
                     panelTree.setVisible(fromTree);
                     treeCode.setVisible(fromTree);
                     buttonUndo.setEnabled(variable.recoded);
+                    buttonSave.setEnabled(variable.recoded);
                     buttonApply.setEnabled(!variable.recoded);
                     buttonRead.setEnabled(true);
                     if (fromTree) {
@@ -285,10 +288,10 @@ public class DialogGlobalRecode extends DialogBase {
                         else{
                             labelRecodeData.setText("Edit box for global recode");
                             labelRecodeData.setToolTipText(null);
-                            textAreaRecodeData.setText("");
-                            textFieldMissing1.setText("");
-                            textFieldMissing2.setText("");
-                            textFieldCodelist.setText("");
+                            //textAreaRecodeData.setText("");
+                            //textFieldMissing1.setText("");
+                            //textFieldMissing2.setText("");
+                            //textFieldCodelist.setText("");
                         }
                         textAreaWarning.setText("");
                     }
@@ -363,7 +366,7 @@ public class DialogGlobalRecode extends DialogBase {
             public void windowClosing(WindowEvent e) {
                 if (documentListener.isChanged()) {
                     documentListener.setChanged(false);
-                    saveRecodeInfo(false);
+                    //saveRecodeInfo(false);
                 }
 
                 tauArgus.ApplyRecode();
@@ -393,6 +396,7 @@ public class DialogGlobalRecode extends DialogBase {
         buttonRead = new javax.swing.JButton();
         buttonApply = new javax.swing.JButton();
         buttonUndo = new javax.swing.JButton();
+        buttonSave = new javax.swing.JButton();
         panelClose = new javax.swing.JPanel();
         buttonClose = new javax.swing.JButton();
         panelMissing = new javax.swing.JPanel();
@@ -416,6 +420,8 @@ public class DialogGlobalRecode extends DialogBase {
         scrollPaneCodeTree = new javax.swing.JScrollPane();
         treeCode = new javax.swing.JTree();
         labelTreeResult = new javax.swing.JLabel();
+
+        fileChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -462,16 +468,24 @@ public class DialogGlobalRecode extends DialogBase {
             }
         });
 
+        buttonSave.setText("Save");
+        buttonSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSaveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelRecodeLayout = new javax.swing.GroupLayout(panelRecode);
         panelRecode.setLayout(panelRecodeLayout);
         panelRecodeLayout.setHorizontalGroup(
             panelRecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelRecodeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelRecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonRead, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonApply, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonUndo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelRecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buttonRead, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                    .addComponent(buttonApply, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                    .addComponent(buttonUndo, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                    .addComponent(buttonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelRecodeLayout.setVerticalGroup(
@@ -481,9 +495,11 @@ public class DialogGlobalRecode extends DialogBase {
                 .addComponent(buttonRead)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonApply)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonUndo)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonSave)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelClose.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -678,7 +694,7 @@ public class DialogGlobalRecode extends DialogBase {
                     .addComponent(panelMissing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelRecodeData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTree, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -715,7 +731,6 @@ public class DialogGlobalRecode extends DialogBase {
             variable.recoded = false;
             variable.truncLevels = 0;
             ((AbstractTableModel)tableVariables.getModel()).fireTableDataChanged();
-            buttonUndo.setEnabled(false);
             if (fromTree) {
                 buildTree();
             }
@@ -728,6 +743,7 @@ public class DialogGlobalRecode extends DialogBase {
             SystemUtils.writeLogbook("Recode for var: " + variable.name + " has been reversed");
             buttonApply.setEnabled(true); 
             buttonUndo.setEnabled(false);
+            buttonSave.setEnabled(false);
             buttonRead.setEnabled(!fromTree);
             textAreaWarning.setText("");
         }
@@ -738,7 +754,7 @@ public class DialogGlobalRecode extends DialogBase {
         setVisible(false);
         if (documentListener.isChanged()) {
             documentListener.setChanged(false);
-            saveRecodeInfo(false);
+            //saveRecodeInfo(false);
         }
         
         tauArgus.ApplyRecode();
@@ -783,9 +799,9 @@ public class DialogGlobalRecode extends DialogBase {
                 LOGGER.log(Level.INFO, "Var: {0} has been recoded\n", variable.name); 
                 SystemUtils.writeLogbook("Var: " + variable.name + " has been recoded");
                 buildTree();
-                int i = JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
-                if (i == JOptionPane.YES_OPTION) 
-                    saveRecodeInfo(true); // true = for treebased recoding
+                //int i = JOptionPane.showConfirmDialog(this, "Do you want to save the recoding of the tree", "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
+                //if (i == JOptionPane.YES_OPTION) 
+                //    saveRecodeInfo(true); // true = for treebased recoding
             } else {
                 JOptionPane.showMessageDialog(this, "This hierarchical recoding could not be applied");
                 labelTreeResult.setText("Tree recode could not be applied");
@@ -937,16 +953,32 @@ public class DialogGlobalRecode extends DialogBase {
         tableVariables.setRowSelectionInterval(rowIndex, rowIndex);
     }//GEN-LAST:event_buttonReadActionPerformed
 
-    private void saveRecodeInfo(Boolean forTreeRecode) {
+    private void buttonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveActionPerformed
+        buttonSave.setEnabled(!saveRecodeInfo(fromTree));
+    }//GEN-LAST:event_buttonSaveActionPerformed
+
+    private void saveTempRecodeFile(RecodeInfo recodeInfo){
+        String tempDir = Application.getTempDir();
+        File f = new File(tempDir, "Argus" + variable.index + ".grc");
+        variable.currentRecodeFile = f.getAbsolutePath();
+        try {
+            variable.writeRecodeFile(variable.currentRecodeFile, recodeInfo);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
+        }
+    }
+    
+    private boolean saveRecodeInfo(Boolean forTreeRecode) {
         RecodeInfo recodeInfo = new RecodeInfo(textAreaRecodeData.getText(), textFieldMissing1.getText(), textFieldMissing2.getText(), textFieldCodelist.getText());
-        int i;
-        if (forTreeRecode){ // You only get here when you want to save the tree recode
-            i = JOptionPane.YES_OPTION;
-        }
-        else{
-            i = JOptionPane.showConfirmDialog(this, "Recode information has been changed.\nSave recodefile?", "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
-        }
-        if (i == JOptionPane.YES_OPTION) {
+        //int i;
+        //if (forTreeRecode){ // You only get here when you want to save the tree recode
+        //    i = JOptionPane.YES_OPTION;
+        //}
+        //else{
+        //    i = JOptionPane.showConfirmDialog(this, "Recode information has been changed.\nSave recodefile?", "ARGUS-recodefiles", JOptionPane.YES_NO_OPTION);
+        //}
+        // You should only get here when you want to save the recoding
+        //if (i == JOptionPane.YES_OPTION) {
 //        String hs = SystemUtils.getRegString("general", "datadir", "");
 //        if (!hs.equals("")){
 //            File file = new File(hs); 
@@ -956,38 +988,46 @@ public class DialogGlobalRecode extends DialogBase {
             fileChooser.setDialogTitle("Save global recode file");
             fileChooser.setSelectedFile(new File(variable.currentRecodeFile));
             fileChooser.setFileFilter(new FileNameExtensionFilter("Recode files (*.grc)", "grc"));
-            if (fileChooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
                 variable.currentRecodeFile = fileChooser.getSelectedFile().toString();
+                // Add default ".grc" if no extension is given
+                if (FilenameUtils.getExtension(variable.currentRecodeFile).equals("")){
+                    variable.currentRecodeFile = variable.currentRecodeFile + ".grc";
+                }
                 TauArgusUtils.putDataDirInRegistry(variable.currentRecodeFile);
                 if (!forTreeRecode){
                    try {
                        variable.writeRecodeFile(variable.currentRecodeFile, recodeInfo);
+                       textAreaWarning.setText("Recoding saved");
                    } catch (IOException ex) {
                        JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
                    }
-                   return;
+                   //return;
                 }
                 else // Save a real tree
                 {
                     try{
                        variable.writeRecodeTreeFile(variable.currentRecodeFile); 
+                       textAreaWarning.setText("Recoding saved");
                     } catch (IOException ex) {
                        JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
                     }
-                    return;    
+                    //return;    
                 }
+                return true; // actually saved
             }    
-        }
-        if(forTreeRecode){return;}
-        // we do not need a temp recode file for a hierarchical recode
-        String tempDir = Application.getTempDir();
-        File f = new File(tempDir, "Argus" + variable.index + ".grc");
-        variable.currentRecodeFile = f.getAbsolutePath();
-        try {
-            variable.writeRecodeFile(variable.currentRecodeFile, recodeInfo);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
-        }
+            else return false; // actually not saved
+        //}
+        //if(!forTreeRecode){ // we do not need a temp recode file for a hierarchical recode
+            //String tempDir = Application.getTempDir();
+            //File f = new File(tempDir, "Argus" + variable.index + ".grc");
+            //variable.currentRecodeFile = f.getAbsolutePath();
+            //try {
+            //    variable.writeRecodeFile(variable.currentRecodeFile, recodeInfo);
+            //} catch (IOException ex) {
+            //    JOptionPane.showMessageDialog(DialogGlobalRecode.this, ex.getMessage());
+            //}
+        //}
     }
 
     private int addChildren(DefaultMutableTreeNode parentNode, VarCodeProperties parentProperties, int codeIndex) {
@@ -1074,6 +1114,7 @@ public class DialogGlobalRecode extends DialogBase {
     private javax.swing.JButton buttonClose;
     private javax.swing.JButton buttonCodelist;
     private javax.swing.JButton buttonRead;
+    private javax.swing.JButton buttonSave;
     private javax.swing.JButton buttonUndo;
     private javax.swing.JComboBox<String> comboBoxMaxLevel;
     private javax.swing.JFileChooser fileChooser;
