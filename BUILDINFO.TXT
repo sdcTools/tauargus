@@ -10,18 +10,17 @@ Used tools:
 - Lazarus (with FPC)
 
 
-Tau-argus is developed with the Netbeans IDE (version 7.3 and 8.0).
+Tau-argus is developed with the Netbeans IDE.
 
 The easiest way to build/compile tau-argus is to make use of the Netbeans IDE.
 When installing Netbeans, make sure to include the C/C++ plugins.
-In the downloadable source code of tau-argus, project files for Netbeans 8.0.2 are included.
 
 Used additional software:
 SCIP 3.1.x 	(http://scip.zib.de)
 Soplex 2.0.x 	(http://scip.zib.de)
 Install SCIP and Soplex, e.g.,
-in directory with soplex: make ZLIB=false GMP=false
-in directory with SCIP: make LPS=spx ZLIB=false GMP=false READLINE=false ZIMPL=false
+in directory with soplex: run "make ZLIB=false GMP=false"
+in directory with SCIP: run "make LPS=spx ZLIB=false GMP=false READLINE=false ZIMPL=false"
 Read INSTALL in download of SCIP and Soplex for more information.
 
 
