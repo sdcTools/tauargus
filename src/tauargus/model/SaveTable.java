@@ -809,7 +809,12 @@ public class SaveTable {
                 hs = tableSet.minFreqCheck ? " " : " not ";
                 out.write ("Additional Min. Frequency option has" + hs + "been used</h3>\n");
             }
-    
+            
+            if (tableSet.suppressed == TableSet.SUP_HITAS) {
+                out.write("LOWERMARG = " + tableSet.GetLowerMarg());
+                out.write("UPPERMARG = " + tableSet.GetUpperMarg());
+            }
+            
             if (tableSet.suppressed == TableSet.SUP_GHMITER) {
                 int j = 0;
                 for (i=0;i<MAX_GH_MITER_RATIO;i++){j = j + tableSet.ghMiterRatio[i];}

@@ -854,7 +854,8 @@ public class batch {
                 tableset.roundMaxStep = 0;
                 tableset.roundMaxTime = 10;
                 tableset.roundPartitions = 0;
-                tableset.roundStoppingRule = 2;                
+                tableset.roundStoppingRule = 2;
+                tableset.roundUnitCost = true;
                 token = nextChar(tail); 
                 
                 if (token.equals(",")){ //steps

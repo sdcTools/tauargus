@@ -67,10 +67,9 @@ public class Application {
 
     // for interfacing with C++ dll
     static {
-//        System.loadLibrary("TauHitas");           
         System.loadLibrary("TauRounder");
         System.loadLibrary("TauHitas");
-        System.loadLibrary("TauArgusJava");                
+        System.loadLibrary("TauArgusJava");
  }
     private static TauArgus tauArgus = new TauArgus();
     private static HiTaSCtrl tauHitas = new HiTaSCtrl();
