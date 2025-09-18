@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import tauargus.extern.dataengine.TauArgus;
 import tauargus.gui.DialogLinkedTables;
 import tauargus.service.TableService;
@@ -86,7 +87,14 @@ public class LinkedTables {
         checkCodeList(); //checkCodeLists  //prepareLinked
         exportTables(MSC, LM, UM);//exportTables
         //checkHierarchies werd in de oude versie ook niet gedaan.
-        runCoverTable();
+        try{
+            runCoverTable();
+        }
+        catch (ArgusException ex){
+            //JOptionPane.showMessageDialog(null, ex.getMessage());
+            throw(ex);
+            //return false;
+        }
         
         readResultsBack();
         
@@ -265,6 +273,12 @@ public class LinkedTables {
         if (testDistFunction()){ out.write("|\"-3\"");}
         else                   {out.write(hs);}
         out.newLine();
+        // Specific solver may have been set in batchfile (.arb) 
+        switch(Application.solverSelected){
+            case Application.SOLVER_CPLEX:  out.write("<SOLVER>  CPLEX"); out.newLine(); break;
+            case Application.SOLVER_XPRESS: out.write("<SOLVER>  XPRESS"); out.newLine(); break;
+            case Application.SOLVER_SOPLEX: out.write("<SOLVER>  FREE"); out.newLine(); break;
+        }
         out.write("<SAFETYRULE>"); out.newLine();
         out.write("<COVER>"); out.newLine();
         out.write("<READTABLE>"); out.newLine();

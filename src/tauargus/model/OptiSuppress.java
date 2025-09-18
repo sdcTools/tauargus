@@ -790,7 +790,12 @@ public class OptiSuppress {
             hs = TAUHITAS.GetErrorString(returnValue);
             //XPRESS or CPLEX or SCIP
             //if (returnValue != 0) {throw new ArgusException ("Error in modular suppression procedure\n" + hs);}
-            throw new ArgusException ("Error in modular suppression procedure\n" + hs);
+            if (Application.batchType() != Application.BATCH_COMMANDLINE)
+                throw new ArgusException ("Error in modular suppression procedure\n" + hs);
+            else{ // if called from commandline with batch-file, terminate
+                System.out.println("Error in modular suppression procedure\n" + hs);
+                System.exit(returnValue);
+            }
         }
         ReadSecondaries(tableSet);
         tableSet.suppressINFO = ReadHitasINFO("hitas.log");
@@ -819,7 +824,7 @@ public class OptiSuppress {
             while  (hs.endsWith("<br>")) {hs = hs.substring(0, hs.length()-4);}
             return hs;
         }
-        catch (IOException ex){return "";}
+        catch (IOException ex){return "Error reading HiTaS.log";}
     }
 
     private static void ReadSecondaries(TableSet tableSet) throws ArgusException{

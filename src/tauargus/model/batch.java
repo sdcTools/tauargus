@@ -697,7 +697,7 @@ public class batch {
                     token = nextToken(tail);
                     tableset.maxHitasTime = Integer.parseInt(token);
                     Application.generalMaxHitasTime = tableset.maxHitasTime;
-                    // The generalMAxHitasTime is used in the RunModular procedure.
+                    // The generalMaxHitasTime is used in the RunModular procedure
                     token = nextChar(tail); 
                 }
                 i=0;

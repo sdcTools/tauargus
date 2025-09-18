@@ -386,44 +386,47 @@ public class DialogLinkedTables extends DialogBase {
       DialogModularParameters paramsG = new DialogModularParameters(parentFrame, tableSet, false, true);
  
       if (paramsG.showDialog() == DialogModularParameters.APPROVE_OPTION) {
-         try {LinkedTables.runLinkedModular(this,tableSet.maxScaleCost,tableSet.GetLowerMarg(),tableSet.GetUpperMarg());
-           try{
-             BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("Inconsistent.cnt")));
-             hs = in.readLine();
-             if (hs.trim().equals("0")) {hs = "";}
-             else {
-               hs = hs + " inconsistencies found in the cover table\n" + 
+         try {
+            LinkedTables.runLinkedModular(this,tableSet.maxScaleCost,tableSet.GetLowerMarg(),tableSet.GetUpperMarg());
+            try{
+                BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("Inconsistent.cnt")));
+                hs = in.readLine();
+                if (hs.trim().equals("0")) {hs = "";}
+                else {
+                hs = hs + " inconsistencies found in the cover table\n" + 
                     "Please check the file: "+ Application.getTempFile("Inconsistent.txt") + "/n";
-             }  
-           }
-           catch (FileNotFoundException ex){}
-           catch (IOException ex) {}
-         for (int i=0;i<TableService.numberOfTables();i++){
-           tableSet = TableService.getTable(i);  
-           hs = hs + tableSet.CountSecondaries()+ " suppressions in table "+(i+1) + "\n";
-         }  
-         JOptionPane.showMessageDialog(this, "Modular has finished the linked tables protection\n"+  hs + 
+                }  
+            }
+            //catch (FileNotFoundException ex){}
+            catch (IOException ex) {}
+            for (int i=0;i<TableService.numberOfTables();i++){
+                tableSet = TableService.getTable(i);  
+                hs = hs + tableSet.CountSecondaries()+ " suppressions in table "+(i+1) + "\n";
+            }  
+            JOptionPane.showMessageDialog(this, "Modular has finished the linked tables protection\n"+  hs + 
                       "Processing time: "+ StrUtils.timeToString(tableSet.processingTime));  
          }     
          catch (ArgusException ex){ 
-          hs = ex.getMessage();
-          try{
-             BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("Inconsistent.cnt")));
-             hs1 = in.readLine();
-             oke = hs1.trim().equals("0");
-             if (!oke){
-               DialogInfo Info = new DialogInfo(getParentFrame(), true);
-               Info.addLabel("Overview of the inconsistency errors");
-               try{
-                  Info.addTextFile(Application.getTempFile("inconsistent.txt"));}
-               catch (ArgusException ex1){}
-               Info.setVisible(true);  
-               hs = hs + "\nSolve the inconsistencies first";
-             }
-           }
-           catch (FileNotFoundException ex1){}
-           catch (IOException ex1) {}
-          JOptionPane.showMessageDialog(this, hs);}
+            hs = ex.getMessage();
+            try{
+                BufferedReader in = new BufferedReader(new FileReader(Application.getTempFile("Inconsistent.cnt")));
+                hs1 = in.readLine();
+                oke = hs1.trim().equals("0");
+                if (!oke){
+                    DialogInfo Info = new DialogInfo(getParentFrame(), true);
+                    Info.addLabel("Overview of the inconsistency errors");
+                    try{
+                        Info.addTextFile(Application.getTempFile("inconsistent.txt"));
+                    }
+                    catch (ArgusException ex1){}
+                    Info.setVisible(true);  
+                    hs = hs + "\nSolve the inconsistencies first";
+                }
+            }
+            //catch (FileNotFoundException ex1){}
+            catch (IOException ex1) {}
+            JOptionPane.showMessageDialog(this, hs);
+         }
       }             
     }//GEN-LAST:event_buttonSuppressModularActionPerformed
 

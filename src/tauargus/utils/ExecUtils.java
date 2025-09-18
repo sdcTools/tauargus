@@ -160,7 +160,8 @@ public class ExecUtils {
             }
             eatStream(process.getInputStream(),silent);
             eatStream(process.getErrorStream(),silent);
-            int exitCode = process.waitFor();
+            process.waitFor();
+            int exitCode = process.exitValue();
             //windowInfo.setVisible(false);
             if (exitCode != 0) {
                 System.out.println("Process terminated with exit code " + exitCode);
