@@ -793,7 +793,7 @@ public class OptiSuppress {
             throw new ArgusException ("Error in modular suppression procedure\n" + hs);
         }
         ReadSecondaries(tableSet);
-        tableSet.suppressINFO = ReadHitasINFO("hitas.log");
+        tableSet.suppressINFO = ReadHitasINFO("HiTaS.log");
         if (tableSet.expVar.size() == 1) {tableSet.nSecond = tableSet.nSecond /2;}
         Date endDate = new Date();
         long diff = endDate.getTime()-startDate.getTime();
@@ -1609,7 +1609,7 @@ public class OptiSuppress {
         }
         if (externalJJFile){return;}
         TAUARGUS.SetSecondaryJJFORMAT(tableSet.index, Application.getTempFile("JJ2.OUT"), false, nSecondary);
-        tableSet.suppressINFO = ReadHitasINFO("fulljj.log");
+        tableSet.suppressINFO = ReadHitasINFO("FullJJ.log");
         //TestTRivialSolution
         tableSet.nSecond = nSecondary[0];
         Date endDate = new Date();
