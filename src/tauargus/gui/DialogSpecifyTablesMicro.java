@@ -418,6 +418,10 @@ public class DialogSpecifyTablesMicro extends DialogBase {
         buttonAddTable.setEnabled(!selectedExplanatoryVariableListModel.isEmpty() && responseVariable != null);
     }
     
+    private void organiseHoldings(){
+        checkBoxUseHoldingsInfo.setEnabled(!checkBoxApplyWeights.isSelected());
+    }
+    
     private void organiseAllOptions() {
         organiseCostOptions();
         organiseDominanceRuleOptions();
@@ -427,6 +431,7 @@ public class DialogSpecifyTablesMicro extends DialogBase {
         organiseZeroUnsafeRuleOptions();
         organiseButtonAddTableOption();
         organiseDistanceOption();
+        organiseHoldings();
         SelectPanel();
     }
     
@@ -452,6 +457,7 @@ public class DialogSpecifyTablesMicro extends DialogBase {
         organiseRequestRuleOptions();
         organiseMinimumFrequencyRuleOptions();
         organiseButtonAddTableOption();
+        checkBoxApplyWeights.setEnabled(!checkBoxUseHoldingsInfo.isSelected());
     }
     
     /**
@@ -1480,6 +1486,11 @@ public class DialogSpecifyTablesMicro extends DialogBase {
         );
 
         checkBoxApplyWeights.setText("Apply weights");
+        checkBoxApplyWeights.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxApplyWeightsActionPerformed(evt);
+            }
+        });
 
         checkBoxMissingSafe.setText("Missing=safe");
 
@@ -1934,6 +1945,10 @@ public class DialogSpecifyTablesMicro extends DialogBase {
         setVisible(false);
         dispose();
     }//GEN-LAST:event_dialogClosing
+
+    private void checkBoxApplyWeightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxApplyWeightsActionPerformed
+        organiseHoldings();
+    }//GEN-LAST:event_checkBoxApplyWeightsActionPerformed
 
     private void setResponseVariable(Variable variable) {
         responseVariable = variable;
