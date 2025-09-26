@@ -836,7 +836,7 @@ public class batch {
                                     tableset.CountSecondaries() + " cells have been suppressed");
                 break;
             case "RND"://TabNo, RoundingBase, Steps, Time, Partitions, StopRule
-                       // OK after Roundbase: Default Step = 0 (no step), time = 10, Nopartitions part = 0, stoprule = 2(optimal)
+                       //OK after Roundbase: Default Step = 0 (no step), time = 10, Nopartitions part = 0, stoprule = 2(optimal), UnitCost = true
                 if (n==0) {throw new ArgusException("Linked tables is not possible for Rounding");}
                 if (Application.solverSelected == Application.SOLVER_CPLEX)
                     reportProgressInfo("Whether controlled rounding can be used when Cplex is selected as solver, " +
@@ -854,7 +854,8 @@ public class batch {
                 tableset.roundMaxStep = 0;
                 tableset.roundMaxTime = 10;
                 tableset.roundPartitions = 0;
-                tableset.roundStoppingRule = 2;                
+                tableset.roundStoppingRule = 2;    
+                tableset.roundUnitCost = true;
                 token = nextChar(tail); 
                 
                 if (token.equals(",")){ //steps

@@ -368,8 +368,8 @@ public class DialogWriteBatchFile extends DialogBase {
                             hs = hs + Integer.toString(tableSet.roundPartitions) + ",";
                             //hs = hs + Integer.toString(tableSet.roundNumberofBlocks) + ",";
                             //hs = hs + Integer.toString(tableSet.roundStoppingRule) + ",";
-                            hs = hs + Integer.toString(tableSet.roundStoppingRule) + ")";
-                            //hs = hs + Integer.toString(tableSet.roundPartitions) + ")";                     
+                            hs = hs + Integer.toString(tableSet.roundStoppingRule) + ",";
+                            hs = hs + Integer.toString(tableSet.roundUnitCost ? 1 : 0) + ")";                     
                             break;
                         case TableSet.SUP_MARGINAL: hs = ""; break;
                         case TableSet.SUP_UWE: hs = ""; break;
