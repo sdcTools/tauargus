@@ -22,9 +22,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.JOptionPane;
 import tauargus.extern.dataengine.TauArgus;
 import tauargus.gui.DialogLinkedTables;
 import tauargus.service.TableService;
@@ -66,8 +66,15 @@ public class LinkedTables {
         if (coverDim > 10){
             throw new ArgusException ("The total number of explanatory variables for the Modular approach should not exceed 10");
         }
+        if (Application.solverSelected==Application.SOLVER_CPLEX){
+            if(!TauArgusUtils.ExistFile(TauArgusUtils.GetCplexLicenceFile())){
+                throw new ArgusException("Cplex license file not found");
+            }
+        }
+        
         for (i=0;i<TableService.numberOfTables();i++){
-            hs = hs + "\n"+ (i+1) + ": "+ TableService.getTableDescription(TableService.getTable(i));        } 
+            hs = hs + "\n"+ (i+1) + ": "+ TableService.getTableDescription(TableService.getTable(i));
+        } 
         SystemUtils.writeLogbook("Start of modular linked tables procedure\n"+
                                  TableService.numberOfTables()+" tables." + hs);
         tableSet0 = TableService.getTable(0);
@@ -87,14 +94,7 @@ public class LinkedTables {
         checkCodeList(); //checkCodeLists  //prepareLinked
         exportTables(MSC, LM, UM);//exportTables
         //checkHierarchies werd in de oude versie ook niet gedaan.
-        try{
-            runCoverTable();
-        }
-        catch (ArgusException ex){
-            //JOptionPane.showMessageDialog(null, ex.getMessage());
-            throw(ex);
-            //return false;
-        }
+        runCoverTable();
         
         readResultsBack();
         
@@ -117,6 +117,23 @@ public class LinkedTables {
         return true;
     }
     
+    static boolean CheckForError(StringBuilder Message){
+        String Line, PreviousLine="";
+        try{ 
+            BufferedReader  in  = new BufferedReader(new FileReader(Application.getTempFile("HiTaS.log"))); 
+            PreviousLine = in.readLine();
+            Line = in.readLine();
+            while (!Line.contains("Start at")){
+                PreviousLine = Line;
+                Line = in.readLine();
+            }
+            if (Line.equals("")) {Message.append("Protection mehod was not started"); return false;}
+            return true;
+        }
+        catch (IOException ex){Message.append("HiTaS.log not found"); return false;}
+        catch (NullPointerException ex) {Message.append(PreviousLine); return false;}
+    }
+    
     static void readResultsBack()throws ArgusException{
         // in fact we convert the output into aprory files and run them
         int[] codeIndex = new int[coverDim]; int j; TableSet tableSet;
@@ -124,7 +141,12 @@ public class LinkedTables {
         String[] totCodes = new String[coverDim];
         String[] regel = new String[1]; Boolean Oke;
         if (!TauArgusUtils.ExistFile(Application.getTempFile("tempTot.txt"))){
-           throw new ArgusException("The results of the protection of the cover table could not be found");}        
+           throw new ArgusException("The results of the protection of the cover table could not be found");}  
+        
+        StringBuilder hs = new StringBuilder("");
+        if (!CheckForError(hs)){
+            throw new ArgusException(hs.toString());
+        }
   
       for (int i=0;i<TableService.numberOfTables();i++){
         tableSet = TableService.getTable(i);
@@ -165,7 +187,7 @@ public class LinkedTables {
       // Apriory files have been made. Read them back
       for (int i=0;i<TableService.numberOfTables();i++){
         tableSet = TableService.getTable(i); 
-        tableSet.suppressINFO = OptiSuppress.ReadHitasINFO("hitas.log");
+        tableSet.suppressINFO = OptiSuppress.ReadHitasINFO("HiTaS.log");
         tableSet.solverUsed = Application.solverSelected;
         int[][] aPrioryStatus = new int[5][2];
         if (TableSet.processAprioryFile(Application.getTempFile("temp"+i+".hst"), i, ";", true, false, false, aPrioryStatus)!=0){
@@ -275,10 +297,11 @@ public class LinkedTables {
         out.newLine();
         // Specific solver may have been set in batchfile (.arb) 
         switch(Application.solverSelected){
-            case Application.SOLVER_CPLEX:  out.write("<SOLVER>  CPLEX"); out.newLine(); break;
-            case Application.SOLVER_XPRESS: out.write("<SOLVER>  XPRESS"); out.newLine(); break;
-            case Application.SOLVER_SOPLEX: out.write("<SOLVER>  FREE"); out.newLine(); break;
+            case Application.SOLVER_CPLEX:  out.write("<SOLVER>  CPLEX"); break;
+            case Application.SOLVER_XPRESS: out.write("<SOLVER>  XPRESS"); break;
+            case Application.SOLVER_SOPLEX: out.write("<SOLVER>  FREE"); break;
         }
+        out.newLine();
         out.write("<SAFETYRULE>"); out.newLine();
         out.write("<COVER>"); out.newLine();
         out.write("<READTABLE>"); out.newLine();
